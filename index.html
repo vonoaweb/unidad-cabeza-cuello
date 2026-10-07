@@ -154,6 +154,19 @@ nav a:not(.btn):hover{color:var(--azul)}
 .miembro b{display:block;font-size:14px;font-weight:600}
 .miembro span{display:block;font-size:12.5px;color:var(--texto-2)}
 .equipo-nota{margin-top:26px;text-align:center;color:var(--texto)}
+.sub-titulo{font-size:20px;font-weight:600;margin:0 0 22px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.sub-titulo span{font-size:14px;font-weight:400;color:var(--texto-2)}
+.base{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.base-card{background:#fff;border:1px solid var(--tinte-2);border-radius:18px;padding:22px;display:grid;gap:10px;align-content:start}
+.base-card .circulo{width:64px;height:64px;border-radius:50%;background:var(--tinte);border:1.5px dashed var(--tinte-2);display:grid;place-items:center}
+.base-card .circulo svg{width:46%;height:46%;color:#C5D1F4}
+.base-card b{font-size:15.5px;font-weight:600;line-height:1.3}
+.base-card p{font-size:14px;color:var(--texto)}
+.base-card small{font-size:12.5px;font-weight:600;color:var(--azul)}
+
+/* tecnología */
+.tec-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.rep p{color:var(--texto);font-size:14.5px;margin-top:6px}
 
 /* contacto */
 .contacto{background:var(--navy);color:rgba(255,255,255,.78)}
@@ -185,13 +198,18 @@ footer a{color:#fff}
   .tira .wrap{grid-template-columns:1fr 1fr}
   .rep-grid{grid-template-columns:1fr 1fr}
   .equipo{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .base{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tec-grid{grid-template-columns:1fr 1fr}
 }
-@media (max-width:980px){
+@media (max-width:1080px){
   nav{display:none;position:absolute;top:var(--header);left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:0;padding:8px 16px 16px;box-shadow:var(--sombra)}
   nav.abierto{display:flex}
   nav a{padding:12px 4px;border-bottom:1px solid var(--tinte-2);font-size:16px}
   nav .btn{margin-top:12px}
   .menu{display:block}
+}
+@media (max-width:520px){
+  .base{grid-template-columns:1fr}
 }
 @media (max-width:760px){
   .wrap{padding:0 16px}
@@ -200,7 +218,7 @@ footer a{color:#fff}
   .sec{padding:64px 0}
   .agenda{padding:24px}
   .unidad-foto{min-height:340px}
-  .esp-grid,.rep-grid{grid-template-columns:1fr}
+  .esp-grid,.rep-grid,.tec-grid{grid-template-columns:1fr}
   .esp ul{grid-template-columns:1fr}
   .equipo{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 }
@@ -218,8 +236,9 @@ footer a{color:#fff}
     <nav id="menu" aria-label="Principal">
       <a href="#unidad">La unidad</a>
       <a href="#especialidades">Especialidades</a>
-      <a href="#reportajes">Información médica</a>
-      <a href="#equipo">Médicos</a>
+      <a href="#tecnologia">Tecnología</a>
+      <a href="#reportajes">Reportajes</a>
+      <a href="#equipo">Equipo</a>
       <a href="#contacto">Contacto</a>
       <a class="btn btn-azul btn-sm" href="#agenda">Agendar cita</a>
     </nav>
@@ -401,6 +420,32 @@ footer a{color:#fff}
   </div>
 </section>
 
+<section class="sec" id="tecnologia">
+  <div class="wrap">
+    <div class="cabeza-sec aparece">
+      <div>
+        <p class="kicker">Nuestra tecnología</p>
+        <h2 class="titulo">El equipo con el que <b>te atendemos</b></h2>
+      </div>
+      <p class="sub">Muy pronto vas a ver aquí cada aparato que usan nuestros especialistas, con una explicación sencilla de para qué sirve.</p>
+    </div>
+    <div class="tec-grid">
+      <article class="rep aparece">
+        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1631558554770-74e921444006?w=800&h=600&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span></div>
+        <div class="rep-cuerpo"><h3>Exploración y diagnóstico</h3><p>Cámaras delgadas que permiten ver por dentro la nariz, la garganta y el oído sin cirugía.</p></div>
+      </article>
+      <article class="rep aparece">
+        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&h=600&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span></div>
+        <div class="rep-cuerpo"><h3>Procedimientos quirúrgicos</h3><p>El equipo que usan nuestros especialistas en las cirugías de cabeza y cuello.</p></div>
+      </article>
+      <article class="rep aparece">
+        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1513224502586-d1e602410265?w=800&h=600&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span></div>
+        <div class="rep-cuerpo"><h3>Anestesia y monitoreo</h3><p>Vigilancia de tus signos vitales durante todo el procedimiento.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
 <section class="sec" id="reportajes">
   <div class="wrap">
     <div class="cabeza-sec aparece">
@@ -436,11 +481,14 @@ footer a{color:#fff}
     <div class="cabeza-sec aparece">
       <div>
         <p class="kicker">Nuestro equipo médico</p>
-        <h2 class="titulo">Conoce a <b>nuestros especialistas</b></h2>
+        <h2 class="titulo">Conoce a <b>nuestro equipo</b></h2>
       </div>
-      <p class="sub">Muy pronto vas a poder ver aquí la foto, la cédula y lo que atiende cada uno.</p>
+      <p class="sub">Especialistas que vienen desde Guadalajara y un equipo de base que vive en Tepatitlán. Muy pronto vas a ver aquí la foto y los datos de cada uno.</p>
     </div>
+    <h3 class="sub-titulo aparece">Especialistas <span>Vienen a consultar y operar en la unidad</span></h3>
     <div class="equipo" id="equipoGrid"></div>
+    <h3 class="sub-titulo aparece" style="margin-top:52px">Equipo de base en Tepatitlán <span>Siempre en la unidad</span></h3>
+    <div class="base" id="baseGrid"></div>
   </div>
 </section>
 
@@ -504,6 +552,17 @@ document.querySelectorAll('[data-wa]').forEach(function (a) {
 var lugares = ['Otorrinolaringología', 'Otorrinolaringología', 'Otorrinolaringología', 'Neurología', 'Cirugía maxilofacial', 'Oculoplastia'];
 document.getElementById('equipoGrid').innerHTML = lugares.map(function (esp) {
   return '<div class="miembro aparece"><div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div><b>Muy pronto</b><span>' + esp + '</span></div>';
+}).join('');
+
+/* Equipo de base: vive en Tepatitlán y no rota */
+var base = [
+  {rol: 'Instrumentista y enfermería', txt: 'Te recibe y te acompaña durante tu procedimiento.'},
+  {rol: 'Ingeniería biomédica', txt: 'Prepara y cuida el equipo y la tecnología de la unidad.'},
+  {rol: 'Anestesiología', txt: 'Se encarga de tu anestesia y de vigilarte durante la cirugía.'},
+  {rol: 'Anestesiología pediátrica', txt: 'Anestesia especializada para niños.'}
+];
+document.getElementById('baseGrid').innerHTML = base.map(function (b) {
+  return '<div class="base-card aparece"><div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div><b>' + b.rol + '</b><p>' + b.txt + '</p><small>Muy pronto</small></div>';
 }).join('');
 
 /* Agenda: con número manda la solicitud por WhatsApp; sin número, avisa */
