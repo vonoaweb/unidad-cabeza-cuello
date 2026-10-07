@@ -3,74 +3,193 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Página temporal mientras se construye el sitio. Quitar noindex cuando esté el dominio y el sitio completo. -->
+<!-- Quitar noindex cuando el sitio tenga su dominio y el contenido real. -->
 <meta name="robots" content="noindex">
 <title>Unidad de Alta Especialidad en Cabeza y Cuello · Tepatitlán</title>
 <meta name="description" content="Otorrinolaringología y Neurología en Tepatitlán de Morelos, Jalisco. Especialistas de Guadalajara que consultan en la unidad.">
 <meta name="theme-color" content="#0A1B5C">
+<link rel="preconnect" href="https://images.unsplash.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-/* marca: solo 3 colores — marino, azul y blanco */
+/* marca: solo 3 colores — marino, azul y blanco. Todo lo demás son tonos de esos tres */
 :root{
   --navy:#0A1B5C; --azul:#2F5BD8; --blanco:#FFFFFF;
-  --tinte:#F5F7FD; --linea:#E2E8FA; --texto:#475485;
+  --tinte:#F5F7FD; --tinte-2:#E2E8FA; --texto:#475485; --texto-2:#7882A5;
+  --r:22px; --sombra:0 18px 44px -18px rgba(10,27,92,.28); --header:72px;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;font-family:"Open Sans","Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.65;color:var(--navy);background:var(--blanco)}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Open Sans","Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.65;color:var(--navy);background:var(--blanco);overflow-x:hidden}
+img{display:block;max-width:100%}
 a{color:inherit}
-h1,h2,h3{margin:0;font-weight:300;line-height:1.15;letter-spacing:-.02em}
+button,input,select{font:inherit;color:inherit}
+h1,h2,h3{margin:0;line-height:1.15;letter-spacing:-.02em}
 p{margin:0}
+section[id]{scroll-margin-top:var(--header)}
 :focus-visible{outline:3px solid var(--azul);outline-offset:3px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-
-header{border-bottom:1px solid var(--linea)}
-header .wrap{display:flex;align-items:center;gap:12px;min-height:68px}
-.marca strong{display:block;font-weight:700;font-size:15.5px}
-.marca span{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--texto)}
-
-.hero{background:linear-gradient(180deg,var(--blanco),var(--tinte));padding:64px 0 72px}
-.aviso{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--azul)}
-.aviso::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--azul);box-shadow:0 0 0 5px rgba(47,91,216,.15)}
-.hero h1{font-size:clamp(32px,5.4vw,56px);margin:18px 0 18px;max-width:16ch}
-.hero h1 b{font-weight:600;color:var(--azul)}
-.hero p.lead{font-size:18px;color:var(--texto);max-width:52ch}
-.hero .ciudad{margin-top:22px;font-weight:600}
-
-.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:64px;padding:13px 24px;font:600 15px/1 "Open Sans","Segoe UI",sans-serif;text-decoration:none;background:var(--azul);color:#fff;cursor:pointer}
-.btn:hover{background:var(--navy)}
-.btn svg{width:18px;height:18px;fill:currentColor}
-.acciones{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}
 [hidden]{display:none !important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--azul)}
+.kicker::before{content:"";width:22px;height:2px;background:currentColor}
+.titulo{font-size:clamp(28px,3.6vw,42px);font-weight:300;margin-top:12px}
+.titulo b{font-weight:600;color:var(--azul)}
+.sub{color:var(--texto);margin-top:12px;max-width:58ch}
+.cabeza-sec{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:34px}
 
-.esp{padding:72px 0}
-.esp h2{font-size:clamp(26px,3.4vw,38px);margin-bottom:28px}
-.tarjetas{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.tarjeta{border:1px solid var(--linea);border-radius:22px;padding:30px;background:var(--blanco);scroll-margin-top:24px;transition:border-color .3s,box-shadow .3s}
-.tarjeta:target{border-color:var(--azul);box-shadow:0 0 0 4px rgba(47,91,216,.14)}
-.tarjeta .ico{width:58px;height:58px;border-radius:50%;background:var(--azul);display:grid;place-items:center;margin-bottom:18px}
-.tarjeta .ico svg{width:36px;height:36px;color:#fff}
-.tarjeta h3{font-size:26px;font-weight:400;margin-bottom:10px}
-.tarjeta p{color:var(--texto)}
-.tarjeta .btn{margin-top:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:64px;padding:14px 24px;font-weight:600;font-size:15px;line-height:1;text-decoration:none;cursor:pointer;transition:background .2s,color .2s}
+.btn svg{width:18px;height:18px;fill:currentColor}
+.btn-azul{background:var(--azul);color:#fff}
+.btn-azul:hover{background:var(--navy)}
+.btn-blanco{background:#fff;color:var(--navy)}
+.btn-blanco:hover{background:var(--tinte-2)}
+.btn-linea{background:transparent;color:var(--navy);box-shadow:inset 0 0 0 1.5px var(--tinte-2)}
+.btn-linea:hover{box-shadow:inset 0 0 0 1.5px var(--azul)}
+.btn-sm{padding:10px 18px;font-size:14px}
 
-.pronto{background:var(--navy);color:rgba(255,255,255,.8);padding:56px 0}
-.pronto h2{color:#fff;font-size:clamp(24px,3vw,32px);margin-bottom:12px}
-.pronto ul{margin:16px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.pronto li{border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:16px 18px;font-weight:600;color:#fff}
-.pronto .recepcion{margin-top:22px}
+/* encabezado */
+header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.95);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--tinte-2)}
+header .wrap{display:flex;align-items:center;gap:22px;height:var(--header)}
+.marca{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
+.marca-sello{width:44px;height:44px;border-radius:50%;background:var(--navy);display:grid;place-items:center;flex:none}
+.marca-sello svg{width:28px;height:28px;color:#fff}
+.marca span{min-width:0}
+.marca strong{display:block;font-weight:700;font-size:15px;line-height:1.2}
+.marca small{display:block;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-2);line-height:1.3}
+nav{margin-left:auto;display:flex;gap:22px;align-items:center}
+nav a{text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+nav a:not(.btn):hover{color:var(--azul)}
+.menu{display:none;margin-left:auto;background:none;border:1.5px solid var(--navy);border-radius:64px;padding:7px 16px;font-weight:700;font-size:14px;cursor:pointer}
+
+/* portada */
+.hero{position:relative;min-height:600px;display:flex;align-items:center;color:#fff;overflow:hidden}
+.hero > img{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(10,27,92,.94) 0%,rgba(10,27,92,.82) 40%,rgba(10,27,92,.25) 100%)}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-top:70px;padding-bottom:130px}
+.hero .kicker{color:#fff;opacity:.85}
+.hero h1{font-size:clamp(34px,5vw,58px);font-weight:300;margin:16px 0 18px;max-width:15ch}
+.hero h1 b{font-weight:600}
+.hero p{font-size:18px;max-width:46ch;opacity:.9}
+.hero .acciones{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+
+.tira{position:relative;z-index:2;margin-top:-72px}
+.tira .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:#fff;border-radius:var(--r);box-shadow:var(--sombra);padding:8px}
+.tira a,.tira div{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:16px;text-decoration:none}
+.tira a:hover{background:var(--tinte)}
+.tira i{width:52px;height:52px;border-radius:50%;background:var(--tinte);display:grid;place-items:center;flex:none}
+.tira i svg{width:34px;height:34px;color:var(--azul)}
+.tira b{display:block;font-size:16px;font-weight:600}
+.tira span{display:block;font-size:13px;color:var(--texto-2)}
+.tira .pronto i{background:transparent;border:1.5px dashed var(--tinte-2)}
+.tira .pronto i svg{color:var(--texto-2)}
+
+/* agenda + unidad */
+.sec{padding:88px 0}
+.agenda-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:stretch}
+.agenda{background:var(--tinte);border:1px solid var(--tinte-2);border-radius:var(--r);padding:34px}
+.agenda h2{font-size:30px;font-weight:300;display:flex;align-items:center;gap:12px}
+.agenda h2 svg{width:30px;height:30px;fill:none;stroke:var(--azul);stroke-width:1.8}
+.agenda p.sub{margin-top:8px}
+.campos{display:grid;gap:14px;margin:24px 0 20px}
+.campos label{display:grid;gap:6px;font-size:13px;font-weight:600;color:var(--texto)}
+.campos select,.campos input{width:100%;padding:13px 14px;border:1px solid var(--tinte-2);border-radius:12px;background:#fff;font-size:15px}
+.campos select:focus,.campos input:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(47,91,216,.15)}
+.agenda .btn{width:100%}
+.agenda .nota{font-size:13.5px;color:var(--texto);margin-top:14px;min-height:22px}
+.unidad-foto{position:relative;border-radius:var(--r);overflow:hidden;min-height:420px}
+.unidad-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.unidad-foto::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(10,27,92,.88))}
+.unidad-foto figcaption{position:absolute;left:30px;right:30px;bottom:28px;z-index:1;color:#fff}
+.unidad-foto blockquote{margin:0;font-size:clamp(22px,2.4vw,28px);font-weight:300;line-height:1.3}
+.unidad-foto span{display:block;margin-top:10px;font-size:14px;opacity:.85}
+
+/* especialidades */
+.bg-tinte{background:var(--tinte)}
+.esp-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.esp{background:#fff;border:1px solid var(--tinte-2);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;scroll-margin-top:calc(var(--header) + 16px);transition:box-shadow .3s,border-color .3s}
+.esp:target{border-color:var(--azul);box-shadow:0 0 0 4px rgba(47,91,216,.16)}
+.esp-foto{position:relative;aspect-ratio:16/9}
+.esp-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.esp-foto i{position:absolute;left:24px;bottom:-26px;width:56px;height:56px;border-radius:50%;background:var(--azul);border:4px solid #fff;display:grid;place-items:center}
+.esp-foto i svg{width:32px;height:32px;color:#fff}
+.esp-cuerpo{padding:40px 28px 28px;display:flex;flex-direction:column;flex:1}
+.esp h3{font-size:26px;font-weight:400}
+.esp p{color:var(--texto);margin-top:8px}
+.esp ul{margin:16px 0 22px;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.esp li{position:relative;padding-left:18px;font-size:14.5px}
+.esp li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--azul)}
+.esp .btn{margin-top:auto;align-self:flex-start}
+
+/* reportajes */
+.rep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.rep{border-radius:18px;overflow:hidden;border:1px solid var(--tinte-2);background:#fff;display:flex;flex-direction:column}
+.rep-foto{position:relative;aspect-ratio:4/3}
+.rep-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rep-foto::after{content:"";position:absolute;inset:0;background:rgba(10,27,92,.18)}
+.rep-foto .play{position:absolute;inset:0;margin:auto;z-index:1;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.rep-foto .play svg{width:18px;height:18px;fill:var(--azul);margin-left:3px}
+.rep-foto .pronto{position:absolute;top:12px;left:12px;z-index:1;background:var(--navy);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:64px}
+.rep-cuerpo{padding:16px 18px 20px}
+.rep h3{font-size:16.5px;font-weight:600;line-height:1.35}
+.rep .etiqueta{display:inline-block;margin-top:10px;font-size:12px;font-weight:600;color:var(--azul);background:var(--tinte);padding:4px 10px;border-radius:64px}
+
+/* equipo */
+.equipo{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;text-align:center}
+.miembro .circulo{width:100%;max-width:150px;margin-inline:auto;aspect-ratio:1;border-radius:50%;border:1.5px dashed var(--tinte-2);background:var(--tinte);display:grid;place-items:center;margin-bottom:12px}
+.miembro .circulo svg{width:42%;height:42%;color:#C5D1F4}
+.miembro b{display:block;font-size:14px;font-weight:600}
+.miembro span{display:block;font-size:12.5px;color:var(--texto-2)}
+.equipo-nota{margin-top:26px;text-align:center;color:var(--texto)}
+
+/* contacto */
+.contacto{background:var(--navy);color:rgba(255,255,255,.78)}
+.contacto .kicker{color:rgba(255,255,255,.7)}
+.contacto .titulo{color:#fff}
+.contacto .titulo b{color:#fff}
+.contacto-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:stretch;margin-top:34px}
+.datos{display:grid;gap:20px;align-content:start}
+.datos dt{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px}
+.datos dd{margin:0;font-size:17px;color:#fff}
+.mapa{border-radius:var(--r);overflow:hidden;min-height:320px;background:rgba(255,255,255,.06)}
+.mapa iframe{width:100%;height:100%;min-height:320px;border:0;display:block;filter:grayscale(.3)}
 
 footer{background:var(--navy);border-top:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:13px;padding:22px 0}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a{color:#fff}
 
-@media (max-width:720px){
-  .hero{padding:44px 0 52px}
-  .tarjetas,.pronto ul{grid-template-columns:1fr}
-  .esp{padding:52px 0}
-  .tarjeta{padding:24px}
+.aviso-pronto{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;max-width:calc(100% - 32px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50}
+.aviso-pronto.ver{opacity:1;transform:translate(-50%,0)}
+
+/* aparición suave al hacer scroll */
+.aparece{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.aparece.si{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.aparece{opacity:1;transform:none;transition:none}}
+
+@media (max-width:1000px){
+  .agenda-wrap,.contacto-grid{grid-template-columns:1fr}
+  .rep-grid{grid-template-columns:1fr 1fr}
+  .equipo{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:980px){
+  nav{display:none;position:absolute;top:var(--header);left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:0;padding:8px 16px 16px;box-shadow:var(--sombra)}
+  nav.abierto{display:flex}
+  nav a{padding:12px 4px;border-bottom:1px solid var(--tinte-2);font-size:16px}
+  nav .btn{margin-top:12px}
+  .menu{display:block}
+}
+@media (max-width:760px){
+  .wrap{padding:0 16px}
+  .hero{min-height:560px}
+  .hero::before{background:linear-gradient(180deg,rgba(10,27,92,.7),rgba(10,27,92,.92))}
+  .hero .wrap{padding-top:48px;padding-bottom:110px}
+  .tira .wrap{grid-template-columns:1fr;margin:0 16px}
+  .sec{padding:64px 0}
+  .agenda{padding:24px}
+  .unidad-foto{min-height:340px}
+  .esp-grid,.rep-grid{grid-template-columns:1fr}
+  .esp ul{grid-template-columns:1fr}
+  .equipo{grid-template-columns:repeat(3,1fr);gap:12px}
 }
 </style>
 </head>
@@ -78,90 +197,272 @@ footer a{color:#fff}
 
 <header>
   <div class="wrap">
-    <div class="marca">
-      <strong>Cabeza y Cuello</strong>
-      <span>Unidad de Alta Especialidad · Tepatitlán</span>
-    </div>
+    <a class="marca" href="#inicio" aria-label="Inicio">
+      <span class="marca-sello" data-icono="oido" aria-hidden="true"></span>
+      <span><strong>Cabeza y Cuello</strong><small>Unidad de Alta Especialidad · Tepatitlán</small></span>
+    </a>
+    <button class="menu" type="button" aria-expanded="false" aria-controls="menu">Menú</button>
+    <nav id="menu" aria-label="Principal">
+      <a href="#especialidades">Especialidades</a>
+      <a href="#reportajes">Información médica</a>
+      <a href="#equipo">Médicos</a>
+      <a href="#contacto">Contacto</a>
+      <a class="btn btn-azul btn-sm" href="#agenda">Agendar cita</a>
+    </nav>
   </div>
 </header>
 
 <main>
-  <section class="hero">
-    <div class="wrap">
-      <p class="aviso">Sitio en construcción</p>
-      <h1>Unidad de Alta Especialidad en <b>Cabeza y Cuello</b></h1>
-      <p class="lead">Otorrinolaringólogos y neurólogos de Guadalajara que vienen a dar consulta aquí, para que no tengas que viajar.</p>
-      <p class="ciudad">Tepatitlán de Morelos, Jalisco</p>
-      <div class="acciones" data-con-whatsapp hidden>
-        <a class="btn" data-wa="Hola, quiero información de la Unidad de Cabeza y Cuello." href="#">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.4-.9-2.8-1.2-4.6-4.1-4.8-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.4.1.1.1.7-.2 1.3z"/></svg>
-          Escríbenos por WhatsApp
-        </a>
-      </div>
-    </div>
-  </section>
 
-  <section class="esp" aria-labelledby="tEsp">
-    <div class="wrap">
-      <h2 id="tEsp">Nuestras especialidades</h2>
-      <div class="tarjetas">
-        <article class="tarjeta" id="otorrinolaringologia">
-          <span class="ico" data-icono="oido"></span>
+<section class="hero" id="inicio">
+  <img src="https://images.unsplash.com/photo-1781513144825-aa1e284c5950?w=1800&q=72&auto=format&fit=crop"
+       srcset="https://images.unsplash.com/photo-1781513144825-aa1e284c5950?w=900&q=70&auto=format&fit=crop 900w, https://images.unsplash.com/photo-1781513144825-aa1e284c5950?w=1800&q=72&auto=format&fit=crop 1800w"
+       sizes="100vw" alt="" fetchpriority="high">
+  <div class="wrap">
+    <p class="kicker">Tepatitlán de Morelos, Jalisco</p>
+    <h1>Especialistas en <b>cabeza y cuello</b>, aquí en Tepatitlán</h1>
+    <p>Otorrinolaringólogos y neurólogos de Guadalajara que vienen a dar consulta a la unidad, para que no tengas que viajar.</p>
+    <div class="acciones">
+      <a class="btn btn-blanco" href="#agenda">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h2v2h6V2h2v2h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3zm12 8H5v9h14zM5 8h14V6H5z"/></svg>
+        Agendar una cita
+      </a>
+      <a class="btn btn-azul" href="#" data-con-wa hidden data-wa="Hola, quiero información de la Unidad de Cabeza y Cuello.">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.4-.9-2.8-1.2-4.6-4.1-4.8-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.4.1.1.1.7-.2 1.3z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="tira">
+  <div class="wrap">
+    <a href="#otorrinolaringologia"><i data-icono="oido"></i><span><b>Otorrinolaringología</b><span>Oído, nariz y garganta</span></span></a>
+    <a href="#neurologia"><i data-icono="cerebro"></i><span><b>Neurología</b><span>Cabeza, nervios y mareo</span></span></a>
+    <div class="pronto"><i data-icono="tiroides"></i><span><b>Más especialidades</b><span>Muy pronto</span></span></div>
+  </div>
+</div>
+
+<section class="sec" id="agenda">
+  <div class="wrap agenda-wrap">
+    <div class="agenda aparece">
+      <h2><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Agenda tu cita</h2>
+      <p class="sub">Elige la especialidad y el día que prefieres. Te confirmamos por WhatsApp el día que viene el especialista.</p>
+      <form id="formCita" class="campos" novalidate>
+        <label>Especialidad
+          <select id="cEsp" required>
+            <option value="Otorrinolaringología">Otorrinolaringología</option>
+            <option value="Neurología">Neurología</option>
+          </select>
+        </label>
+        <label>Médico
+          <select id="cMed">
+            <option>El que tenga el próximo lugar</option>
+          </select>
+        </label>
+        <label>Fecha que prefieres
+          <input id="cFecha" type="date">
+        </label>
+        <button class="btn btn-azul" type="submit">Solicitar cita</button>
+      </form>
+      <p class="nota" id="notaCita" aria-live="polite"></p>
+    </div>
+    <figure class="unidad-foto aparece" id="unidad" style="margin:0">
+      <img src="https://images.unsplash.com/photo-1758691461990-03b49d969495?w=1200&q=72&auto=format&fit=crop" alt="" loading="lazy">
+      <figcaption>
+        <blockquote>“Un equipo de especialistas para una atención integral.”</blockquote>
+        <span>Médicos de alta especialidad de Guadalajara, consultando en Tepatitlán.</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="sec bg-tinte" id="especialidades">
+  <div class="wrap">
+    <div class="cabeza-sec aparece">
+      <div>
+        <p class="kicker">Especialidades</p>
+        <h2 class="titulo">Lo que atendemos en <b>la unidad</b></h2>
+      </div>
+      <p class="sub">Del cuello para arriba: oído, nariz, garganta, voz, cabeza y nervios.</p>
+    </div>
+    <div class="esp-grid">
+      <article class="esp aparece" id="otorrinolaringologia">
+        <div class="esp-foto">
+          <img src="https://images.unsplash.com/photo-1766299892549-b56b257d1ddd?w=1000&h=563&q=72&auto=format&fit=crop" alt="" loading="lazy">
+          <i data-icono="oido"></i>
+        </div>
+        <div class="esp-cuerpo">
           <h3>Otorrinolaringología</h3>
-          <p>Oído, nariz y garganta: dolor e infecciones de oído, audición, sinusitis, voz, amígdalas y bolitas del cuello.</p>
-          <a class="btn" data-con-whatsapp hidden data-wa="Hola, quiero información sobre Otorrinolaringología." href="#">Preguntar por WhatsApp</a>
-        </article>
-        <article class="tarjeta" id="neurologia">
-          <span class="ico" data-icono="cerebro"></span>
+          <p>Oído, nariz y garganta, en niños y adultos.</p>
+          <ul>
+            <li>Dolor e infecciones de oído</li>
+            <li>Pérdida de audición y zumbido</li>
+            <li>Sinusitis y nariz tapada</li>
+            <li>Ronquera y problemas de voz</li>
+            <li>Amígdalas y anginas</li>
+            <li>Bolitas en el cuello</li>
+          </ul>
+          <a class="btn btn-azul btn-sm" href="#agenda" data-esp="Otorrinolaringología">Agendar con Otorrinolaringología</a>
+        </div>
+      </article>
+      <article class="esp aparece" id="neurologia">
+        <div class="esp-foto">
+          <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1000&h=563&q=72&auto=format&fit=crop" alt="" loading="lazy">
+          <i data-icono="cerebro"></i>
+        </div>
+        <div class="esp-cuerpo">
           <h3>Neurología</h3>
-          <p>Dolor de cabeza y migraña, mareo, hormigueo o adormecimiento, y otros problemas de los nervios.</p>
-          <a class="btn" data-con-whatsapp hidden data-wa="Hola, quiero información sobre Neurología." href="#">Preguntar por WhatsApp</a>
-        </article>
+          <p>Cabeza, nervios y equilibrio.</p>
+          <ul>
+            <li>Dolor de cabeza y migraña</li>
+            <li>Mareo y vértigo</li>
+            <li>Hormigueo o adormecimiento</li>
+            <li>Parálisis facial</li>
+          </ul>
+          <a class="btn btn-azul btn-sm" href="#agenda" data-esp="Neurología">Agendar con Neurología</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="reportajes">
+  <div class="wrap">
+    <div class="cabeza-sec aparece">
+      <div>
+        <p class="kicker">Reportajes e información médica</p>
+        <h2 class="titulo">Videos y entrevistas con <b>nuestros especialistas</b></h2>
+      </div>
+      <p class="sub">Muy pronto vas a encontrar aquí videos cortos y reportajes sobre las enfermedades de cabeza y cuello.</p>
+    </div>
+    <div class="rep-grid">
+      <article class="rep aparece">
+        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1763294905880-6caf7e585241?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="rep-cuerpo"><h3>¿Cuándo llevar a tu hijo al otorrino?</h3><span class="etiqueta">Otorrinolaringología</span></div>
+      </article>
+      <article class="rep aparece">
+        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1758691462863-9e1b8a863140?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="rep-cuerpo"><h3>¿Sinusitis o alergia? Cómo distinguirlas</h3><span class="etiqueta">Otorrinolaringología</span></div>
+      </article>
+      <article class="rep aparece">
+        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1631563020241-09beac7791b7?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="rep-cuerpo"><h3>Migraña: cuándo el dolor de cabeza ya no es normal</h3><span class="etiqueta">Neurología</span></div>
+      </article>
+      <article class="rep aparece">
+        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="rep-cuerpo"><h3>Una bolita en el cuello: qué revisar primero</h3><span class="etiqueta">Otorrinolaringología</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec bg-tinte" id="equipo">
+  <div class="wrap">
+    <div class="cabeza-sec aparece">
+      <div>
+        <p class="kicker">Nuestro equipo médico</p>
+        <h2 class="titulo">Conoce a <b>nuestros especialistas</b></h2>
+      </div>
+      <p class="sub">Muy pronto vas a poder ver aquí la foto, la cédula y lo que atiende cada uno.</p>
+    </div>
+    <div class="equipo" id="equipoGrid"></div>
+  </div>
+</section>
+
+<section class="sec contacto" id="contacto">
+  <div class="wrap">
+    <p class="kicker">Contacto y ubicación</p>
+    <h2 class="titulo">Estamos en <b>Tepatitlán</b></h2>
+    <div class="contacto-grid">
+      <dl class="datos aparece">
+        <div><dt>Dónde</dt><dd>Tepatitlán de Morelos, Jalisco</dd></div>
+        <div><dt>Citas</dt><dd data-sin-wa>Pregunta en la recepción de la unidad</dd><dd data-con-wa hidden><a class="btn btn-blanco btn-sm" href="#" data-wa="Hola, quiero agendar una cita en la Unidad de Cabeza y Cuello.">Escríbenos por WhatsApp</a></dd></div>
+        <div><dt>Especialidades</dt><dd>Otorrinolaringología y Neurología</dd></div>
+      </dl>
+      <div class="mapa aparece">
+        <iframe title="Mapa de Tepatitlán de Morelos" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=Tepatitl%C3%A1n%20de%20Morelos%2C%20Jalisco&z=13&output=embed"></iframe>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="pronto" aria-labelledby="tPronto">
-    <div class="wrap">
-      <h2 id="tPronto">Muy pronto, aquí mismo</h2>
-      <p>Estamos terminando nuestro sitio. En unos días vas a encontrar:</p>
-      <ul>
-        <li>Nuestros especialistas, con su foto y lo que atiende cada uno</li>
-        <li>Reportajes y videos de información médica</li>
-        <li>Agenda tu cita desde el celular</li>
-      </ul>
-      <p class="recepcion" data-sin-whatsapp>Mientras tanto, pregunta en la recepción de la unidad.</p>
-    </div>
-  </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <span>Unidad de Alta Especialidad en Cabeza y Cuello · Tepatitlán de Morelos, Jalisco</span>
+    <span>Unidad de Alta Especialidad en Cabeza y Cuello · Tepatitlán de Morelos, Jalisco · Imágenes ilustrativas</span>
     <span>Sitio por <a href="https://vonoaweb.com" target="_blank" rel="noopener">Vonoa</a></span>
   </div>
 </footer>
 
+<div class="aviso-pronto" id="aviso" role="status" aria-live="polite"></div>
+
 <script>
 /* Número de WhatsApp de la unidad (lada de país + número, sin espacios). Ej: 5213312345678.
-   Mientras esté vacío, la página no muestra botones de WhatsApp. */
+   Mientras esté vacío, no se muestran botones de WhatsApp y la agenda avisa que abre pronto. */
 var WHATSAPP = '';
 
 /* Íconos: Healthicons (healthicons.org), licencia MIT */
-var ICONOS = {"oido": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M23.9999 7C17.4575 7 12.1538 11.9249 12.1538 18H10C10 10.8203 16.268 5 23.9999 5C31.7318 5 37.9998 10.8203 37.9998 18C37.9998 22.5012 35.5353 26.4674 31.796 28.7993C29.244 30.3908 27.2306 32.5075 27.2306 34.9113V35C27.2306 39.4183 23.3734 43 18.6153 43C13.8572 43 10 39.4183 10 35V33H12.1538V35C12.1538 38.3137 15.0467 41 18.6153 41C22.1839 41 25.0768 38.3137 25.0768 35V34.9113C25.0768 31.4539 27.9071 28.8153 30.5952 27.139C33.7642 25.1627 35.8459 21.8069 35.8459 18C35.8459 11.9249 30.5423 7 23.9999 7ZM19.0888 17.0195C19.472 15.3146 21.0523 14 23 14C25.2438 14 27 15.7447 27 17.8209H29C29 14.572 26.279 12 23 12C19.721 12 17 14.572 17 17.8209C17 19.4602 17.6387 20.7713 19.0188 21.5288C19.768 21.94 20.2693 22.2895 20.5748 22.57C20.6497 22.6387 20.7061 22.6971 20.7484 22.7451C20.5637 22.8323 20.2632 22.9315 19.8121 23.0178L20.1879 24.9822C20.8602 24.8536 21.4835 24.6622 21.9568 24.3587C22.4506 24.0421 22.9228 23.4937 22.8587 22.7099C22.8042 22.0432 22.3697 21.5027 21.9273 21.0966C21.4548 20.6628 20.7981 20.2239 19.9812 19.7755C19.6596 19.599 19.4076 19.3642 19.2395 19.0314C19.9322 19.0772 20.7861 19.1834 21.6271 19.4135C22.5702 19.6715 23.4243 20.0656 24.0302 20.6365C24.5985 21.172 24.9893 21.8978 24.9998 22.9636C24.8705 24.3254 24.5479 25.2047 24.1796 25.7744C23.8162 26.3364 23.3787 26.6444 22.9248 26.823C22.453 27.0087 21.9322 27.0658 21.4081 27.0658C21.1478 27.0658 20.8987 27.052 20.6577 27.0366L20.566 27.0307C20.3659 27.0176 20.1475 27.0034 19.9638 27.0034C19.0142 27.0034 18.5332 27.7387 18.3111 28.1707C18.1573 28.4698 18.0055 28.8782 17.8752 29.2289C17.82 29.3773 17.7686 29.5154 17.7226 29.6304C17.533 30.1046 17.349 30.4509 17.1276 30.6789C16.9434 30.8687 16.7135 31 16.3113 31C15.7796 31 15.5037 30.8802 15.3635 30.7843C15.2256 30.69 15.1392 30.5646 15.0819 30.4077C15.0207 30.2404 15 30.0536 15 29.8924C15 29.8153 15.0047 29.7528 15.0089 29.7133C15.0109 29.6938 15.0127 29.6806 15.0136 29.6748C15.0139 29.6728 15.014 29.6717 15.014 29.6717L15.0136 29.6748L15.0129 29.6782L15.0126 29.68C15.0125 29.6805 15.0122 29.6819 14.0285 29.5021C13.0448 29.3223 13.0447 29.3228 13.0446 29.3234L13.0444 29.3245L13.044 29.3269L13.043 29.3324L13.0407 29.3464C13.0389 29.357 13.0369 29.37 13.0346 29.3855C13.0301 29.4163 13.0248 29.4568 13.0197 29.5056C13.0095 29.6026 13 29.7353 13 29.8924C13 30.1996 13.0363 30.6372 13.2035 31.0944C13.3744 31.562 13.6875 32.0611 14.2345 32.4351C14.779 32.8076 15.4734 33 16.3113 33C17.2788 33 18.0191 32.6317 18.5625 32.0722C19.0688 31.5508 19.3698 30.8979 19.5797 30.3729C19.6756 30.133 19.7492 29.9331 19.8131 29.7592C19.9124 29.4892 19.9887 29.2819 20.0898 29.085C20.1055 29.0546 20.1194 29.0292 20.1316 29.0082C20.2145 29.0122 20.3121 29.0185 20.4315 29.0262L20.5304 29.0326C20.779 29.0484 21.0809 29.0658 21.4081 29.0658C22.0589 29.0658 22.8593 28.9981 23.6571 28.6841C24.4729 28.3632 25.2535 27.797 25.8591 26.8602C26.4555 25.9377 26.8495 24.7072 26.9959 23.0982C26.9986 23.0681 27 23.0379 27 23.0076C27 21.3498 26.3665 20.0899 25.4017 19.1809C24.4667 18.2999 23.2662 17.7884 22.1548 17.4844C21.0346 17.1779 19.9301 17.0621 19.1166 17.0209C19.1073 17.0204 19.0981 17.02 19.0888 17.0195ZM20.1923 28.9192C20.1923 28.9197 20.1893 28.9235 20.1832 28.9292C20.1892 28.9216 20.1923 28.9188 20.1923 28.9192Z\" fill=\"currentColor\"/>", "cerebro": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M29.5844 22.8731C30.7438 22.8731 31.8763 22.5579 32.8338 21.9687C33.806 22.5568 34.9534 22.8651 36.1242 22.8529L39.8433 21.6331C40.8913 20.8544 41.6107 19.7749 41.8813 18.5754C42.1518 17.3758 41.9569 16.1289 41.3293 15.0433C40.7017 13.9577 39.6794 13.0993 38.4336 12.6118C38.1491 11.4505 37.4326 10.4117 36.4029 9.66789L32.7725 8.5228H32.3638C31.5563 7.46088 30.344 6.70341 28.9574 6.39438L21.1741 6C19.8803 6.09689 18.6603 6.58325 17.7105 7.38081C17.2617 7.28544 16.8023 7.23601 16.3412 7.23346C15.2247 7.23553 14.1327 7.52881 13.1971 8.0779C12.2615 8.62699 11.5222 9.40843 11.0685 10.3279L8.11115 12.216C7.37528 13.1146 6.97913 14.2026 6.98108 15.3194C6.9738 15.7865 7.04266 16.2519 7.18545 16.7009C6.40957 17.6083 5.99236 18.7234 6.00011 19.869C5.99826 21.1976 6.56142 22.4764 7.57375 23.4423C7.65545 24.3935 8.02424 25.3065 8.64022 26.0824C9.2562 26.8583 10.0959 27.4677 11.0685 27.8444C12.1891 28.4776 13.138 29.3292 13.8453 30.3364C14.5527 31.3437 15.0005 32.4811 15.1559 33.6649H22.7915V28.1391C22.7901 27.158 23.0938 26.1962 23.6682 25.3627C24.2425 24.5293 25.0645 23.8576 26.041 23.4238C26.5901 23.2345 26.7252 22.9796 26.8907 22.6673C27.001 22.4592 27.1249 22.2255 27.3937 21.9687C27.6273 22.1124 27.8083 22.2399 27.9652 22.3504C28.4518 22.6929 28.7077 22.8731 29.5844 22.8731ZM34.032 20.3449C34.5652 20.6333 35.18 20.807 35.8225 20.8411L38.8778 19.839C39.4357 19.3535 39.79 18.7515 39.9302 18.1296C40.0877 17.4314 39.9791 16.6979 39.5978 16.0384C39.2129 15.3726 38.5587 14.8026 37.7048 14.4685L36.738 14.0902L36.491 13.0818C36.3463 12.4911 35.9991 11.9204 35.4592 11.4615L32.4646 10.5169H31.3721L30.7718 9.72751C30.296 9.10182 29.5621 8.60824 28.6714 8.3766L21.21 7.99854C20.3583 8.08446 19.584 8.41337 18.9966 8.90662L18.2493 9.5341L17.2948 9.33129C16.9821 9.26484 16.6609 9.22992 16.3376 9.22763C15.5675 9.23033 14.828 9.43391 14.2094 9.79695C13.59 10.1604 13.1326 10.6586 12.862 11.207L12.6151 11.7075L9.48953 13.703C9.14804 14.2036 8.98012 14.7602 8.98108 15.3101L8.98111 15.3274L8.98084 15.3448C8.97696 15.5937 9.01352 15.844 9.09138 16.0889L9.42858 17.1491L8.70555 17.9948C8.22801 18.5533 7.99572 19.2069 8.00006 19.8496L8.00011 19.8577L8.0001 19.8659C7.99906 20.6151 8.31472 21.3791 8.95437 21.9894L9.50169 22.5116L9.56642 23.2653C9.61317 23.8096 9.82528 24.3527 10.2066 24.833C10.5897 25.3156 11.1317 25.7182 11.791 25.9736L11.9261 26.026L12.0524 26.0973C12.1986 26.1799 12.3426 26.2657 12.4843 26.3546L12.4781 26.3592C15.1968 28.0179 16.3504 30.4319 16.742 31.6663H17.354V24.3727L15.1507 22.4142L13.6552 23.9098C13.2647 24.3003 12.6315 24.3003 12.241 23.9098C11.8505 23.5193 11.8505 22.8861 12.241 22.4956L14.0328 20.7037L13.4952 17.7468L11.0593 16.5289C10.5653 16.2819 10.3651 15.6812 10.6121 15.1872C10.8591 14.6933 11.4598 14.493 11.9538 14.74L14.3306 15.9285L17.242 14.0758L16.3365 11.6609C16.1425 11.1438 16.4046 10.5674 16.9217 10.3734C17.4388 10.1795 18.0152 10.4415 18.2091 10.9586L19.1822 13.5535H20.2587L20.7729 12.525L19.9576 10.6225C19.74 10.1149 19.9752 9.527 20.4828 9.30944C20.9904 9.09189 21.5783 9.32704 21.7959 9.83467L22.498 11.4729L25.286 11.9798L25.2975 11.9705L27.0994 10.5289C27.5307 10.1839 28.16 10.2538 28.505 10.6851C28.85 11.1163 28.7801 11.7456 28.3488 12.0906L27.1443 13.0543L28.4794 14.7709L28.9921 13.7457C29.1614 13.4069 29.5077 13.1929 29.8865 13.1929H32.0488C32.6011 13.1929 33.0488 13.6406 33.0488 14.1929C33.0488 14.7452 32.6011 15.1929 32.0488 15.1929H30.5045L30.2364 15.7291L31.9054 16.1C31.9852 16.1178 32.0625 16.1452 32.1357 16.1818L33.5772 16.9026C34.0712 17.1495 34.2714 17.7502 34.0245 18.2442C33.7775 18.7382 33.1768 18.9384 32.6828 18.6914L31.3514 18.0257L28.228 17.3316C28.0009 17.2811 27.7984 17.153 27.6556 16.9694L25.3674 14.0274L22.5941 13.5232C22.5539 13.5563 22.5107 13.5865 22.4648 13.6135L21.8767 14.7895V15.3552H23.0391C23.1943 15.3552 23.3474 15.3914 23.4863 15.4608L26.3694 16.9024C26.8634 17.1494 27.0636 17.75 26.8166 18.244C26.5696 18.738 25.9689 18.9382 25.475 18.6912L22.803 17.3552H21.8767V18.8782C21.8767 19.4304 21.429 19.8782 20.8767 19.8782C20.3244 19.8782 19.8767 19.4304 19.8767 18.8782V16.3629L19.8767 16.3552L19.8767 16.3476V15.5535H18.6452L15.4938 17.5589L16.0326 20.5223L19.0184 23.1762C19.2318 23.366 19.354 23.638 19.354 23.9236V31.6663H20.7916V28.1003C20.7916 25.3985 22.3008 23.7402 23.1251 22.9551C23.7844 22.327 24.7748 21.7975 25.1876 21.6113C25.2696 21.4277 25.5493 20.9512 26.0118 20.5137C26.4743 20.0762 26.9545 19.6205 27.1368 19.4473C28.3747 20.1548 29.336 20.8652 29.336 20.8652C29.336 20.8652 30.6172 20.7949 31.1993 20.5606C31.6649 20.3731 32.4766 19.8522 32.8243 19.6152L34.032 20.3449Z\" fill=\"currentColor\"/> <path d=\"M15 38H23V36H15V38Z\" fill=\"currentColor\"/> <path d=\"M23 42H15V40H23V42Z\" fill=\"currentColor\"/>"};
+var ICONOS = {"oido": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M23.9999 7C17.4575 7 12.1538 11.9249 12.1538 18H10C10 10.8203 16.268 5 23.9999 5C31.7318 5 37.9998 10.8203 37.9998 18C37.9998 22.5012 35.5353 26.4674 31.796 28.7993C29.244 30.3908 27.2306 32.5075 27.2306 34.9113V35C27.2306 39.4183 23.3734 43 18.6153 43C13.8572 43 10 39.4183 10 35V33H12.1538V35C12.1538 38.3137 15.0467 41 18.6153 41C22.1839 41 25.0768 38.3137 25.0768 35V34.9113C25.0768 31.4539 27.9071 28.8153 30.5952 27.139C33.7642 25.1627 35.8459 21.8069 35.8459 18C35.8459 11.9249 30.5423 7 23.9999 7ZM19.0888 17.0195C19.472 15.3146 21.0523 14 23 14C25.2438 14 27 15.7447 27 17.8209H29C29 14.572 26.279 12 23 12C19.721 12 17 14.572 17 17.8209C17 19.4602 17.6387 20.7713 19.0188 21.5288C19.768 21.94 20.2693 22.2895 20.5748 22.57C20.6497 22.6387 20.7061 22.6971 20.7484 22.7451C20.5637 22.8323 20.2632 22.9315 19.8121 23.0178L20.1879 24.9822C20.8602 24.8536 21.4835 24.6622 21.9568 24.3587C22.4506 24.0421 22.9228 23.4937 22.8587 22.7099C22.8042 22.0432 22.3697 21.5027 21.9273 21.0966C21.4548 20.6628 20.7981 20.2239 19.9812 19.7755C19.6596 19.599 19.4076 19.3642 19.2395 19.0314C19.9322 19.0772 20.7861 19.1834 21.6271 19.4135C22.5702 19.6715 23.4243 20.0656 24.0302 20.6365C24.5985 21.172 24.9893 21.8978 24.9998 22.9636C24.8705 24.3254 24.5479 25.2047 24.1796 25.7744C23.8162 26.3364 23.3787 26.6444 22.9248 26.823C22.453 27.0087 21.9322 27.0658 21.4081 27.0658C21.1478 27.0658 20.8987 27.052 20.6577 27.0366L20.566 27.0307C20.3659 27.0176 20.1475 27.0034 19.9638 27.0034C19.0142 27.0034 18.5332 27.7387 18.3111 28.1707C18.1573 28.4698 18.0055 28.8782 17.8752 29.2289C17.82 29.3773 17.7686 29.5154 17.7226 29.6304C17.533 30.1046 17.349 30.4509 17.1276 30.6789C16.9434 30.8687 16.7135 31 16.3113 31C15.7796 31 15.5037 30.8802 15.3635 30.7843C15.2256 30.69 15.1392 30.5646 15.0819 30.4077C15.0207 30.2404 15 30.0536 15 29.8924C15 29.8153 15.0047 29.7528 15.0089 29.7133C15.0109 29.6938 15.0127 29.6806 15.0136 29.6748C15.0139 29.6728 15.014 29.6717 15.014 29.6717L15.0136 29.6748L15.0129 29.6782L15.0126 29.68C15.0125 29.6805 15.0122 29.6819 14.0285 29.5021C13.0448 29.3223 13.0447 29.3228 13.0446 29.3234L13.0444 29.3245L13.044 29.3269L13.043 29.3324L13.0407 29.3464C13.0389 29.357 13.0369 29.37 13.0346 29.3855C13.0301 29.4163 13.0248 29.4568 13.0197 29.5056C13.0095 29.6026 13 29.7353 13 29.8924C13 30.1996 13.0363 30.6372 13.2035 31.0944C13.3744 31.562 13.6875 32.0611 14.2345 32.4351C14.779 32.8076 15.4734 33 16.3113 33C17.2788 33 18.0191 32.6317 18.5625 32.0722C19.0688 31.5508 19.3698 30.8979 19.5797 30.3729C19.6756 30.133 19.7492 29.9331 19.8131 29.7592C19.9124 29.4892 19.9887 29.2819 20.0898 29.085C20.1055 29.0546 20.1194 29.0292 20.1316 29.0082C20.2145 29.0122 20.3121 29.0185 20.4315 29.0262L20.5304 29.0326C20.779 29.0484 21.0809 29.0658 21.4081 29.0658C22.0589 29.0658 22.8593 28.9981 23.6571 28.6841C24.4729 28.3632 25.2535 27.797 25.8591 26.8602C26.4555 25.9377 26.8495 24.7072 26.9959 23.0982C26.9986 23.0681 27 23.0379 27 23.0076C27 21.3498 26.3665 20.0899 25.4017 19.1809C24.4667 18.2999 23.2662 17.7884 22.1548 17.4844C21.0346 17.1779 19.9301 17.0621 19.1166 17.0209C19.1073 17.0204 19.0981 17.02 19.0888 17.0195ZM20.1923 28.9192C20.1923 28.9197 20.1893 28.9235 20.1832 28.9292C20.1892 28.9216 20.1923 28.9188 20.1923 28.9192Z\" fill=\"currentColor\"/>", "cerebro": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M29.5844 22.8731C30.7438 22.8731 31.8763 22.5579 32.8338 21.9687C33.806 22.5568 34.9534 22.8651 36.1242 22.8529L39.8433 21.6331C40.8913 20.8544 41.6107 19.7749 41.8813 18.5754C42.1518 17.3758 41.9569 16.1289 41.3293 15.0433C40.7017 13.9577 39.6794 13.0993 38.4336 12.6118C38.1491 11.4505 37.4326 10.4117 36.4029 9.66789L32.7725 8.5228H32.3638C31.5563 7.46088 30.344 6.70341 28.9574 6.39438L21.1741 6C19.8803 6.09689 18.6603 6.58325 17.7105 7.38081C17.2617 7.28544 16.8023 7.23601 16.3412 7.23346C15.2247 7.23553 14.1327 7.52881 13.1971 8.0779C12.2615 8.62699 11.5222 9.40843 11.0685 10.3279L8.11115 12.216C7.37528 13.1146 6.97913 14.2026 6.98108 15.3194C6.9738 15.7865 7.04266 16.2519 7.18545 16.7009C6.40957 17.6083 5.99236 18.7234 6.00011 19.869C5.99826 21.1976 6.56142 22.4764 7.57375 23.4423C7.65545 24.3935 8.02424 25.3065 8.64022 26.0824C9.2562 26.8583 10.0959 27.4677 11.0685 27.8444C12.1891 28.4776 13.138 29.3292 13.8453 30.3364C14.5527 31.3437 15.0005 32.4811 15.1559 33.6649H22.7915V28.1391C22.7901 27.158 23.0938 26.1962 23.6682 25.3627C24.2425 24.5293 25.0645 23.8576 26.041 23.4238C26.5901 23.2345 26.7252 22.9796 26.8907 22.6673C27.001 22.4592 27.1249 22.2255 27.3937 21.9687C27.6273 22.1124 27.8083 22.2399 27.9652 22.3504C28.4518 22.6929 28.7077 22.8731 29.5844 22.8731ZM34.032 20.3449C34.5652 20.6333 35.18 20.807 35.8225 20.8411L38.8778 19.839C39.4357 19.3535 39.79 18.7515 39.9302 18.1296C40.0877 17.4314 39.9791 16.6979 39.5978 16.0384C39.2129 15.3726 38.5587 14.8026 37.7048 14.4685L36.738 14.0902L36.491 13.0818C36.3463 12.4911 35.9991 11.9204 35.4592 11.4615L32.4646 10.5169H31.3721L30.7718 9.72751C30.296 9.10182 29.5621 8.60824 28.6714 8.3766L21.21 7.99854C20.3583 8.08446 19.584 8.41337 18.9966 8.90662L18.2493 9.5341L17.2948 9.33129C16.9821 9.26484 16.6609 9.22992 16.3376 9.22763C15.5675 9.23033 14.828 9.43391 14.2094 9.79695C13.59 10.1604 13.1326 10.6586 12.862 11.207L12.6151 11.7075L9.48953 13.703C9.14804 14.2036 8.98012 14.7602 8.98108 15.3101L8.98111 15.3274L8.98084 15.3448C8.97696 15.5937 9.01352 15.844 9.09138 16.0889L9.42858 17.1491L8.70555 17.9948C8.22801 18.5533 7.99572 19.2069 8.00006 19.8496L8.00011 19.8577L8.0001 19.8659C7.99906 20.6151 8.31472 21.3791 8.95437 21.9894L9.50169 22.5116L9.56642 23.2653C9.61317 23.8096 9.82528 24.3527 10.2066 24.833C10.5897 25.3156 11.1317 25.7182 11.791 25.9736L11.9261 26.026L12.0524 26.0973C12.1986 26.1799 12.3426 26.2657 12.4843 26.3546L12.4781 26.3592C15.1968 28.0179 16.3504 30.4319 16.742 31.6663H17.354V24.3727L15.1507 22.4142L13.6552 23.9098C13.2647 24.3003 12.6315 24.3003 12.241 23.9098C11.8505 23.5193 11.8505 22.8861 12.241 22.4956L14.0328 20.7037L13.4952 17.7468L11.0593 16.5289C10.5653 16.2819 10.3651 15.6812 10.6121 15.1872C10.8591 14.6933 11.4598 14.493 11.9538 14.74L14.3306 15.9285L17.242 14.0758L16.3365 11.6609C16.1425 11.1438 16.4046 10.5674 16.9217 10.3734C17.4388 10.1795 18.0152 10.4415 18.2091 10.9586L19.1822 13.5535H20.2587L20.7729 12.525L19.9576 10.6225C19.74 10.1149 19.9752 9.527 20.4828 9.30944C20.9904 9.09189 21.5783 9.32704 21.7959 9.83467L22.498 11.4729L25.286 11.9798L25.2975 11.9705L27.0994 10.5289C27.5307 10.1839 28.16 10.2538 28.505 10.6851C28.85 11.1163 28.7801 11.7456 28.3488 12.0906L27.1443 13.0543L28.4794 14.7709L28.9921 13.7457C29.1614 13.4069 29.5077 13.1929 29.8865 13.1929H32.0488C32.6011 13.1929 33.0488 13.6406 33.0488 14.1929C33.0488 14.7452 32.6011 15.1929 32.0488 15.1929H30.5045L30.2364 15.7291L31.9054 16.1C31.9852 16.1178 32.0625 16.1452 32.1357 16.1818L33.5772 16.9026C34.0712 17.1495 34.2714 17.7502 34.0245 18.2442C33.7775 18.7382 33.1768 18.9384 32.6828 18.6914L31.3514 18.0257L28.228 17.3316C28.0009 17.2811 27.7984 17.153 27.6556 16.9694L25.3674 14.0274L22.5941 13.5232C22.5539 13.5563 22.5107 13.5865 22.4648 13.6135L21.8767 14.7895V15.3552H23.0391C23.1943 15.3552 23.3474 15.3914 23.4863 15.4608L26.3694 16.9024C26.8634 17.1494 27.0636 17.75 26.8166 18.244C26.5696 18.738 25.9689 18.9382 25.475 18.6912L22.803 17.3552H21.8767V18.8782C21.8767 19.4304 21.429 19.8782 20.8767 19.8782C20.3244 19.8782 19.8767 19.4304 19.8767 18.8782V16.3629L19.8767 16.3552L19.8767 16.3476V15.5535H18.6452L15.4938 17.5589L16.0326 20.5223L19.0184 23.1762C19.2318 23.366 19.354 23.638 19.354 23.9236V31.6663H20.7916V28.1003C20.7916 25.3985 22.3008 23.7402 23.1251 22.9551C23.7844 22.327 24.7748 21.7975 25.1876 21.6113C25.2696 21.4277 25.5493 20.9512 26.0118 20.5137C26.4743 20.0762 26.9545 19.6205 27.1368 19.4473C28.3747 20.1548 29.336 20.8652 29.336 20.8652C29.336 20.8652 30.6172 20.7949 31.1993 20.5606C31.6649 20.3731 32.4766 19.8522 32.8243 19.6152L34.032 20.3449Z\" fill=\"currentColor\"/> <path d=\"M15 38H23V36H15V38Z\" fill=\"currentColor\"/> <path d=\"M23 42H15V40H23V42Z\" fill=\"currentColor\"/>", "tiroides": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M21.5843 10.0874L21.5782 10.0928C21.574 10.0194 21.5698 9.94163 21.5654 9.85905L21.557 9.70141C21.521 9.04058 21.4654 8.0406 21.0591 7.25051C20.8385 6.8214 20.4962 6.41208 19.9757 6.15329C19.4613 5.89747 18.8729 5.83854 18.245 5.925C17.6883 6.00166 17.1945 6.22589 16.8047 6.60348C16.4226 6.97362 16.1957 7.43726 16.0709 7.91064C15.8285 8.8293 15.9314 9.92695 16.1818 10.9837C16.6881 13.1199 17.9194 15.5841 19.3039 17.2603C19.8366 17.9052 20.0001 18.877 20.0001 19.2956V21.5L22.0001 22V20.685C22.8827 20.357 23.4789 20.207 24.038 20.1955C24.5799 20.1844 25.1584 20.3035 26.0001 20.6513V22L28.0001 21.5L28.0001 19.2956C28.0001 18.877 28.1636 17.9052 28.6963 17.2603C30.0715 15.5953 31.3642 13.1422 31.9358 11.0123C32.2179 9.96102 32.3592 8.86383 32.1474 7.94184C32.0381 7.46562 31.8243 6.99328 31.4453 6.61447C31.0583 6.22759 30.5621 6.00178 30.0045 5.925C29.3767 5.83854 28.7883 5.89747 28.2738 6.15329C27.7534 6.41208 27.4111 6.8214 27.1904 7.25051C26.7842 8.0406 26.7286 9.04058 26.6926 9.70141L26.6841 9.85903C26.6798 9.94162 26.6756 10.0194 26.6714 10.0928L26.6653 10.0874C26.1879 9.66212 25.5561 9.51729 25.1302 9.45488C24.8041 9.4071 24.4873 9.39377 24.2495 9.39006V9.38864L24.2369 9.38864C24.2036 9.38863 24.1661 9.38863 24.1248 9.38883C24.0836 9.38863 24.0462 9.38863 24.0129 9.38864L24.0001 9.38864V9.39006C23.7623 9.39377 23.4454 9.4071 23.1193 9.45488C22.6935 9.51729 22.0617 9.66212 21.5843 10.0874ZM22.9147 11.5807C22.9153 11.5802 22.9236 11.5734 22.9436 11.5624C22.9579 11.5544 22.9766 11.5453 23 11.5355V16H25V11.462C25.0782 11.4785 25.1466 11.4974 25.2044 11.518C25.2502 11.5345 25.2834 11.5499 25.306 11.5624C25.326 11.5735 25.3344 11.5803 25.335 11.5809C25.7583 11.9579 26.188 12.2759 26.6192 12.4201C26.8509 12.4977 27.1459 12.5466 27.4634 12.4691C27.7982 12.3874 28.0479 12.1922 28.2164 11.9732C28.5014 11.6029 28.578 11.1307 28.6142 10.8471C28.6499 10.5673 28.6668 10.2448 28.6821 9.95223L28.6896 9.81013C28.7302 9.06395 28.7917 8.51011 28.9691 8.16501C29.0403 8.02653 29.1064 7.97291 29.1644 7.9441C29.2283 7.91232 29.3881 7.85899 29.7317 7.9063C29.9126 7.93121 29.99 7.98762 30.0314 8.02894C30.0808 8.07833 30.1501 8.18017 30.1982 8.38958C30.3014 8.83886 30.2551 9.55868 30.0042 10.4939C29.5096 12.3368 28.3539 14.5343 27.1543 15.9867C26.4846 16.7974 26.183 17.7918 26.0652 18.5403C25.3509 18.3021 24.6867 18.1818 23.9969 18.1959C23.3165 18.2099 22.6534 18.355 21.9421 18.586C21.8294 17.8326 21.5293 16.814 20.8459 15.9867C19.6556 14.5455 18.5632 12.3591 18.1279 10.5225C17.9076 9.59276 17.8853 8.87338 18.0047 8.42078C18.0607 8.20854 18.1364 8.09799 18.1963 8.03993C18.2486 7.98932 18.3361 7.93133 18.5179 7.9063C18.8614 7.85899 19.0213 7.91232 19.0852 7.9441C19.1432 7.97291 19.2093 8.02653 19.2805 8.16501C19.4579 8.51011 19.5193 9.06395 19.5599 9.81013L19.5675 9.95218C19.5828 10.2448 19.5997 10.5673 19.6354 10.8471C19.6715 11.1307 19.7482 11.6029 20.0331 11.9732C20.2017 12.1922 20.4514 12.3874 20.7862 12.4691C21.1037 12.5466 21.3987 12.4977 21.6304 12.4201C22.0616 12.2759 22.4914 11.9578 22.9147 11.5807Z\" fill=\"currentColor\"/> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M24 42C26.2091 42 27.9999 40.2092 28 38.0001L28.0001 35.8333L26.0001 33.6667L26.0001 35.315C25.1175 35.643 24.5214 35.793 23.9623 35.8045C23.4204 35.8156 22.8418 35.6965 22.0001 35.3487V33.6667L20.0001 35.8334V38C20.0001 40.2091 21.7909 42 24 42ZM24 40C22.8955 40 22.0001 39.1046 22 38.0001L22.0001 37.4811C22.6898 37.7051 23.3346 37.8178 24.0033 37.8041C24.6652 37.7905 25.3107 37.6528 26.0001 37.4327V38C26.0001 39.1046 25.1046 40 24 40Z\" fill=\"currentColor\"/> <path d=\"M11 19C11.5523 19 12 18.5523 12 18C12 17.4477 11.5523 17 11 17C10.4477 17 10 17.4477 10 18C10 18.5523 10.4477 19 11 19Z\" fill=\"currentColor\"/> <path d=\"M14 22C14 22.5523 13.5523 23 13 23C12.4477 23 12 22.5523 12 22C12 21.4477 12.4477 21 13 21C13.5523 21 14 21.4477 14 22Z\" fill=\"currentColor\"/> <path d=\"M11 27C11.5523 27 12 26.5523 12 26C12 25.4477 11.5523 25 11 25C10.4477 25 10 25.4477 10 26C10 26.5523 10.4477 27 11 27Z\" fill=\"currentColor\"/> <path d=\"M17 31C17 31.5523 16.5523 32 16 32C15.4477 32 15 31.5523 15 31C15 30.4477 15.4477 30 16 30C16.5523 30 17 30.4477 17 31Z\" fill=\"currentColor\"/> <path d=\"M12 32C12.5523 32 13 31.5523 13 31C13 30.4477 12.5523 30 12 30C11.4477 30 11 30.4477 11 31C11 31.5523 11.4477 32 12 32Z\" fill=\"currentColor\"/> <path d=\"M17 27C17 27.5523 16.5523 28 16 28C15.4477 28 15 27.5523 15 27C15 26.4477 15.4477 26 16 26C16.5523 26 17 26.4477 17 27Z\" fill=\"currentColor\"/> <path d=\"M20 29C20.5523 29 21 28.5523 21 28C21 27.4477 20.5523 27 20 27C19.4477 27 19 27.4477 19 28C19 28.5523 19.4477 29 20 29Z\" fill=\"currentColor\"/> <path d=\"M36 18C36 18.5523 36.4477 19 37 19C37.5523 19 38 18.5523 38 18C38 17.4477 37.5523 17 37 17C36.4477 17 36 17.4477 36 18Z\" fill=\"currentColor\"/> <path d=\"M35 23C34.4477 23 34 22.5523 34 22C34 21.4477 34.4477 21 35 21C35.5523 21 36 21.4477 36 22C36 22.5523 35.5523 23 35 23Z\" fill=\"currentColor\"/> <path d=\"M36 26C36 26.5523 36.4477 27 37 27C37.5523 27 38 26.5523 38 26C38 25.4477 37.5523 25 37 25C36.4477 25 36 25.4477 36 26Z\" fill=\"currentColor\"/> <path d=\"M32 32C31.4477 32 31 31.5523 31 31C31 30.4477 31.4477 30 32 30C32.5523 30 33 30.4477 33 31C33 31.5523 32.5523 32 32 32Z\" fill=\"currentColor\"/> <path d=\"M35 31C35 31.5523 35.4477 32 36 32C36.5523 32 37 31.5523 37 31C37 30.4477 36.5523 30 36 30C35.4477 30 35 30.4477 35 31Z\" fill=\"currentColor\"/> <path d=\"M32 28C31.4477 28 31 27.5523 31 27C31 26.4477 31.4477 26 32 26C32.5523 26 33 26.4477 33 27C33 27.5523 32.5523 28 32 28Z\" fill=\"currentColor\"/> <path d=\"M27 28C27 28.5523 27.4477 29 28 29C28.5523 29 29 28.5523 29 28C29 27.4477 28.5523 27 28 27C27.4477 27 27 27.4477 27 28Z\" fill=\"currentColor\"/> <path d=\"M24 29C24.5523 29 25 28.5523 25 28C25 27.4477 24.5523 27 24 27C23.4477 27 23 27.4477 23 28C23 28.5523 23.4477 29 24 29Z\" fill=\"currentColor\"/> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M33.2263 14.725C33.8311 13.2191 34.6469 12.0825 35.6384 11.4564C36.6834 10.7965 37.8663 10.7501 38.9189 11.3558C39.9103 11.9262 40.672 13.0052 41.1835 14.3775C41.7012 15.7664 42 17.5493 42 19.6819V29.8691C42 30.7182 41.8359 32.6845 40.883 34.4771C39.8932 36.3389 38.045 38.0002 34.8462 38.0002C33.251 38.0002 32.0601 37.5494 31.0936 36.849C30.2289 36.2225 29.5679 35.4071 28.9943 34.6995L28.878 34.5561C28.2484 33.7817 27.6901 33.1275 26.9608 32.6456C26.2611 32.1833 25.354 31.8504 24 31.8504C22.646 31.8504 21.7389 32.1833 21.0392 32.6456C20.3099 33.1275 19.7516 33.7817 19.122 34.5561L19.0057 34.6995C18.4321 35.4071 17.7711 36.2225 16.9064 36.849C15.9399 37.5494 14.749 38.0002 13.1538 38.0002C9.95499 38.0002 8.10675 36.3389 7.11703 34.4771C6.16409 32.6845 6 30.7182 6 29.8691V19.6819C6 17.5493 6.29877 15.7664 6.81647 14.3775C7.32798 13.0052 8.08973 11.9262 9.08109 11.3558C10.1337 10.7501 11.3166 10.7965 12.3616 11.4564C13.3531 12.0825 14.1689 13.2191 14.7737 14.725C14.9275 15.1079 15.0778 15.5207 15.2352 15.9525C15.7537 17.3761 16.348 19.0077 17.3924 20.4676C18.6864 22.2764 20.6362 23.7381 24 23.7381C27.3638 23.7381 29.3136 22.2764 30.6076 20.4676C31.652 19.0077 32.2463 17.3761 32.7648 15.9525C32.9221 15.5209 33.0726 15.1077 33.2263 14.725ZM15.7658 21.6312C17.3804 23.8882 19.9018 25.7381 24 25.7381C28.0982 25.7381 30.6196 23.8882 32.2342 21.6312C33.4573 19.9216 34.1819 17.9229 34.704 16.4826C34.8425 16.1007 34.9667 15.758 35.0822 15.4704C35.6015 14.1775 36.2035 13.465 36.7063 13.1475C37.1556 12.8637 37.5437 12.8719 37.9215 13.0893C38.3605 13.3419 38.8887 13.9471 39.3095 15.076C39.7241 16.1883 40 17.7236 40 19.6819V29.8691C40 30.5481 39.8564 32.1474 39.117 33.5383C38.4144 34.86 37.1857 36.0002 34.8462 36.0002C33.6721 36.0002 32.8919 35.6823 32.2671 35.2295C31.6229 34.7628 31.116 34.1389 30.498 33.3783L30.4298 33.2944C29.8094 32.5314 29.0792 31.6482 28.0633 30.977C27.0178 30.2862 25.7229 29.8504 24 29.8504C22.2771 29.8504 20.9822 30.2862 19.9367 30.977C18.9208 31.6482 18.1906 32.5314 17.5702 33.2944L17.502 33.3783C16.884 34.1389 16.3771 34.7628 15.7329 35.2295C15.1081 35.6823 14.3279 36.0002 13.1538 36.0002C10.8143 36.0002 9.58562 34.86 8.88301 33.5383C8.14363 32.1474 8 30.5481 8 29.8691V19.6819C8 17.7236 8.27592 16.1883 8.69052 15.076C9.11132 13.9471 9.63947 13.3419 10.0785 13.0893C10.4563 12.8719 10.8444 12.8637 11.2937 13.1475C11.7965 13.465 12.3985 14.1775 12.9178 15.4704C13.0332 15.7579 13.1574 16.1004 13.2958 16.4821C13.818 17.9224 14.5427 19.9216 15.7658 21.6312Z\" fill=\"currentColor\"/>"};
 
-document.querySelectorAll('[data-icono]').forEach(function (el) {
-  el.innerHTML = '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true">' + (ICONOS[el.dataset.icono] || '') + '</svg>';
+function icono(id) { return '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true">' + (ICONOS[id] || '') + '</svg>'; }
+document.querySelectorAll('[data-icono]').forEach(function (el) { el.innerHTML = icono(el.dataset.icono); });
+
+function aviso(texto) {
+  var a = document.getElementById('aviso');
+  a.textContent = texto; a.classList.add('ver');
+  clearTimeout(aviso.t); aviso.t = setTimeout(function () { a.classList.remove('ver'); }, 4200);
+}
+function abrirWhatsApp(texto) { window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto), '_blank', 'noopener'); }
+
+/* WhatsApp: se muestra solo cuando hay número */
+if (WHATSAPP) {
+  document.querySelectorAll('[data-con-wa]').forEach(function (el) { el.hidden = false; });
+  document.querySelectorAll('[data-sin-wa]').forEach(function (el) { el.hidden = true; });
+}
+document.querySelectorAll('[data-wa]').forEach(function (a) {
+  a.addEventListener('click', function (e) { e.preventDefault(); if (WHATSAPP) abrirWhatsApp(a.dataset.wa); });
 });
 
-if (WHATSAPP) {
-  document.querySelectorAll('[data-con-whatsapp]').forEach(function (el) { el.hidden = false; });
-  document.querySelectorAll('[data-sin-whatsapp]').forEach(function (el) { el.hidden = true; });
-  document.querySelectorAll('[data-wa]').forEach(function (a) {
-    a.href = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(a.dataset.wa);
-    a.target = '_blank';
-    a.rel = 'noopener';
-  });
+/* Equipo: lugares de los especialistas mientras confirman */
+var lugares = ['Otorrinolaringología', 'Otorrinolaringología', 'Otorrinolaringología', 'Otorrinolaringología', 'Neurología', 'Neurología'];
+document.getElementById('equipoGrid').innerHTML = lugares.map(function (esp) {
+  return '<div class="miembro aparece"><div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div><b>Muy pronto</b><span>' + esp + '</span></div>';
+}).join('');
+
+/* Agenda: con número manda la solicitud por WhatsApp; sin número, avisa */
+var hoy = new Date(); hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
+document.getElementById('cFecha').min = hoy.toISOString().slice(0, 10);
+document.querySelectorAll('[data-esp]').forEach(function (a) {
+  a.addEventListener('click', function () { document.getElementById('cEsp').value = a.dataset.esp; });
+});
+document.getElementById('formCita').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var esp = document.getElementById('cEsp').value;
+  var f = document.getElementById('cFecha').value;
+  var fecha = f ? new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) : 'el próximo día disponible';
+  if (WHATSAPP) {
+    abrirWhatsApp('Hola, quiero una cita de ' + esp + ' para ' + fecha + '.');
+  } else {
+    document.getElementById('notaCita').textContent = 'La agenda en línea abre muy pronto. Mientras tanto, pide tu cita de ' + esp + ' en la recepción de la unidad.';
+  }
+});
+
+/* Menú en celular */
+var menu = document.querySelector('.menu'), nav = document.getElementById('menu');
+menu.addEventListener('click', function () { menu.setAttribute('aria-expanded', nav.classList.toggle('abierto')); });
+nav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { nav.classList.remove('abierto'); menu.setAttribute('aria-expanded', 'false'); }); });
+
+/* Aparición suave al hacer scroll */
+if ('IntersectionObserver' in window) {
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('si'); io.unobserve(e.target); } });
+  }, {rootMargin: '0px 0px -8% 0px'});
+  document.querySelectorAll('.aparece').forEach(function (el) { io.observe(el); });
+} else {
+  document.querySelectorAll('.aparece').forEach(function (el) { el.classList.add('si'); });
 }
 </script>
 </body>
