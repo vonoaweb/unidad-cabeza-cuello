@@ -164,6 +164,35 @@ nav a:not(.btn):hover{color:var(--azul)}
 .base-card p{font-size:14px;color:var(--texto)}
 .base-card small{font-size:12.5px;font-weight:600;color:var(--azul)}
 
+/* videoteca */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.filtro{border:1px solid var(--tinte-2);background:#fff;border-radius:64px;padding:8px 16px;font-size:14px;font-weight:600;color:var(--texto);cursor:pointer}
+.filtro:hover{border-color:var(--azul)}
+.filtro[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:16px}
+.vid{background:none;border:0;padding:0;text-align:left;cursor:pointer;display:grid;gap:10px}
+.vid-portada{position:relative;aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:var(--tinte)}
+.vid-portada img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.vid:hover .vid-portada img{transform:scale(1.04)}
+.vid-portada::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,27,92,.55))}
+.vid-portada .play{position:absolute;inset:0;margin:auto;z-index:1;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.vid-portada .play svg{width:16px;height:16px;fill:var(--azul);margin-left:3px}
+.vid-portada .num{position:absolute;left:10px;bottom:10px;z-index:1;color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em}
+.vid b{font-size:14.5px;font-weight:600;line-height:1.35}
+.vid small{font-size:12px;font-weight:600;color:var(--azul)}
+.vid.oculto{display:none}
+.mas-videos{display:flex;justify-content:center;margin-top:28px}
+.aviso-med{margin-top:18px;font-size:13px;color:var(--texto-2);text-align:center}
+.visor{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%}
+.visor::backdrop{background:rgba(6,12,40,.88)}
+.visor[open]{display:grid;place-items:center}
+.visor-caja{position:relative;display:grid;gap:12px;justify-items:center;padding:16px}
+.visor video{height:min(78vh,820px);aspect-ratio:9/16;max-width:calc(100vw - 32px);border-radius:16px;background:#000}
+.visor h3{color:#fff;font-size:17px;font-weight:600;text-align:center;max-width:46ch}
+.visor .cerrar{position:absolute;top:4px;right:4px;width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:var(--navy);font-size:22px;cursor:pointer}
+.visor .flecha{position:absolute;top:50%;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:var(--navy);font-size:20px;cursor:pointer;transform:translateY(-50%)}
+.visor .ant{left:-56px}.visor .sig{right:-56px}
+
 /* tecnología */
 .tec-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .rep p{color:var(--texto);font-size:14.5px;margin-top:6px}
@@ -219,6 +248,9 @@ footer a{color:#fff}
   .agenda{padding:24px}
   .unidad-foto{min-height:340px}
   .esp-grid,.rep-grid,.tec-grid{grid-template-columns:1fr}
+  .videos{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .visor .ant{left:6px}.visor .sig{right:6px}
+  .visor .flecha{top:auto;bottom:-6px;transform:none}
   .esp ul{grid-template-columns:1fr}
   .equipo{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 }
@@ -237,7 +269,7 @@ footer a{color:#fff}
       <a href="#unidad">La unidad</a>
       <a href="#especialidades">Especialidades</a>
       <a href="#tecnologia">Tecnología</a>
-      <a href="#reportajes">Reportajes</a>
+      <a href="#reportajes">Videos</a>
       <a href="#equipo">Equipo</a>
       <a href="#contacto">Contacto</a>
       <a class="btn btn-azul btn-sm" href="#agenda">Agendar cita</a>
@@ -450,31 +482,27 @@ footer a{color:#fff}
   <div class="wrap">
     <div class="cabeza-sec aparece">
       <div>
-        <p class="kicker">Reportajes e información médica</p>
-        <h2 class="titulo">Videos y entrevistas con <b>nuestros especialistas</b></h2>
+        <p class="kicker">Información médica</p>
+        <h2 class="titulo">Aprende sobre <b>oído, nariz y garganta</b></h2>
       </div>
-      <p class="sub">Muy pronto vas a encontrar aquí videos cortos y reportajes sobre las enfermedades de cabeza y cuello.</p>
+      <p class="sub">Videos cortos que explican los problemas más comunes y cuándo conviene ir al especialista. Muy pronto, entrevistas con nuestros especialistas.</p>
     </div>
-    <div class="rep-grid">
-      <article class="rep aparece">
-        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1763294905880-6caf7e585241?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
-        <div class="rep-cuerpo"><h3>¿Cuándo llevar a tu hijo al otorrino?</h3><span class="etiqueta">Otorrinolaringología</span></div>
-      </article>
-      <article class="rep aparece">
-        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1758691462863-9e1b8a863140?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
-        <div class="rep-cuerpo"><h3>¿Sinusitis o alergia? Cómo distinguirlas</h3><span class="etiqueta">Otorrinolaringología</span></div>
-      </article>
-      <article class="rep aparece">
-        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1631563020241-09beac7791b7?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
-        <div class="rep-cuerpo"><h3>Migraña: cuándo el dolor de cabeza ya no es normal</h3><span class="etiqueta">Neurología</span></div>
-      </article>
-      <article class="rep aparece">
-        <div class="rep-foto"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=700&h=525&q=70&auto=format&fit=crop" alt="" loading="lazy"><span class="pronto">Próximamente</span><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
-        <div class="rep-cuerpo"><h3>Una bolita en el cuello: qué revisar primero</h3><span class="etiqueta">Otorrinolaringología</span></div>
-      </article>
-    </div>
+    <div class="filtros" id="filtros" role="group" aria-label="Filtrar videos por tema"></div>
+    <div class="videos" id="videos"></div>
+    <div class="mas-videos"><button class="btn btn-linea" type="button" id="verMas">Ver todos los videos</button></div>
+    <p class="aviso-med">Videos informativos. No sustituyen una consulta médica.</p>
   </div>
 </section>
+
+<dialog class="visor" id="visor" aria-label="Video">
+  <div class="visor-caja">
+    <button class="cerrar" type="button" data-cerrar aria-label="Cerrar video">×</button>
+    <button class="flecha ant" type="button" data-mover="-1" aria-label="Video anterior">‹</button>
+    <video id="visorVideo" controls playsinline preload="none"></video>
+    <button class="flecha sig" type="button" data-mover="1" aria-label="Video siguiente">›</button>
+    <h3 id="visorTitulo"></h3>
+  </div>
+</dialog>
 
 <section class="sec bg-tinte" id="equipo">
   <div class="wrap">
@@ -553,6 +581,96 @@ var lugares = ['Otorrinolaringología', 'Otorrinolaringología', 'Otorrinolaring
 document.getElementById('equipoGrid').innerHTML = lugares.map(function (esp) {
   return '<div class="miembro aparece"><div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div><b>Muy pronto</b><span>' + esp + '</span></div>';
 }).join('');
+
+/* Videoteca: videos/tema-NN.mp4 y su portada videos/tema-NN.jpg */
+var TEMAS = {nariz: 'Nariz y senos', oido: 'Oído', garganta: 'Garganta y voz', sueno: 'Sueño y ronquido', cirugia: 'Cirugías y tratamientos', general: 'Cuándo ir al otorrino'};
+var VIDEOS = [
+  ['01','nariz','Sinusitis: síntomas más comunes'], ['02','nariz','Diferencia entre sinusitis aguda y crónica'],
+  ['03','nariz','Nariz tapada todo el tiempo'], ['04','nariz','Respirar por la boca: riesgos para la salud'],
+  ['05','nariz','Desviación del tabique nasal'], ['06','nariz','Pólipos nasales: qué son'],
+  ['07','nariz','Alergia respiratoria y congestión nasal'], ['08','nariz','Goteo nasal constante'],
+  ['09','nariz','Dolor facial y sinusitis'], ['10','nariz','¿Cuándo la sinusitis necesita cirugía?'],
+  ['11','oido','Zumbido en el oído: posibles causas'], ['12','oido','Pérdida auditiva: señales de alerta'],
+  ['13','oido','Infección de oído en adultos y niños'], ['14','oido','Otitis: síntomas importantes'],
+  ['15','oido','Mareos y vértigo: cuándo preocuparse'], ['16','oido','Enfermedad de Ménière'],
+  ['17','oido','Sensación de oído tapado'], ['18','oido','Exceso de cera en el oído'],
+  ['19','oido','¿Usar cotonetes daña el oído?'], ['20','oido','¿Cuándo hacer una evaluación auditiva?'],
+  ['21','garganta','Dolor de garganta frecuente'], ['22','garganta','Amigdalitis: cuándo preocuparse'],
+  ['23','garganta','Ronquera persistente'], ['24','garganta','Reflujo y dolor de garganta'],
+  ['25','garganta','Nódulos en las cuerdas vocales'], ['26','garganta','Pérdida de voz: causas comunes'],
+  ['27','garganta','Dificultad para tragar'], ['28','garganta','Carraspeo constante'],
+  ['29','garganta','Laringitis: síntomas y tratamiento'], ['30','garganta','¿Cuándo una ronquera es peligrosa?'],
+  ['31','sueno','Ronquidos frecuentes: cuándo no son normales'], ['32','sueno','Apnea del sueño: señales importantes'],
+  ['33','sueno','Dormir con la boca abierta'], ['34','sueno','Cansancio durante el día y apnea'],
+  ['35','sueno','Falta de aire al dormir'], ['36','sueno','Sueño de mala calidad y respiración'],
+  ['37','sueno','¿La apnea del sueño afecta el corazón?'], ['38','sueno','Niños que roncan: ¿es normal?'],
+  ['39','sueno','Respiración nasal y calidad del sueño'], ['40','sueno','¿Cuándo buscar ayuda por ronquidos?'],
+  ['41','cirugia','Cirugía de tabique nasal: cuándo se indica'], ['42','cirugia','Cirugía para sinusitis'],
+  ['43','cirugia','Cirugía de amígdalas: cuándo es necesaria'], ['44','cirugia','Cirugía de adenoides en niños'],
+  ['45','cirugia','Implante coclear: cómo funciona'], ['46','cirugia','Tratamiento para vértigo'],
+  ['47','nariz','Lavado nasal: cómo hacerlo correctamente'], ['48','cirugia','Endoscopia nasal: qué es'],
+  ['49','general','¿Cuándo acudir al otorrinolaringólogo?'], ['50','general','Señales de alerta en oído, nariz y garganta']
+];
+/* los primeros que se ven al entrar */
+var DESTACADOS = ['49','50','01','11','21','32','15','05','23','43','38','12'];
+var INICIALES = 12;
+var filtroVid = 'todos', mostrarTodos = false, listaVisible = [], actual = 0;
+
+function ordenar(lista) {
+  return lista.slice().sort(function (a, b) {
+    var da = DESTACADOS.indexOf(a[0]), db = DESTACADOS.indexOf(b[0]);
+    if (da < 0) da = 99; if (db < 0) db = 99;
+    return da - db || a[0].localeCompare(b[0]);
+  });
+}
+function pintarVideos() {
+  var lista = filtroVid === 'todos' ? ordenar(VIDEOS) : VIDEOS.filter(function (v) { return v[1] === filtroVid; });
+  listaVisible = lista;
+  var limite = (filtroVid === 'todos' && !mostrarTodos) ? INICIALES : lista.length;
+  document.getElementById('videos').innerHTML = lista.map(function (v, i) {
+    return '<button class="vid' + (i >= limite ? ' oculto' : '') + '" type="button" data-video="' + i + '">' +
+      '<span class="vid-portada"><img src="videos/tema-' + v[0] + '.jpg" alt="" loading="lazy">' +
+      '<span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span>' +
+      '<b>' + v[2] + '</b><small>' + TEMAS[v[1]] + '</small></button>';
+  }).join('');
+  var boton = document.getElementById('verMas');
+  boton.parentNode.hidden = !(filtroVid === 'todos' && lista.length > INICIALES);
+  boton.textContent = mostrarTodos ? 'Ver menos' : 'Ver los ' + VIDEOS.length + ' videos';
+}
+document.getElementById('filtros').innerHTML = '<button class="filtro" type="button" data-filtro="todos" aria-pressed="true">Todos</button>' +
+  Object.keys(TEMAS).map(function (k) { return '<button class="filtro" type="button" data-filtro="' + k + '" aria-pressed="false">' + TEMAS[k] + '</button>'; }).join('');
+document.getElementById('filtros').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-filtro]'); if (!b) return;
+  filtroVid = b.dataset.filtro;
+  document.querySelectorAll('.filtro').forEach(function (f) { f.setAttribute('aria-pressed', f === b); });
+  pintarVideos();
+});
+document.getElementById('verMas').addEventListener('click', function () {
+  mostrarTodos = !mostrarTodos; pintarVideos();
+  if (!mostrarTodos) document.getElementById('reportajes').scrollIntoView();
+});
+
+var visor = document.getElementById('visor'), visorVideo = document.getElementById('visorVideo');
+function abrirVideo(i) {
+  actual = (i + listaVisible.length) % listaVisible.length;
+  var v = listaVisible[actual];
+  visorVideo.poster = 'videos/tema-' + v[0] + '.jpg';
+  visorVideo.src = 'videos/tema-' + v[0] + '.mp4';
+  document.getElementById('visorTitulo').textContent = v[2];
+  if (!visor.open) visor.showModal();
+  var p = visorVideo.play(); if (p && p.catch) p.catch(function () {});
+}
+function cerrarVideo() { visorVideo.pause(); visorVideo.removeAttribute('src'); visorVideo.load(); visor.close(); }
+document.getElementById('videos').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-video]'); if (b) abrirVideo(+b.dataset.video);
+});
+visor.addEventListener('click', function (e) {
+  if (e.target === visor || e.target.closest('[data-cerrar]')) return cerrarVideo();
+  var m = e.target.closest('[data-mover]'); if (m) abrirVideo(actual + (+m.dataset.mover));
+});
+visor.addEventListener('cancel', function (e) { e.preventDefault(); cerrarVideo(); });
+visorVideo.addEventListener('ended', function () { abrirVideo(actual + 1); });
+pintarVideos();
 
 /* Equipo de base: vive en Tepatitlán y no rota */
 var base = [
