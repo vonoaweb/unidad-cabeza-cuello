@@ -6,7 +6,7 @@
 <!-- Quitar noindex cuando el sitio tenga su dominio y el contenido real. -->
 <meta name="robots" content="noindex">
 <title>Unidad de Alta Especialidad en Cabeza y Cuello · Tepatitlán</title>
-<meta name="description" content="Otorrinolaringología, Neurología, Cirugía maxilofacial, Oculoplastia, Oncología de cabeza y cuello y Dermatología en Tepatitlán de Morelos, Jalisco. Especialistas de Guadalajara que consultan en la unidad.">
+<meta name="description" content="Otorrinolaringología, Neurocirugía, Cirugía maxilofacial, Oculoplastia, Oncología de cabeza y cuello y Dermatología en Tepatitlán de Morelos, Jalisco. Especialistas de Guadalajara que consultan en la unidad.">
 <meta name="theme-color" content="#0A1B5C">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://images.unsplash.com">
@@ -126,7 +126,8 @@ nav a:not(.btn):hover{color:var(--azul)}
 .bg-tinte{background:var(--tinte)}
 .esp-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 .esp{background:#fff;border:1px solid var(--tinte-2);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;scroll-margin-top:calc(var(--header) + 16px);transition:box-shadow .3s,border-color .3s}
-.esp:target{border-color:var(--azul);box-shadow:0 0 0 4px rgba(47,91,216,.16)}
+.esp:target,.esp:has(.ancla-vieja:target){border-color:var(--azul);box-shadow:0 0 0 4px rgba(47,91,216,.16)}
+.ancla-vieja{display:block;height:0;scroll-margin-top:calc(var(--header) + 16px)}
 .esp-foto{position:relative;aspect-ratio:16/9}
 .esp-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .esp-foto i{position:absolute;left:24px;bottom:-26px;width:56px;height:56px;border-radius:50%;background:var(--azul);border:4px solid #fff;display:grid;place-items:center}
@@ -328,7 +329,7 @@ footer a{color:#fff}
 <div class="tira">
   <div class="wrap">
     <a href="#otorrinolaringologia"><i data-icono="oido"></i><span><b>Otorrinolaringología</b><span>Oído, nariz y garganta</span></span></a>
-    <a href="#neurologia"><i data-icono="cerebro"></i><span><b>Neurología</b><span>Cabeza, nervios y mareo</span></span></a>
+    <a href="#neurocirugia"><i data-icono="cerebro"></i><span><b>Neurocirugía</b><span>Cirugía de base de cráneo</span></span></a>
     <a href="#cirugia-maxilofacial"><i data-icono="cara"></i><span><b>Cirugía maxilofacial</b><span>Cara, mandíbula y boca</span></span></a>
     <a href="#oculoplastia"><i data-icono="ojo"></i><span><b>Oculoplastia</b><span>Párpados y vías lagrimales</span></span></a>
     <a href="#oncologia"><i data-icono="onco"></i><span><b>Oncología de cabeza y cuello</b><span>Tumores de cabeza, cuello y tiroides</span></span></a>
@@ -345,7 +346,7 @@ footer a{color:#fff}
         <label>Especialidad
           <select id="cEsp" required>
             <option value="Otorrinolaringología">Otorrinolaringología</option>
-            <option value="Neurología">Neurología</option>
+            <option value="Neurocirugía">Neurocirugía</option>
             <option value="Cirugía maxilofacial">Cirugía maxilofacial</option>
             <option value="Oculoplastia">Oculoplastia</option>
             <option value="Oncología de cabeza y cuello">Oncología de cabeza y cuello</option>
@@ -354,7 +355,7 @@ footer a{color:#fff}
         </label>
         <label>Médico
           <select id="cMed">
-            <option>El que tenga el próximo lugar</option>
+            <option value="">El que tenga el próximo lugar</option>
           </select>
         </label>
         <label>Fecha que prefieres
@@ -405,7 +406,7 @@ footer a{color:#fff}
         <p class="kicker">Especialidades</p>
         <h2 class="titulo">Diferentes especialidades, un mismo <b>compromiso con tu salud</b></h2>
       </div>
-      <p class="sub">Nuestra unidad reúne especialistas en Otorrinolaringología, Oncología, Oculoplastia, Cirugía Maxilofacial y Dermatología, ofreciendo un enfoque multidisciplinario para la prevención, diagnóstico y tratamiento de diversas enfermedades.</p>
+      <p class="sub">Nuestra unidad reúne especialistas en Otorrinolaringología, Oncología, Neurocirugía, Oculoplastia, Cirugía Maxilofacial y Dermatología, ofreciendo un enfoque multidisciplinario para la prevención, diagnóstico y tratamiento de diversas enfermedades.</p>
     </div>
     <div class="esp-grid">
       <article class="esp aparece" id="otorrinolaringologia">
@@ -427,21 +428,22 @@ footer a{color:#fff}
           <a class="btn btn-azul btn-sm" href="#agenda" data-esp="Otorrinolaringología">Agendar con Otorrinolaringología</a>
         </div>
       </article>
-      <article class="esp aparece" id="neurologia">
+      <article class="esp aparece" id="neurocirugia">
+        <span class="ancla-vieja" id="neurologia"></span>
         <div class="esp-foto">
           <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1000&h=563&q=72&auto=format&fit=crop" alt="" loading="lazy">
           <i data-icono="cerebro"></i>
         </div>
         <div class="esp-cuerpo">
-          <h3>Neurología</h3>
-          <p>Cabeza, nervios y equilibrio.</p>
+          <h3>Neurocirugía</h3>
+          <p>Cirugía de base de cráneo: la zona donde se unen el cerebro, la nariz, el oído y los ojos.</p>
           <ul>
-            <li>Dolor de cabeza y migraña</li>
-            <li>Mareo y vértigo</li>
-            <li>Hormigueo o adormecimiento</li>
-            <li>Parálisis facial</li>
+            <li>Tumores de la base del cráneo</li>
+            <li>Tumores de hipófisis</li>
+            <li>Neurinoma del acústico (nervio del oído)</li>
+            <li>Salida de líquido claro por la nariz (fístula)</li>
           </ul>
-          <a class="btn btn-azul btn-sm" href="#agenda" data-esp="Neurología">Agendar con Neurología</a>
+          <a class="btn btn-azul btn-sm" href="#agenda" data-esp="Neurocirugía">Agendar con Neurocirugía</a>
         </div>
       </article>
       <article class="esp aparece" id="cirugia-maxilofacial">
@@ -594,7 +596,7 @@ footer a{color:#fff}
       <dl class="datos aparece">
         <div><dt>Dónde</dt><dd>Tepatitlán de Morelos, Jalisco</dd></div>
         <div><dt>Citas</dt><dd data-sin-wa>Pregunta en la recepción de la unidad</dd><dd data-con-wa hidden><a class="btn btn-blanco btn-sm" href="#" data-wa="Hola, quiero agendar una cita en la Unidad de Cabeza y Cuello.">Escríbenos por WhatsApp</a></dd></div>
-        <div><dt>Especialidades</dt><dd>Otorrinolaringología, Neurología, Cirugía maxilofacial, Oculoplastia, Oncología de cabeza y cuello y Dermatología</dd></div>
+        <div><dt>Especialidades</dt><dd>Otorrinolaringología, Neurocirugía, Cirugía maxilofacial, Oculoplastia, Oncología de cabeza y cuello y Dermatología</dd></div>
       </dl>
       <div class="mapa aparece">
         <iframe title="Mapa de Tepatitlán de Morelos" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
@@ -645,21 +647,22 @@ document.querySelectorAll('[data-wa]').forEach(function (a) {
 /* Equipo: los que ya mandaron foto van primero; los demás son lugares mientras confirman.
    Cuando llegue el nombre de cada médico, va en "nombre" (se muestra en lugar de "Muy pronto"). */
 var lugares = [
-  {esp: 'Oncología de cabeza y cuello', foto: 'img/medico-oncologia.jpg'},
-  {esp: 'Especialista de la unidad', foto: 'img/medico-ejemplo-2.jpg'},
-  {esp: 'Otorrinolaringología'}, {esp: 'Otorrinolaringología'}, {esp: 'Otorrinolaringología'},
-  {esp: 'Neurología'}, {esp: 'Cirugía maxilofacial'}, {esp: 'Oculoplastia'}, {esp: 'Dermatología'}
+  {nombre: 'Dra. Daniela Oceguera Reyes', esp: 'Otorrinolaringología y Oncología de cabeza y cuello', foto: 'img/dra-oceguera.jpg',
+   agenda: ['Otorrinolaringología', 'Oncología de cabeza y cuello']},
+  {nombre: 'Dr. Alejandro Javier Rodríguez Núñez', esp: 'Otorrinolaringología pediátrica', foto: 'img/dr-rodriguez.jpg',
+   agenda: ['Otorrinolaringología']},
+  {esp: 'Otorrinolaringología'}, {esp: 'Neurocirugía'}, {esp: 'Cirugía maxilofacial'}, {esp: 'Oculoplastia'}, {esp: 'Dermatología'}
 ];
 document.getElementById('equipoGrid').innerHTML = lugares.map(function (m) {
   var circulo = m.foto
-    ? '<div class="circulo foto"><img src="' + m.foto + '" alt="Especialista de ' + m.esp + '" loading="lazy"></div>'
+    ? '<div class="circulo foto"><img src="' + m.foto + '" alt="' + (m.nombre || 'Especialista de ' + m.esp) + '" loading="lazy"></div>'
     : '<div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div>';
   return '<div class="miembro aparece">' + circulo + '<b>' + (m.nombre || 'Muy pronto') + '</b><span>' + m.esp + '</span></div>';
 }).join('');
 
 /* Videoteca por especialidad: cada especialidad es un riel que se desliza hacia los lados, con sus filtros por tema.
    Cada una lleva sus temas y sus videos (archivo + NN.mp4 y su portada archivo + NN.jpg).
-   Cuando lleguen videos de otra especialidad (Neurología, Dermatología...), se agrega otro bloque a VIDEOTECA
+   Cuando lleguen videos de otra especialidad (Neurocirugía, Dermatología...), se agrega otro bloque a VIDEOTECA
    y aparece su riel debajo del de Otorrinolaringología. */
 var TEMAS = {nariz: 'Nariz y senos', oido: 'Oído', garganta: 'Garganta y voz', sueno: 'Sueño y ronquido', cirugia: 'Cirugías y tratamientos', general: 'Cuándo ir al otorrino'};
 var VIDEOS = [
@@ -803,16 +806,24 @@ document.getElementById('compartir').addEventListener('click', function () {
 /* Agenda: con número manda la solicitud por WhatsApp; sin número, avisa */
 var hoy = new Date(); hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
 document.getElementById('cFecha').min = hoy.toISOString().slice(0, 10);
+var cEsp = document.getElementById('cEsp'), cMed = document.getElementById('cMed');
+function llenarMedicos() {
+  cMed.innerHTML = '<option value="">El que tenga el próximo lugar</option>' + lugares.filter(function (m) {
+    return m.nombre && m.agenda && m.agenda.indexOf(cEsp.value) >= 0;
+  }).map(function (m) { return '<option>' + m.nombre + '</option>'; }).join('');
+}
+cEsp.addEventListener('change', llenarMedicos);
+llenarMedicos();
 document.querySelectorAll('[data-esp]').forEach(function (a) {
-  a.addEventListener('click', function () { document.getElementById('cEsp').value = a.dataset.esp; });
+  a.addEventListener('click', function () { cEsp.value = a.dataset.esp; llenarMedicos(); });
 });
 document.getElementById('formCita').addEventListener('submit', function (e) {
   e.preventDefault();
-  var esp = document.getElementById('cEsp').value;
+  var esp = cEsp.value, med = cMed.value;
   var f = document.getElementById('cFecha').value;
   var fecha = f ? new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) : 'el próximo día disponible';
   if (WHATSAPP) {
-    abrirWhatsApp('Hola, quiero una cita de ' + esp + ' para ' + fecha + '.');
+    abrirWhatsApp('Hola, quiero una cita de ' + esp + (med ? ' con ' + med : '') + ' para ' + fecha + '.');
   } else {
     document.getElementById('notaCita').textContent = 'La agenda en línea abre muy pronto. Mientras tanto, pide tu cita de ' + esp + ' en la recepción de la unidad.';
   }
