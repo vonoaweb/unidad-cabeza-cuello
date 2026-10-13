@@ -76,11 +76,25 @@ nav a:not(.btn):hover{color:var(--azul)}
 .tira{position:relative;z-index:2;margin-top:-72px}
 .tira .wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;background:#fff;border-radius:var(--r);box-shadow:var(--sombra);padding:8px}
 .tira a,.tira div{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:16px;text-decoration:none}
-.tira a:hover{background:var(--tinte)}
-.tira i{width:52px;height:52px;border-radius:50%;background:var(--tinte);display:grid;place-items:center;flex:none}
+.tira a{position:relative;padding-right:56px;transition:background .2s}
+.tira a:hover,.tira a:focus-visible{background:var(--tinte)}
+.tira a:active{background:var(--tinte-2)}
+.tira-cabeza{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px;margin:0;padding:14px 20px 2px}
+.tira-cabeza b{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--azul)}
+.tira-cabeza span{font-size:13.5px;color:var(--texto)}
+.tira i{width:52px;height:52px;border-radius:50%;background:var(--tinte);display:grid;place-items:center;flex:none;animation:brinca 4.2s ease-in-out infinite}
 .tira i svg{width:34px;height:34px;color:var(--azul)}
-.tira b{display:block;font-size:16px;font-weight:600}
-.tira span{display:block;font-size:13px;color:var(--texto-2)}
+.tira b{display:block;font-size:16px;font-weight:600;color:var(--navy)}
+.tira a > span > span{display:block;font-size:13px;color:var(--texto-2)}
+.tira a::after{content:"";position:absolute;right:18px;top:50%;width:30px;height:30px;margin-top:-15px;border-radius:50%;
+  background:var(--tinte) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F5BD8' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E") center/15px no-repeat;transition:transform .25s,background-color .25s}
+.tira a:hover::after,.tira a:focus-visible::after{background-color:var(--azul);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");transform:translateX(3px)}
+.tira a:hover i{animation:none;transform:scale(1.08);transition:transform .25s}
+.tira a:nth-of-type(2) i{animation-delay:.14s}.tira a:nth-of-type(3) i{animation-delay:.28s}
+.tira a:nth-of-type(4) i{animation-delay:.42s}.tira a:nth-of-type(5) i{animation-delay:.56s}.tira a:nth-of-type(6) i{animation-delay:.7s}
+@keyframes brinca{0%,70%,100%{transform:translateY(0)}76%{transform:translateY(-6px)}82%{transform:translateY(0)}87%{transform:translateY(-2px)}92%{transform:translateY(0)}}
+@media (hover:hover){.solo-tactil{display:none}}
+@media (hover:none){.solo-mouse{display:none}}
 .tira .pronto i{background:transparent;border:1.5px dashed var(--tinte-2)}
 .tira .pronto i svg{color:var(--texto-2)}
 
@@ -126,7 +140,8 @@ nav a:not(.btn):hover{color:var(--azul)}
 .bg-tinte{background:var(--tinte)}
 .esp-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 .esp{background:#fff;border:1px solid var(--tinte-2);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;scroll-margin-top:calc(var(--header) + 16px);transition:box-shadow .3s,border-color .3s}
-.esp:target,.esp:has(.ancla-vieja:target){border-color:var(--azul);box-shadow:0 0 0 4px rgba(47,91,216,.16)}
+.esp:target,.esp:has(.ancla-vieja:target){border-color:var(--azul);box-shadow:0 0 0 4px rgba(47,91,216,.16);animation:resalta 1.1s ease-out}
+@keyframes resalta{0%{box-shadow:0 0 0 14px rgba(47,91,216,.35)}100%{box-shadow:0 0 0 4px rgba(47,91,216,.16)}}
 .ancla-vieja{display:block;height:0;scroll-margin-top:calc(var(--header) + 16px)}
 .esp-foto{position:relative;aspect-ratio:16/9}
 .esp-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -158,10 +173,31 @@ nav a:not(.btn):hover{color:var(--azul)}
 .miembro{flex:0 0 calc((100% - 72px) / 5)}
 .miembro .circulo{width:100%;max-width:150px;margin-inline:auto;aspect-ratio:1;border-radius:50%;border:1.5px dashed var(--tinte-2);background:var(--tinte);display:grid;place-items:center;margin-bottom:12px}
 .miembro .circulo svg{width:42%;height:42%;color:#C5D1F4}
-.miembro .circulo.foto{border:0;box-shadow:0 0 0 4px #fff,0 0 0 5.5px var(--tinte-2);overflow:hidden}
-.miembro .circulo img{width:100%;height:100%;object-fit:cover}
+.miembro .circulo.foto{position:relative;border:0;box-shadow:0 0 0 4px #fff,0 0 0 5.5px var(--tinte-2)}
+.miembro .circulo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .miembro b{display:block;font-size:14px;font-weight:600}
-.miembro span{display:block;font-size:12.5px;color:var(--texto-2)}
+.miembro .m-esp{display:block;font-size:12.5px;color:var(--texto-2)}
+button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:center}
+.con-perfil .circulo{transition:transform .3s ease,box-shadow .3s ease}
+.con-perfil .circulo::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid var(--azul);opacity:0;animation:late 3.2s ease-out infinite;pointer-events:none}
+@keyframes late{0%{transform:scale(.95);opacity:.6}55%,100%{transform:scale(1.13);opacity:0}}
+.con-perfil:hover .circulo,.con-perfil:focus-visible .circulo{transform:scale(1.07);box-shadow:0 0 0 4px #fff,0 0 0 6.5px var(--azul),0 18px 34px -14px rgba(10,27,92,.45)}
+.con-perfil:active .circulo{transform:scale(.97)}
+.con-perfil em{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-style:normal;font-size:12.5px;font-weight:700;color:var(--azul);background:#fff;border:1px solid var(--tinte-2);padding:6px 14px;border-radius:64px;transition:background .2s,color .2s,border-color .2s}
+.con-perfil em::after{content:"›";font-size:16px;line-height:1}
+.con-perfil:hover em,.con-perfil:focus-visible em{background:var(--azul);border-color:var(--azul);color:#fff}
+.con-perfil:focus-visible{outline:none}
+/* ficha del médico */
+.perfil{border:0;padding:0;border-radius:var(--r);width:min(420px,calc(100vw - 32px));max-height:calc(100vh - 32px);box-shadow:0 30px 80px -20px rgba(6,12,40,.6)}
+.perfil::backdrop{background:rgba(6,12,40,.72)}
+.perfil-caja{position:relative;padding:22px 26px 28px;text-align:center;display:grid;justify-items:center;gap:8px}
+.perfil .cerrar{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:var(--tinte);color:var(--navy);font-size:22px;cursor:pointer}
+.perfil-unidad{justify-self:start;display:flex;align-items:center;gap:10px;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-2);text-align:left;line-height:1.35;padding-right:44px}
+.perfil-unidad img{width:36px;height:36px;border-radius:50%;box-shadow:0 0 0 1.5px var(--navy);flex:none}
+.perfil-foto{width:176px;height:176px;border-radius:50%;object-fit:cover;margin-top:14px;box-shadow:0 0 0 5px #fff,0 0 0 7px var(--azul)}
+.perfil h3{font-size:22px;font-weight:600;margin-top:10px}
+.perfil-esp{color:var(--azul);font-weight:600;font-size:15px}
+.perfil-datos{list-style:none;padding:0;margin:8px 0 12px;display:grid;gap:6px;font-size:14px;color:var(--texto)}
 .equipo-nota{margin-top:26px;text-align:center;color:var(--texto)}
 .sub-titulo{font-size:20px;font-weight:600;margin:0 0 22px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .sub-titulo span{font-size:14px;font-weight:400;color:var(--texto-2)}
@@ -235,7 +271,7 @@ footer a{color:#fff}
 /* aparición suave al hacer scroll */
 .aparece{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
 .aparece.si{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.aparece{opacity:1;transform:none;transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.aparece{opacity:1;transform:none;transition:none}.tira i,.con-perfil .circulo::after,.esp:target{animation:none}}
 
 @media (max-width:1000px){
   .agenda-wrap,.contacto-grid,.hero .wrap,.unidad-grid{grid-template-columns:1fr}
@@ -328,6 +364,7 @@ footer a{color:#fff}
 
 <div class="tira">
   <div class="wrap">
+    <p class="tira-cabeza"><b>Elige una especialidad</b><span><span class="solo-tactil">Toca</span><span class="solo-mouse">Da clic en</span> una para ver qué atiende</span></p>
     <a href="#otorrinolaringologia"><i data-icono="oido"></i><span><b>Otorrinolaringología</b><span>Oído, nariz y garganta</span></span></a>
     <a href="#neurocirugia"><i data-icono="cerebro"></i><span><b>Neurocirugía de base de cráneo</b><span>Tumores de base de cráneo e hipófisis</span></span></a>
     <a href="#cirugia-maxilofacial"><i data-icono="cara"></i><span><b>Cirugía maxilofacial</b><span>Cara, mandíbula y boca</span></span></a>
@@ -558,6 +595,21 @@ footer a{color:#fff}
   </div>
 </section>
 
+<dialog class="perfil" id="perfil" aria-labelledby="perfilNombre">
+  <div class="perfil-caja">
+    <button class="cerrar" type="button" data-cerrar-perfil aria-label="Cerrar">×</button>
+    <div class="perfil-unidad"><img src="img/logo-sello-96.png" alt="" width="36" height="36"><span>Unidad de Alta Especialidad<br>en Cabeza y Cuello · Tepatitlán</span></div>
+    <img class="perfil-foto" id="perfilFoto" src="" alt="">
+    <h3 id="perfilNombre"></h3>
+    <p class="perfil-esp" id="perfilEsp"></p>
+    <ul class="perfil-datos">
+      <li>Consulta en la unidad, en Tepatitlán de Morelos.</li>
+      <li>Muy pronto: su formación, cédulas profesionales y videos.</li>
+    </ul>
+    <button class="btn btn-azul" type="button" id="perfilAgendar">Agendar cita</button>
+  </div>
+</dialog>
+
 <dialog class="visor" id="visor" aria-label="Video">
   <div class="visor-caja">
     <button class="cerrar" type="button" data-cerrar aria-label="Cerrar video">×</button>
@@ -653,12 +705,35 @@ var lugares = [
    agenda: ['Otorrinolaringología']},
   {esp: 'Otorrinolaringología'}, {esp: 'Neurocirugía de base de cráneo'}, {esp: 'Cirugía maxilofacial'}, {esp: 'Oculoplastia'}, {esp: 'Dermatología'}
 ];
-document.getElementById('equipoGrid').innerHTML = lugares.map(function (m) {
-  var circulo = m.foto
-    ? '<div class="circulo foto"><img src="' + m.foto + '" alt="' + (m.nombre || 'Especialista de ' + m.esp) + '" loading="lazy"></div>'
-    : '<div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div>';
-  return '<div class="miembro aparece">' + circulo + '<b>' + (m.nombre || 'Muy pronto') + '</b><span>' + m.esp + '</span></div>';
+var equipoGrid = document.getElementById('equipoGrid');
+equipoGrid.innerHTML = lugares.map(function (m, i) {
+  if (m.foto) return '<button class="miembro con-perfil aparece" type="button" data-medico="' + i + '">' +
+    '<span class="circulo foto"><img src="' + m.foto + '" alt="" loading="lazy"></span>' +
+    '<b>' + m.nombre + '</b><span class="m-esp">' + m.esp + '</span><em>Ver perfil</em></button>';
+  return '<div class="miembro aparece"><div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div>' +
+    '<b>Muy pronto</b><span class="m-esp">' + m.esp + '</span></div>';
 }).join('');
+
+/* Ficha del médico (con el logo de la unidad siempre presente) */
+var perfil = document.getElementById('perfil'), medicoActual = null;
+equipoGrid.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-medico]'); if (!b) return;
+  var m = medicoActual = lugares[+b.dataset.medico];
+  document.getElementById('perfilFoto').src = m.foto;
+  document.getElementById('perfilFoto').alt = m.nombre;
+  document.getElementById('perfilNombre').textContent = m.nombre;
+  document.getElementById('perfilEsp').textContent = m.esp;
+  document.getElementById('perfilAgendar').textContent = 'Agendar con ' + (m.nombre.indexOf('Dra.') === 0 ? 'la ' : 'el ') + m.nombre.split(' ').slice(0, 2).join(' ');
+  perfil.showModal();
+});
+perfil.addEventListener('click', function (e) {
+  if (e.target === perfil || e.target.closest('[data-cerrar-perfil]')) perfil.close();
+});
+document.getElementById('perfilAgendar').addEventListener('click', function () {
+  cEsp.value = medicoActual.agenda[0]; llenarMedicos(); cMed.value = medicoActual.nombre;
+  perfil.close();
+  document.getElementById('agenda').scrollIntoView();
+});
 
 /* Videoteca por especialidad: cada especialidad es un riel que se desliza hacia los lados, con sus filtros por tema.
    Cada una lleva sus temas y sus videos (archivo + NN.mp4 y su portada archivo + NN.jpg).
