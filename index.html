@@ -188,13 +188,40 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .con-perfil:hover em,.con-perfil:focus-visible em{background:var(--azul);border-color:var(--azul);color:#fff}
 .con-perfil:focus-visible{outline:none}
 /* ficha del médico */
-.perfil{border:0;padding:0;border-radius:var(--r);width:min(420px,calc(100vw - 32px));max-height:calc(100vh - 32px);box-shadow:0 30px 80px -20px rgba(6,12,40,.6)}
+.perfil{border:0;padding:0;border-radius:var(--r);width:min(440px,calc(100vw - 32px));max-height:calc(100vh - 32px);box-shadow:0 30px 80px -20px rgba(6,12,40,.6)}
+.perfil.completo{width:min(680px,calc(100vw - 32px))}
 .perfil::backdrop{background:rgba(6,12,40,.72)}
 .perfil-caja{position:relative;padding:22px 26px 28px;text-align:center;display:grid;justify-items:center;gap:8px}
 .perfil .cerrar{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:var(--tinte);color:var(--navy);font-size:22px;cursor:pointer}
 .perfil-unidad{justify-self:start;display:flex;align-items:center;gap:10px;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-2);text-align:left;line-height:1.35;padding-right:44px}
 .perfil-unidad img{width:36px;height:36px;border-radius:50%;box-shadow:0 0 0 1.5px var(--navy);flex:none}
-.perfil-foto{width:176px;height:176px;border-radius:50%;object-fit:cover;margin-top:14px;box-shadow:0 0 0 5px #fff,0 0 0 7px var(--azul)}
+.perfil-foto{width:176px;height:176px;border-radius:50%;object-fit:cover;margin-top:14px;box-shadow:0 0 0 5px #fff,0 0 0 7px var(--azul);display:grid;place-items:center;overflow:hidden;background:var(--navy);color:#fff;font-size:54px;font-weight:300}
+.perfil-foto img{width:100%;height:100%;object-fit:cover}
+.perfil-sub{font-size:14px;color:var(--texto);margin-top:-2px}
+.perfil-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
+.perfil-chips span{font-size:12.5px;font-weight:600;color:var(--navy);background:var(--tinte);border:1px solid var(--tinte-2);padding:4px 10px;border-radius:64px}
+.perfil-cuerpo{width:100%;text-align:left;display:grid;gap:4px;margin-top:10px}
+.perfil-cuerpo > .perfil-datos{text-align:center}
+.pf-sec{border-top:1px solid var(--tinte-2);padding:16px 0 6px}
+.pf-sec h4{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--azul)}
+.pf-sec p{font-size:15px;color:var(--texto);margin-top:6px}
+.pf-sec p:first-of-type{margin-top:0}
+.pf-lista{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}
+.pf-lista li{position:relative;padding-left:16px;font-size:14.5px;color:var(--navy)}
+.pf-lista li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--azul)}
+.pf-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pf-chips span{font-size:14px;color:var(--navy);background:var(--tinte);border-radius:12px;padding:7px 12px}
+.pf-datos{margin:0;display:grid;gap:10px}
+.pf-datos div{display:grid;grid-template-columns:150px 1fr;gap:12px;font-size:14.5px}
+.pf-datos dt{font-weight:600;color:var(--navy)}
+.pf-datos dd{margin:0;color:var(--texto)}
+.perfil-acciones{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:14px}
+.miembro .circulo.iniciales{background:var(--navy);color:#fff;font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:.02em}
+/* botón flotante de WhatsApp (solo aparece cuando hay número) */
+.wa-flotante{position:fixed;right:20px;bottom:20px;z-index:40;width:60px;height:60px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 12px 28px -10px rgba(0,0,0,.45);transition:transform .2s}
+.wa-flotante:hover{transform:scale(1.08)}
+.wa-flotante svg{width:32px;height:32px;fill:#fff}
+@media (max-width:760px){.pf-lista{grid-template-columns:1fr}.pf-datos div{grid-template-columns:1fr;gap:2px}.perfil-caja{padding:20px 18px 24px}}
 .perfil h3{font-size:22px;font-weight:600;margin-top:10px}
 .perfil-esp{color:var(--azul);font-weight:600;font-size:15px}
 .perfil-datos{list-style:none;padding:0;margin:8px 0 12px;display:grid;gap:6px;font-size:14px;color:var(--texto)}
@@ -599,14 +626,16 @@ footer a{color:#fff}
   <div class="perfil-caja">
     <button class="cerrar" type="button" data-cerrar-perfil aria-label="Cerrar">×</button>
     <div class="perfil-unidad"><img src="img/logo-sello-96.png" alt="" width="36" height="36"><span>Unidad de Alta Especialidad<br>en Cabeza y Cuello · Tepatitlán</span></div>
-    <img class="perfil-foto" id="perfilFoto" src="" alt="">
+    <div class="perfil-foto" id="perfilFoto"></div>
     <h3 id="perfilNombre"></h3>
     <p class="perfil-esp" id="perfilEsp"></p>
-    <ul class="perfil-datos">
-      <li>Consulta en la unidad, en Tepatitlán de Morelos.</li>
-      <li>Muy pronto: su formación, cédulas profesionales y videos.</li>
-    </ul>
-    <button class="btn btn-azul" type="button" id="perfilAgendar">Agendar cita</button>
+    <p class="perfil-sub" id="perfilSub"></p>
+    <p class="perfil-chips" id="perfilChips"></p>
+    <div class="perfil-cuerpo" id="perfilCuerpo"></div>
+    <div class="perfil-acciones">
+      <button class="btn btn-azul" type="button" id="perfilAgendar">Agendar cita</button>
+      <button class="btn btn-linea" type="button" id="perfilCompartir">Compartir perfil</button>
+    </div>
   </div>
 </dialog>
 
@@ -667,6 +696,10 @@ footer a{color:#fff}
   </div>
 </footer>
 
+<a class="wa-flotante" href="#" data-con-wa hidden data-wa="Hola, tengo una pregunta para la Unidad de Alta Especialidad en Cabeza y Cuello." aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.4-.9-2.8-1.2-4.6-4.1-4.8-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.3.1.5.2.5.4.1.1.1.7-.2 1.3z"/></svg>
+</a>
+
 <div class="aviso-pronto" id="aviso" role="status" aria-live="polite"></div>
 
 <script>
@@ -696,19 +729,47 @@ document.querySelectorAll('[data-wa]').forEach(function (a) {
   a.addEventListener('click', function (e) { e.preventDefault(); if (WHATSAPP) abrirWhatsApp(a.dataset.wa); });
 });
 
-/* Equipo: los que ya mandaron foto van primero; los demás son lugares mientras confirman.
-   Cuando llegue el nombre de cada médico, va en "nombre" (se muestra en lugar de "Muy pronto"). */
+/* Equipo: primero los médicos confirmados, luego los de ejemplo y al final los lugares por confirmar.
+   La ficha completa sale de "perfil" (respuestas del formulario de la unidad). Sin "foto" se muestran sus iniciales.
+   Cada médico tiene liga directa: la página + #medico-<id>. */
 var lugares = [
-  {nombre: 'Dra. Daniela Oceguera Reyes', esp: 'Otorrinolaringología y Oncología de cabeza y cuello', foto: 'img/dra-oceguera.jpg',
+  {id: 'dominguez-palomera', nombre: 'Dr. Luis Omar Domínguez Palomera', esp: 'Otorrinolaringología y Cirugía de Cabeza y Cuello',
+   agenda: ['Oncología de cabeza y cuello', 'Otorrinolaringología'],
+   perfil: {
+     sub: 'Subespecialidad en Cirugía Oncológica de Cabeza y Cuello',
+     edades: 'Adultos',
+     presentacion: 'Atención para pacientes con cáncer de cabeza y cuello.',
+     consiste: 'Tratamiento del cáncer de cabeza y cuello.',
+     sintomas: ['Bola en el cuello', 'Cambios en la voz', 'Sangrado por boca o nariz', 'Úlceras en la boca'],
+     padecimientos: ['Tumores de tiroides', 'Tumores de laringe', 'Tumores de glándulas salivales', 'Tumores de piel', 'Tumores de boca'],
+     procedimientos: ['Tiroidectomía total', 'Parotidectomía', 'Laringectomía', 'Cirugía láser de laringe', 'Maxilectomía', 'Mandibulectomía', 'Disección de cuello'],
+     formacion: [
+       ['Licenciatura', 'Universidad de Guadalajara'],
+       ['Especialidad y subespecialidad', 'Hospital Civil Fray Antonio Alcalde e Instituto Jalisciense de Cancerología'],
+       ['Formación adicional', 'Fellowship en Cirugía Oncológica de Cabeza y Cuello MSKCC – IFHNOS'],
+       ['Cédulas profesionales', '6850882 / 14472122']
+     ],
+     consulta: [
+       ['Qué esperar', 'Atención especializada.'],
+       ['Qué llevar', 'Todos los estudios y documentos que tengas.'],
+       ['Preparación', 'Ninguna preparación previa.']
+     ]
+   }},
+  {id: 'oceguera-reyes', nombre: 'Dra. Daniela Oceguera Reyes', esp: 'Otorrinolaringología y Oncología de cabeza y cuello', foto: 'img/dra-oceguera.jpg',
    agenda: ['Otorrinolaringología', 'Oncología de cabeza y cuello']},
-  {nombre: 'Dr. Alejandro Javier Rodríguez Núñez', esp: 'Otorrinolaringología pediátrica', foto: 'img/dr-rodriguez.jpg',
+  {id: 'rodriguez-nunez', nombre: 'Dr. Alejandro Javier Rodríguez Núñez', esp: 'Otorrinolaringología pediátrica', foto: 'img/dr-rodriguez.jpg',
    agenda: ['Otorrinolaringología']},
   {esp: 'Otorrinolaringología'}, {esp: 'Neurocirugía de base de cráneo'}, {esp: 'Cirugía maxilofacial'}, {esp: 'Oculoplastia'}, {esp: 'Dermatología'}
 ];
 var equipoGrid = document.getElementById('equipoGrid');
+function iniciales(nombre) {
+  var p = nombre.replace(/^Dra?\.\s*/, '').split(' ');
+  return p[0].charAt(0) + (p.length > 2 ? p[p.length - 2] : p[p.length - 1]).charAt(0);
+}
 equipoGrid.innerHTML = lugares.map(function (m, i) {
-  if (m.foto) return '<button class="miembro con-perfil aparece" type="button" data-medico="' + i + '">' +
-    '<span class="circulo foto"><img src="' + m.foto + '" alt="" loading="lazy"></span>' +
+  if (m.nombre) return '<button class="miembro con-perfil aparece" type="button" data-medico="' + i + '">' +
+    (m.foto ? '<span class="circulo foto"><img src="' + m.foto + '" alt="" loading="lazy"></span>'
+            : '<span class="circulo foto iniciales">' + iniciales(m.nombre) + '</span>') +
     '<b>' + m.nombre + '</b><span class="m-esp">' + m.esp + '</span><em>Ver perfil</em></button>';
   return '<div class="miembro aparece"><div class="circulo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4.1-7.2 8.5-7.2s7.9 2.8 8.5 7.2z"/></svg></div>' +
     '<b>Muy pronto</b><span class="m-esp">' + m.esp + '</span></div>';
@@ -716,19 +777,60 @@ equipoGrid.innerHTML = lugares.map(function (m, i) {
 
 /* Ficha del médico (con el logo de la unidad siempre presente) */
 var perfil = document.getElementById('perfil'), medicoActual = null;
-equipoGrid.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-medico]'); if (!b) return;
-  var m = medicoActual = lugares[+b.dataset.medico];
-  document.getElementById('perfilFoto').src = m.foto;
-  document.getElementById('perfilFoto').alt = m.nombre;
+function seccion(titulo, html) { return '<section class="pf-sec"><h4>' + titulo + '</h4>' + html + '</section>'; }
+function lista(arr) { return '<ul class="pf-lista">' + arr.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>'; }
+function datos(pares) { return '<dl class="pf-datos">' + pares.map(function (d) { return '<div><dt>' + d[0] + '</dt><dd>' + d[1] + '</dd></div>'; }).join('') + '</dl>'; }
+function apellido(nombre) {  /* primer apellido: "Dr. Luis Omar Domínguez Palomera" -> "Domínguez" */
+  var p = nombre.replace(/^Dra?\.\s*/, '').split(' ');
+  return p.length > 2 ? p[p.length - 2] : p[p.length - 1];
+}
+function abrirMedico(m) {
+  medicoActual = m;
+  var ella = m.nombre.indexOf('Dra.') === 0, p = m.perfil;
+  document.getElementById('perfilFoto').innerHTML = m.foto ? '<img src="' + m.foto + '" alt="' + m.nombre + '">' : iniciales(m.nombre);
   document.getElementById('perfilNombre').textContent = m.nombre;
   document.getElementById('perfilEsp').textContent = m.esp;
-  document.getElementById('perfilAgendar').textContent = 'Agendar con ' + (m.nombre.indexOf('Dra.') === 0 ? 'la ' : 'el ') + m.nombre.split(' ').slice(0, 2).join(' ');
-  perfil.showModal();
+  document.getElementById('perfilSub').textContent = p ? p.sub : '';
+  document.getElementById('perfilChips').innerHTML = p ? '<span>Atiende: ' + p.edades + '</span><span>Consulta en Tepatitlán</span>' : '';
+  document.getElementById('perfilCuerpo').innerHTML = p
+    ? seccion('Sobre ' + (ella ? 'la doctora' : 'el doctor'), '<p>' + p.presentacion + '</p><p><b>Su especialidad, en palabras sencillas:</b> ' + p.consiste + '</p>') +
+      seccion('¿Cuándo acudir con ' + (ella ? 'ella' : 'él') + '?', '<div class="pf-chips">' + p.sintomas.map(function (x) { return '<span>' + x + '</span>'; }).join('') + '</div>') +
+      seccion('Padecimientos que atiende', lista(p.padecimientos)) +
+      seccion('Procedimientos y cirugías', lista(p.procedimientos)) +
+      seccion('Formación', datos(p.formacion)) +
+      seccion('Tu primera consulta', datos(p.consulta)) +
+      seccion('Video', '<p>Muy pronto, un video ' + (ella ? 'de la doctora' : 'del doctor') + ' explicando su especialidad.</p>')
+    : '<ul class="perfil-datos"><li>Consulta en la unidad, en Tepatitlán de Morelos.</li><li>Muy pronto: su formación, cédulas profesionales y videos.</li></ul>';
+  perfil.classList.toggle('completo', !!p);
+  document.getElementById('perfilAgendar').textContent = 'Agendar con ' + (ella ? 'la Dra. ' : 'el Dr. ') + apellido(m.nombre);
+  if (!perfil.open) perfil.showModal();
+  perfil.scrollTop = 0;
+}
+function cerrarMedico() {
+  perfil.close();
+}
+perfil.addEventListener('close', function () {
+  if (/^#medico-/.test(location.hash) && history.replaceState) history.replaceState(null, '', location.pathname + location.search + '#equipo');
+});
+equipoGrid.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-medico]'); if (b) abrirMedico(lugares[+b.dataset.medico]);
 });
 perfil.addEventListener('click', function (e) {
-  if (e.target === perfil || e.target.closest('[data-cerrar-perfil]')) perfil.close();
+  if (e.target === perfil || e.target.closest('[data-cerrar-perfil]')) cerrarMedico();
 });
+/* Compartir perfil: liga que abre la página directo en la ficha del médico */
+document.getElementById('perfilCompartir').addEventListener('click', function () {
+  var m = medicoActual, url = location.origin + location.pathname + '#medico-' + m.id;
+  var texto = m.nombre + ' · ' + m.esp + ' · Unidad de Alta Especialidad en Cabeza y Cuello';
+  if (navigator.share) navigator.share({title: m.nombre, text: texto, url: url}).catch(function () {});
+  else window.open('https://wa.me/?text=' + encodeURIComponent(texto + ' ' + url), '_blank', 'noopener');
+});
+(function () {
+  var h = location.hash.match(/^#medico-([a-z-]+)$/); if (!h) return;
+  lugares.forEach(function (m) {
+    if (m.id === h[1]) { document.getElementById('equipo').scrollIntoView(); abrirMedico(m); }
+  });
+})();
 document.getElementById('perfilAgendar').addEventListener('click', function () {
   cEsp.value = medicoActual.agenda[0]; llenarMedicos(); cMed.value = medicoActual.nombre;
   perfil.close();
