@@ -733,10 +733,10 @@ document.querySelectorAll('[data-wa]').forEach(function (a) {
    La ficha completa sale de "perfil" (respuestas del formulario de la unidad). Sin "foto" se muestran sus iniciales.
    Cada médico tiene liga directa: la página + #medico-<id>. */
 var lugares = [
-  {id: 'dominguez-palomera', nombre: 'Dr. Luis Omar Domínguez Palomera', esp: 'Otorrinolaringología y Cirugía de Cabeza y Cuello',
-   agenda: ['Oncología de cabeza y cuello', 'Otorrinolaringología'],
+  {id: 'dominguez-palomera', nombre: 'Dr. Luis Omar Domínguez Palomera', esp: 'Cirugía Oncológica de Cabeza y Cuello',
+   foto: 'img/dr-dominguez.jpg', agenda: ['Oncología de cabeza y cuello'],
    perfil: {
-     sub: 'Subespecialidad en Cirugía Oncológica de Cabeza y Cuello',
+     sub: '',  /* el doctor pidió (28-oct) que solo diga "Cirugía Oncológica de Cabeza y Cuello" */
      edades: 'Adultos',
      presentacion: 'Atención para pacientes con cáncer de cabeza y cuello.',
      consiste: 'Tratamiento del cáncer de cabeza y cuello.',
@@ -791,6 +791,7 @@ function abrirMedico(m) {
   document.getElementById('perfilNombre').textContent = m.nombre;
   document.getElementById('perfilEsp').textContent = m.esp;
   document.getElementById('perfilSub').textContent = p ? p.sub : '';
+  document.getElementById('perfilSub').hidden = !(p && p.sub);
   document.getElementById('perfilChips').innerHTML = p ? '<span>Atiende: ' + p.edades + '</span><span>Consulta en Tepatitlán</span>' : '';
   document.getElementById('perfilCuerpo').innerHTML = p
     ? seccion('Sobre ' + (ella ? 'la doctora' : 'el doctor'), '<p>' + p.presentacion + '</p><p><b>Su especialidad, en palabras sencillas:</b> ' + p.consiste + '</p>') +
