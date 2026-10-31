@@ -215,6 +215,8 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .pf-datos div{display:grid;grid-template-columns:150px 1fr;gap:12px;font-size:14.5px}
 .pf-datos dt{font-weight:600;color:var(--navy)}
 .pf-datos dd{margin:0;color:var(--texto)}
+.tipo-cita{border:0;margin:0;padding:0;display:grid;gap:8px}.tipo-cita legend{font-size:13px;font-weight:600;color:var(--texto);margin-bottom:6px;padding:0}.tipo-cita label{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:400;color:var(--navy);background:#fff;border:1px solid var(--tinte-2);border-radius:12px;padding:12px 14px;cursor:pointer}.tipo-cita input{accent-color:var(--azul);width:18px;height:18px}
+.aviso-texto{font-size:15px;color:var(--texto);text-align:left}
 .perfil-acciones{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:14px}
 .miembro .circulo.iniciales{background:var(--navy);color:#fff;font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:.02em}
 /* botón flotante de WhatsApp (solo aparece cuando hay número) */
@@ -417,6 +419,10 @@ footer a{color:#fff}
             <option value="Dermatología">Dermatología</option>
           </select>
         </label>
+        <fieldset class="tipo-cita"><legend>Tipo de consulta</legend>
+          <label><input type="radio" name="tipo" value="presencial" checked> En persona, en la unidad</label>
+          <label><input type="radio" name="tipo" value="digital"> Digital (videollamada)</label>
+        </fieldset>
         <label>Médico
           <select id="cMed">
             <option value="">El que tenga el próximo lugar</option>
@@ -621,6 +627,19 @@ footer a{color:#fff}
     <p class="aviso-med">Videos informativos. No sustituyen una consulta médica.</p>
   </div>
 </section>
+
+<dialog class="perfil" id="avisoDigital" aria-labelledby="avisoTitulo">
+  <div class="perfil-caja">
+    <button class="cerrar" type="button" data-cerrar-aviso aria-label="Cerrar">×</button>
+    <h3 id="avisoTitulo">¿Qué es la consulta digital?</h3>
+    <p class="aviso-texto">Es una videollamada con el especialista, sin que tengas que trasladarte. Sirve para una primera valoración, para revisar estudios que ya tengas y para dar seguimiento a tu tratamiento.</p>
+    <p class="aviso-texto">Si el especialista necesita revisarte en persona, te lo indicará y te agendamos una consulta en la unidad.</p>
+    <div class="perfil-acciones">
+      <button class="btn btn-azul" type="button" id="avisoSi">Sí, quiero consulta digital</button>
+      <button class="btn btn-linea" type="button" data-cerrar-aviso>Mejor en persona</button>
+    </div>
+  </div>
+</dialog>
 
 <dialog class="perfil" id="perfil" aria-labelledby="perfilNombre">
   <div class="perfil-caja">
@@ -995,13 +1014,27 @@ llenarMedicos();
 document.querySelectorAll('[data-esp]').forEach(function (a) {
   a.addEventListener('click', function () { cEsp.value = a.dataset.esp; llenarMedicos(); });
 });
+/* Consulta digital: antes de mandar la solicitud se explica en qué consiste y el paciente confirma */
+var avisoDigital = document.getElementById('avisoDigital'), digitalOk = false;
+avisoDigital.addEventListener('click', function (e) {
+  if (e.target === avisoDigital || e.target.closest('[data-cerrar-aviso]')) {
+    avisoDigital.close();
+    if (e.target.closest('.btn-linea')) document.querySelector('[name=tipo][value=presencial]').checked = true;
+  }
+});
+document.getElementById('avisoSi').addEventListener('click', function () {
+  digitalOk = true; avisoDigital.close(); document.getElementById('formCita').requestSubmit();
+});
+document.querySelectorAll('[name=tipo]').forEach(function (r) { r.addEventListener('change', function () { digitalOk = false; }); });
 document.getElementById('formCita').addEventListener('submit', function (e) {
   e.preventDefault();
-  var esp = cEsp.value, med = cMed.value;
+  var tipo = document.querySelector('[name=tipo]:checked').value;
+  if (tipo === 'digital' && !digitalOk) return avisoDigital.showModal();
+  var esp = (tipo === 'digital' ? 'consulta digital de ' : '') + cEsp.value, med = cMed.value;
   var f = document.getElementById('cFecha').value;
   var fecha = f ? new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) : 'el próximo día disponible';
   if (WHATSAPP) {
-    abrirWhatsApp('Hola, quiero una cita de ' + esp + (med ? (med.indexOf('Dra.') === 0 ? ' con la ' : ' con el ') + med : '') + ' para ' + fecha + '.');
+    abrirWhatsApp('Hola, quiero una ' + (tipo === 'digital' ? '' : 'cita de ') + esp + (med ? (med.indexOf('Dra.') === 0 ? ' con la ' : ' con el ') + med : '') + ' para ' + fecha + '.');
   } else {
     document.getElementById('notaCita').textContent = 'La agenda en línea abre muy pronto. Mientras tanto, pide tu cita de ' + esp + ' en la recepción de la unidad.';
   }
