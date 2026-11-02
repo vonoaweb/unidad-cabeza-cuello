@@ -217,6 +217,11 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .pf-datos dd{margin:0;color:var(--texto)}
 .tipo-cita{border:0;margin:0;padding:0;display:grid;gap:8px}.tipo-cita legend{font-size:13px;font-weight:600;color:var(--texto);margin-bottom:6px;padding:0}.tipo-cita label{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:400;color:var(--navy);background:#fff;border:1px solid var(--tinte-2);border-radius:12px;padding:12px 14px;cursor:pointer}.tipo-cita input{accent-color:var(--azul);width:18px;height:18px}
 .aviso-texto{font-size:15px;color:var(--texto);text-align:left}
+.aviso-reglas-t{justify-self:start;font-size:14px;font-weight:700;color:var(--navy);margin:6px 0 0}
+.aviso-reglas{text-align:left;margin:0;padding-left:20px;display:grid;gap:6px;font-size:14.5px;color:var(--texto)}
+.aviso-acepto{justify-self:start;display:flex;gap:10px;align-items:center;font-size:14.5px;font-weight:600;color:var(--navy);cursor:pointer;margin-top:6px}
+.aviso-acepto input{width:18px;height:18px;accent-color:var(--azul)}
+#avisoSi:disabled{opacity:.45;cursor:not-allowed}
 .perfil-acciones{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:14px}
 .miembro .circulo.iniciales{background:var(--navy);color:#fff;font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:.02em}
 /* botón flotante de WhatsApp (solo aparece cuando hay número) */
@@ -632,10 +637,16 @@ footer a{color:#fff}
   <div class="perfil-caja">
     <button class="cerrar" type="button" data-cerrar-aviso aria-label="Cerrar">×</button>
     <h3 id="avisoTitulo">¿Qué es la consulta digital?</h3>
-    <p class="aviso-texto">Es una videollamada con el especialista, sin que tengas que trasladarte. Sirve para una primera valoración, para revisar estudios que ya tengas y para dar seguimiento a tu tratamiento.</p>
-    <p class="aviso-texto">Si el especialista necesita revisarte en persona, te lo indicará y te agendamos una consulta en la unidad.</p>
+    <p class="aviso-texto">Es una videollamada por Google Meet con el especialista, de hasta 30 minutos, sin que tengas que trasladarte. Sirve para aclarar dudas sobre tus molestias o tus estudios y preparar tu consulta en persona en la unidad.</p>
+    <h4 class="aviso-reglas-t">Antes de pedirla, considera:</h4>
+    <ul class="aviso-reglas">
+      <li>El especialista reserva ese horario solo para ti y deja de atender a otros pacientes.</li>
+      <li>Si cancelas, se cobra el 50&nbsp;% de la consulta.</li>
+      <li>Si no te conectas a la hora acordada, se toma como consulta dada y se cobra completa.</li>
+    </ul>
+    <label class="aviso-acepto"><input type="checkbox" id="avisoAcepto"> Leí y acepto estas condiciones</label>
     <div class="perfil-acciones">
-      <button class="btn btn-azul" type="button" id="avisoSi">Sí, quiero consulta digital</button>
+      <button class="btn btn-azul" type="button" id="avisoSi" disabled>Sí, quiero consulta digital</button>
       <button class="btn btn-linea" type="button" data-cerrar-aviso>Mejor en persona</button>
     </div>
   </div>
@@ -1022,6 +1033,7 @@ avisoDigital.addEventListener('click', function (e) {
     if (e.target.closest('.btn-linea')) document.querySelector('[name=tipo][value=presencial]').checked = true;
   }
 });
+document.getElementById('avisoAcepto').addEventListener('change', function () { document.getElementById('avisoSi').disabled = !this.checked; });
 document.getElementById('avisoSi').addEventListener('click', function () {
   digitalOk = true; avisoDigital.close(); document.getElementById('formCita').requestSubmit();
 });
