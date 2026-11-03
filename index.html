@@ -222,6 +222,9 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .aviso-acepto{justify-self:start;display:flex;gap:10px;align-items:center;font-size:14.5px;font-weight:600;color:var(--navy);cursor:pointer;margin-top:6px}
 .aviso-acepto input{width:18px;height:18px;accent-color:var(--azul)}
 .aviso-paso{display:grid;gap:10px;justify-items:center;width:100%}
+.pago-trans{display:grid;gap:4px;width:100%;padding:14px 16px;border:1px solid var(--tinte-2);border-radius:12px;font-size:14.5px;text-align:left}
+.pago-trans code{font-size:15px;font-weight:600;letter-spacing:.02em}
+.btn-copiar{margin-left:6px;padding:3px 10px;border:1px solid var(--tinte-2);border-radius:8px;background:#fff;font-size:12.5px;cursor:pointer}
 #avisoPaso2{justify-items:stretch;text-align:left}#avisoPaso2 h3{text-align:center}
 #avisoSi:disabled{opacity:.45;cursor:not-allowed}
 .perfil-acciones{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:14px}
@@ -1115,7 +1118,7 @@ document.getElementById('avisoSi').addEventListener('click', function () {
     if (!d.medicos.length) throw new Error('sin horarios');
     opciones(dMed, d.medicos.map(function (m) { return [m.id, m.nombre + ' · ' + m.especialidad]; }), '');
     var elegido = d.medicos.filter(function (m) { return m.nombre === cMed.value; })[0]; if (elegido) dMed.value = elegido.id;
-    document.getElementById('dPrecio').textContent = 'Costo: $' + d.precio + '. ' + (d.pagoEnLinea ? 'Al apartar te mandamos a pagar en línea.' : 'Al apartar te mandamos por WhatsApp cómo pagar; la cita se confirma con el pago.');
+    document.getElementById('dPrecio').textContent = 'Costo: $' + d.precio + '. ' + 'Al apartar eliges cómo pagar; la cita se confirma con el pago.';
     verPaso(2); cargarDias();
   }).catch(function () { digitalOk = true; avisoDigital.close(); document.getElementById('formCita').requestSubmit(); });
 });
@@ -1128,12 +1131,28 @@ document.getElementById('avisoPaso2').addEventListener('submit', function (e) {
     medico: dMed.value, fecha: dDia.value, hora: dHora.value, nombre: document.getElementById('dNombre').value,
     whatsapp: document.getElementById('dWa').value, correo: document.getElementById('dCorreo').value, motivo: document.getElementById('dMotivo').value, acepto: true
   })}).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error); return d; }); }).then(function (d) {
-    if (d.pago) { location.href = d.pago; return; }
     var cuando = new Date(d.fecha + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) + ' a las ' + d.hora + ' h';
     var texto = 'Hola, aparté una consulta digital. Folio ' + d.folio + ' con ' + d.medico + ', el ' + cuando + '. ¿Cómo hago el pago de $' + d.precio + '?';
-    document.getElementById('avisoPaso3').innerHTML = '<h3>¡Tu consulta quedó apartada!</h3><p class="aviso-texto">Folio <b>' + d.folio + '</b><br>' + d.medico + '<br>' + cuando + '</p>' +
-      '<p class="aviso-texto">Para confirmarla, manda tu folio por WhatsApp y te decimos cómo pagar los $' + d.precio + '. Con el pago te mandamos la liga de la videollamada.</p>' +
-      '<div class="perfil-acciones"><a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Mandar mi folio por WhatsApp</a></div>';
+    var tr = d.transferencia, html = '<h3>¡Tu consulta quedó apartada!</h3><p class="aviso-texto">Folio <b>' + d.folio + '</b><br>' + d.medico + '<br>' + cuando + '</p>';
+    /* Formas de pago: Mercado Pago (si la unidad ya tiene cuenta) y transferencia con comprobante por WhatsApp (si ya hay CLABE) */
+    if (d.pago || tr) {
+      html += '<p class="aviso-texto">Para confirmarla, paga los <b>$' + d.precio + '</b>. Con el pago te mandamos la liga de la videollamada.</p>';
+      if (d.pago) html += '<div class="perfil-acciones"><a class="btn btn-azul" href="' + d.pago + '">Pagar con tarjeta o Mercado Pago</a></div>';
+      if (tr) {
+        var comp = 'Hola, ya hice la transferencia de $' + d.precio + ' de mi consulta digital. Folio ' + d.folio + ' con ' + d.medico + ', el ' + cuando + '. Aquí va mi comprobante:';
+        html += '<div class="pago-trans"><b>' + (d.pago ? 'O por transferencia' : 'Pago por transferencia') + '</b>' +
+          (tr.banco ? '<span>Banco: ' + tr.banco + '</span>' : '') + (tr.titular ? '<span>A nombre de: ' + tr.titular + '</span>' : '') +
+          '<span>CLABE: <code id="pClabe">' + tr.clabe.replace(/(\d{3})(\d{3})(\d{11})(\d)/, '$1 $2 $3 $4') + '</code> <button type="button" class="btn-copiar" id="pCopiar">Copiar</button></span>' +
+          '<span>Concepto: <b>' + d.folio + '</b></span></div>' +
+          '<div class="perfil-acciones"><a class="btn ' + (d.pago ? 'btn-linea' : 'btn-azul') + '" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(comp) + '" target="_blank" rel="noopener">Mandar mi comprobante por WhatsApp</a></div>';
+      }
+    } else {
+      html += '<p class="aviso-texto">Para confirmarla, manda tu folio por WhatsApp y te decimos cómo pagar los $' + d.precio + '. Con el pago te mandamos la liga de la videollamada.</p>' +
+        '<div class="perfil-acciones"><a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Mandar mi folio por WhatsApp</a></div>';
+    }
+    document.getElementById('avisoPaso3').innerHTML = html;
+    var cp = document.getElementById('pCopiar');
+    if (cp) cp.addEventListener('click', function () { navigator.clipboard.writeText(tr.clabe).then(function () { cp.textContent = 'Copiada'; }); });
     verPaso(3);
   }).catch(function (err) { nota.textContent = err.message || 'No se pudo apartar. Intenta de nuevo.'; cargarHoras(); })
     .then(function () { boton.disabled = false; });
