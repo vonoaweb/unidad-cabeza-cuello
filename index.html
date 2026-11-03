@@ -438,8 +438,11 @@ footer a{color:#fff}
             <option value="">El que tenga el próximo lugar</option>
           </select>
         </label>
-        <label>Fecha que prefieres
+        <label id="cFechaCaja">Fecha que prefieres
           <input id="cFecha" type="date">
+        </label>
+        <label id="cDiaCaja" hidden>Día de consulta
+          <select id="cDia"></select>
         </label>
         <button class="btn btn-azul" type="submit">Solicitar cita</button>
       </form>
@@ -786,6 +789,7 @@ document.querySelectorAll('[data-wa]').forEach(function (a) {
 var lugares = [
   {id: 'dominguez-palomera', nombre: 'Dr. Luis Omar Domínguez Palomera', esp: 'Cirugía Oncológica de Cabeza y Cuello',
    foto: 'img/dr-dominguez.jpg?v=2', agenda: ['Oncología de cabeza y cuello'],
+   presencial: {dias: [5], turno: 'por la mañana', mensual: true},  /* un viernes al mes, a media quincena (del 15 al 21) */
    perfil: {
      sub: '',  /* el doctor pidió (28-oct) que solo diga "Cirugía Oncológica de Cabeza y Cuello" */
      edades: 'Adultos',
@@ -808,6 +812,7 @@ var lugares = [
    }},
   {id: 'oceguera-reyes', nombre: 'Dra. Daniela Oceguera Reyes', esp: 'Cirugía Oncológica de Cabeza y Cuello', foto: 'img/dra-oceguera.jpg?v=2',
    agenda: ['Otorrinolaringología', 'Oncología de cabeza y cuello'],
+   presencial: {dias: [6, 0]},
    perfil: {
      sub: 'Otorrinolaringología',
      edades: 'De 6 años en adelante',
@@ -829,6 +834,7 @@ var lugares = [
    }},
   {id: 'rodriguez-nunez', nombre: 'Dr. Alejandro Javier Rodríguez Núñez', esp: 'Otorrinolaringología Pediátrica', foto: 'img/dr-rodriguez.jpg?v=2',
    agenda: ['Otorrinolaringología'],
+   presencial: {dias: [3], turno: 'por la mañana'},
    perfil: {
      sub: 'Otorrinolaringología y Cirugía de Cabeza y Cuello',
      edades: 'Desde recién nacidos hasta los 17 años',
@@ -924,7 +930,7 @@ document.getElementById('perfilCompartir').addEventListener('click', function ()
   });
 })();
 document.getElementById('perfilAgendar').addEventListener('click', function () {
-  cEsp.value = medicoActual.agenda[0]; llenarMedicos(); cMed.value = medicoActual.nombre;
+  cEsp.value = medicoActual.agenda[0]; llenarMedicos(); cMed.value = medicoActual.nombre; diasPresencial();
   perfil.close();
   document.getElementById('agenda').scrollIntoView();
 });
@@ -1081,8 +1087,25 @@ function llenarMedicos() {
     return m.nombre && m.agenda && m.agenda.indexOf(cEsp.value) >= 0;
   }).map(function (m) { return '<option>' + m.nombre + '</option>'; }).join('');
 }
-cEsp.addEventListener('change', llenarMedicos);
+cEsp.addEventListener('change', function () { llenarMedicos(); diasPresencial(); });
 llenarMedicos();
+/* Consulta en persona: si el médico tiene días fijos ("presencial"), solo se ofrecen esos días */
+var cDia = document.getElementById('cDia'), cDiaCaja = document.getElementById('cDiaCaja'), cFechaCaja = document.getElementById('cFechaCaja');
+function medicoElegido() { return lugares.filter(function (m) { return m.nombre && m.nombre === cMed.value; })[0]; }
+function diasPresencial() {
+  var m = medicoElegido(), pr = m && m.presencial, tipo = document.querySelector('[name=tipo]:checked').value;
+  cDiaCaja.hidden = !(pr && tipo === 'presencial'); cFechaCaja.hidden = !cDiaCaja.hidden;
+  if (cDiaCaja.hidden) return;
+  var d = new Date(), ops = [];
+  for (var i = 1; i <= 150 && ops.length < 6; i++) {
+    d.setDate(d.getDate() + 1);
+    if (pr.dias.indexOf(d.getDay()) < 0 || (pr.mensual && (d.getDate() < 15 || d.getDate() > 21))) continue;
+    var txt = d.toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) + (pr.turno ? ', ' + pr.turno : '');
+    ops.push('<option>' + txt + '</option>');
+  }
+  cDia.innerHTML = ops.join('');
+}
+cMed.addEventListener('change', diasPresencial);
 document.querySelectorAll('[data-esp]').forEach(function (a) {
   a.addEventListener('click', function () { cEsp.value = a.dataset.esp; llenarMedicos(); });
 });
@@ -1159,14 +1182,14 @@ document.getElementById('avisoPaso2').addEventListener('submit', function (e) {
 });
 avisoDigital.addEventListener('close', function () { verPaso(1); });
 (function () { var q = new URLSearchParams(location.search); if (q.get('cita') && q.get('pago')) aviso(q.get('pago') === 'ok' ? 'Pago recibido. Folio ' + q.get('cita') + ': te mandamos la liga de la videollamada por WhatsApp.' : 'El pago no se completó. Folio ' + q.get('cita') + ': escríbenos por WhatsApp.'); })();
-document.querySelectorAll('[name=tipo]').forEach(function (r) { r.addEventListener('change', function () { digitalOk = false; }); });
+document.querySelectorAll('[name=tipo]').forEach(function (r) { r.addEventListener('change', function () { digitalOk = false; diasPresencial(); }); });
 document.getElementById('formCita').addEventListener('submit', function (e) {
   e.preventDefault();
   var tipo = document.querySelector('[name=tipo]:checked').value;
   if (tipo === 'digital' && !digitalOk) return avisoDigital.showModal();
   var esp = (tipo === 'digital' ? 'consulta digital de ' : '') + cEsp.value, med = cMed.value;
   var f = document.getElementById('cFecha').value;
-  var fecha = f ? new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) : 'el próximo día disponible';
+  var fecha = !cDiaCaja.hidden && cDia.value ? 'el ' + cDia.value : f ? new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) : 'el próximo día disponible';
   if (WHATSAPP) {
     abrirWhatsApp('Hola, quiero una ' + (tipo === 'digital' ? '' : 'cita de ') + esp + (med ? (med.indexOf('Dra.') === 0 ? ' con la ' : ' con el ') + med : '') + ' para ' + fecha + '.');
   } else {
