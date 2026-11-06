@@ -789,7 +789,7 @@ document.querySelectorAll('[data-wa]').forEach(function (a) {
 var lugares = [
   {id: 'dominguez-palomera', nombre: 'Dr. Luis Omar Domínguez Palomera', esp: 'Cirugía Oncológica de Cabeza y Cuello',
    foto: 'img/dr-dominguez.jpg?v=2', agenda: ['Oncología de cabeza y cuello'],
-   presencial: {dias: [5], turno: 'por la mañana', mensual: true},  /* un viernes al mes, a media quincena (del 15 al 21) */
+   presencial: {fechas: ['2026-11-20'], turno: 'por la mañana'},  /* un viernes al mes, a media quincena */
    perfil: {
      sub: '',  /* el doctor pidió (28-oct) que solo diga "Cirugía Oncológica de Cabeza y Cuello" */
      edades: 'Adultos',
@@ -812,7 +812,7 @@ var lugares = [
    }},
   {id: 'oceguera-reyes', nombre: 'Dra. Daniela Oceguera Reyes', esp: 'Cirugía Oncológica de Cabeza y Cuello', foto: 'img/dra-oceguera.jpg?v=2',
    agenda: ['Otorrinolaringología', 'Oncología de cabeza y cuello'],
-   presencial: {dias: [6, 0]},
+   presencial: {fechas: ['2026-11-15']},  /* domingos */
    perfil: {
      sub: 'Otorrinolaringología',
      edades: 'De 6 años en adelante',
@@ -834,7 +834,7 @@ var lugares = [
    }},
   {id: 'rodriguez-nunez', nombre: 'Dr. Alejandro Javier Rodríguez Núñez', esp: 'Otorrinolaringología Pediátrica', foto: 'img/dr-rodriguez.jpg?v=2',
    agenda: ['Otorrinolaringología'],
-   presencial: {dias: [3], turno: 'por la mañana'},
+   presencial: {fechas: ['2026-11-11'], turno: 'por la mañana'},  /* miércoles */
    perfil: {
      sub: 'Otorrinolaringología y Cirugía de Cabeza y Cuello',
      edades: 'Desde recién nacidos hasta los 17 años',
@@ -1089,21 +1089,19 @@ function llenarMedicos() {
 }
 cEsp.addEventListener('change', function () { llenarMedicos(); diasPresencial(); });
 llenarMedicos();
-/* Consulta en persona: si el médico tiene días fijos ("presencial"), solo se ofrecen esos días */
+/* Consulta en persona: la unidad abre un día a la vez por médico (presencial.fechas) para juntar pacientes;
+   cuando se llena, se agrega el siguiente. Las fechas que ya pasaron se ocultan solas. */
 var cDia = document.getElementById('cDia'), cDiaCaja = document.getElementById('cDiaCaja'), cFechaCaja = document.getElementById('cFechaCaja');
 function medicoElegido() { return lugares.filter(function (m) { return m.nombre && m.nombre === cMed.value; })[0]; }
 function diasPresencial() {
   var m = medicoElegido(), pr = m && m.presencial, tipo = document.querySelector('[name=tipo]:checked').value;
   cDiaCaja.hidden = !(pr && tipo === 'presencial'); cFechaCaja.hidden = !cDiaCaja.hidden;
   if (cDiaCaja.hidden) return;
-  var d = new Date(), ops = [];
-  for (var i = 1; i <= 150 && ops.length < 6; i++) {
-    d.setDate(d.getDate() + 1);
-    if (pr.dias.indexOf(d.getDay()) < 0 || (pr.mensual && (d.getDate() < 15 || d.getDate() > 21))) continue;
-    var txt = d.toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) + (pr.turno ? ', ' + pr.turno : '');
-    ops.push('<option>' + txt + '</option>');
-  }
-  cDia.innerHTML = ops.join('');
+  var hoyIso = hoy.toISOString().slice(0, 10);
+  var ops = pr.fechas.filter(function (f) { return f > hoyIso; }).map(function (f) {
+    return '<option>' + new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}) + (pr.turno ? ', ' + pr.turno : '') + '</option>';
+  });
+  cDia.innerHTML = ops.join('') || '<option value="">Próxima fecha por confirmar</option>';
 }
 cMed.addEventListener('change', diasPresencial);
 document.querySelectorAll('[data-esp]').forEach(function (a) {
