@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Elige tu horario · Cabeza y Cuello</title>
+<link rel="icon" href="img/logo-sello-96.png">
+<style>
+:root{--navy:#0A1B5C;--azul:#2F5BD8;--tinte:#F5F7FD;--tinte-2:#E2E8FA;--texto:#475485}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--navy);background:var(--tinte);font-size:16px;line-height:1.5}
+header{background:var(--navy);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px}
+header img{width:40px;height:40px}header b{display:block;font-size:16px}header span{font-size:12.5px;opacity:.75}
+main{max-width:560px;margin:0 auto;padding:22px 16px 60px}
+.caja{background:#fff;border:1px solid var(--tinte-2);border-radius:16px;padding:20px;display:grid;gap:14px}
+h1{font-size:21px;margin:0}
+.op{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--tinte-2);border-radius:12px;cursor:pointer;font-size:15.5px}
+.op input{accent-color:var(--azul);width:18px;height:18px}.op:has(input:checked){border-color:var(--azul);background:#f2f5fe}
+button{font:inherit}
+.btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:40px;padding:13px 20px;font-weight:600;cursor:pointer;text-decoration:none;background:var(--azul);color:#fff}
+.btn-linea{background:#fff;color:var(--navy);border:1px solid var(--tinte-2)}
+.nota{color:var(--texto);font-size:14px;margin:0}
+</style>
+</head>
+<body>
+<header><img src="img/logo-sello-96.png" alt=""><div><b>Unidad de Alta Especialidad en Cabeza y Cuello</b><span>Tu consulta virtual</span></div></header>
+<main><div class="caja" id="caja"><p class="nota">Cargando…</p></div></main>
+<script>
+var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams(location.search), F = q.get('f'), T = q.get('t');
+var caja = document.getElementById('caja');
+function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
+function listo(d, fecha, hora) {
+  var txt = 'Hola, elegí el horario de mi consulta virtual ' + d.folio + ' con ' + d.medico + ': ' + fechaLarga(fecha) + ' a las ' + hora + ' h.';
+  return '<h1>¡Tu consulta quedó agendada!</h1><p><b>' + fechaLarga(fecha) + ' a las ' + hora + ' h</b><br>' + d.medico + ' · folio ' + d.folio + '</p>' +
+    '<p class="nota">Te mandaremos la liga de Google Meet por WhatsApp. Recuerda: si cancelas se cobra el 50 % y si no te conectas a la hora, la consulta se cobra completa.</p>' +
+    '<a class="btn" href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Avisar a la unidad por WhatsApp</a>';
+}
+fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(T)).then(function (r) { return r.json(); }).then(function (d) {
+  if (d.error || d.quien !== 'paciente') { caja.innerHTML = '<h1>Liga no válida</h1><p class="nota">Escríbenos por WhatsApp y te la volvemos a mandar.</p>'; return; }
+  if (d.fecha) { caja.innerHTML = listo(d, d.fecha, d.hora); return; }
+  if (d.estado !== 'opciones') { caja.innerHTML = '<h1>Consulta ' + d.folio + '</h1><p class="nota">' + (d.estado === 'por_pagar' ? 'Todavía no recibimos tu pago.' : 'Tu médico todavía no propone horarios. Te avisamos por WhatsApp.') + '</p>'; return; }
+  caja.innerHTML = '<h1>Elige el horario de tu consulta</h1><p class="nota">' + d.medico + ' · ' + d.tipo + ' · folio ' + d.folio + '</p><form id="f" style="display:grid;gap:10px">' +
+    d.opciones.map(function (o, i) { return '<label class="op"><input type="radio" name="op" value="' + i + '"' + (i ? '' : ' checked') + '> ' + fechaLarga(o.fecha) + ' · ' + o.hora + ' h</label>'; }).join('') +
+    '<button class="btn" id="enviar">Confirmar este horario</button><p class="nota" id="nota"></p></form>';
+  document.getElementById('f').onsubmit = function (e) {
+    e.preventDefault();
+    var i = +document.querySelector('[name=op]:checked').value, nota = document.getElementById('nota');
+    document.getElementById('enviar').disabled = true; nota.textContent = 'Confirmando…';
+    fetch(API + 'paciente/elegir', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({folio: F, t: T, opcion: i})})
+      .then(function (r) { return r.json().then(function (x) { if (!r.ok) throw new Error(x.error); return x; }); })
+      .then(function (x) { caja.innerHTML = listo(d, x.fecha, x.hora); })
+      .catch(function (err) { nota.textContent = err.message || 'No se pudo confirmar.'; document.getElementById('enviar').disabled = false; });
+  };
+}).catch(function () { caja.innerHTML = '<p class="nota">No se pudo cargar. Revisa tu conexión e intenta de nuevo.</p>'; });
+</script>
+</body>
+</html>

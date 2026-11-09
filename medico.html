@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Opciones para tu paciente · Cabeza y Cuello</title>
+<link rel="icon" href="img/logo-sello-96.png">
+<style>
+:root{--navy:#0A1B5C;--azul:#2F5BD8;--tinte:#F5F7FD;--tinte-2:#E2E8FA;--texto:#475485}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--navy);background:var(--tinte);font-size:16px;line-height:1.5}
+header{background:var(--navy);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px}
+header img{width:40px;height:40px}header b{display:block;font-size:16px}header span{font-size:12.5px;opacity:.75}
+main{max-width:560px;margin:0 auto;padding:22px 16px 60px}
+.caja{background:#fff;border:1px solid var(--tinte-2);border-radius:16px;padding:20px;display:grid;gap:14px}
+h1{font-size:21px;margin:0}
+.datos{display:grid;gap:4px;font-size:15px}.datos span{color:var(--texto)}
+.op{display:grid;grid-template-columns:1fr 120px;gap:8px}
+input,button{font:inherit}input{width:100%;padding:12px;border:1px solid var(--tinte-2);border-radius:12px;background:#fff}
+.btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:40px;padding:13px 20px;font-weight:600;cursor:pointer;text-decoration:none;background:var(--azul);color:#fff}
+.btn-linea{background:#fff;color:var(--navy);border:1px solid var(--tinte-2)}
+.nota{color:var(--texto);font-size:14px;margin:0}
+</style>
+</head>
+<body>
+<header><img src="img/logo-sello-96.png" alt=""><div><b>Unidad de Alta Especialidad en Cabeza y Cuello</b><span>Consulta virtual · opciones para el paciente</span></div></header>
+<main><div class="caja" id="caja"><p class="nota">Cargando…</p></div></main>
+<script>
+var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams(location.search), F = q.get('f'), T = q.get('t');
+var caja = document.getElementById('caja');
+var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); };
+function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
+function fila() { return '<div class="op"><input type="date" class="of"><input type="time" class="oh" step="900"></div>'; }
+function avisar(d, texto) { return '<a class="btn btn-linea" href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Avisar a la unidad por WhatsApp</a>'; }
+fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(T)).then(function (r) { return r.json(); }).then(function (d) {
+  if (d.error || d.quien !== 'medico') { caja.innerHTML = '<h1>Liga no válida</h1><p class="nota">Pide a la unidad que te la vuelva a mandar.</p>'; return; }
+  var cab = '<h1>Consulta virtual ' + esc(d.folio) + '</h1><div class="datos"><div><span>Paciente:</span> ' + esc(d.paciente) + '</div><div><span>Tipo:</span> ' + esc(d.tipo) + '</div>' +
+    (d.motivo ? '<div><span>Motivo:</span> ' + esc(d.motivo) + '</div>' : '') + '</div>';
+  if (d.estado === 'por_pagar') { caja.innerHTML = cab + '<p class="nota">El paciente todavía no paga. La unidad te avisará cuando esté pagada.</p>'; return; }
+  if (['agendada', 'realizada', 'no_asistio', 'cancelada'].indexOf(d.estado) >= 0) {
+    caja.innerHTML = cab + (d.fecha ? '<p><b>El paciente eligió el ' + fechaLarga(d.fecha) + ' a las ' + d.hora + ' h.</b></p><p class="nota">La unidad te mandará la liga de Google Meet.</p>' : '<p class="nota">Esta consulta ya no está activa.</p>');
+    return;
+  }
+  var previas = d.opciones || [];
+  caja.innerHTML = cab + '<p class="nota">Ponga los días y horas en que puede dar la videollamada (hasta 6). El paciente elegirá una.</p>' +
+    '<form id="f" style="display:grid;gap:10px"><div id="ops">' + [0, 1, 2].map(fila).join('') + '</div>' +
+    '<button type="button" class="btn btn-linea" id="mas">Agregar otra opción</button><button class="btn" id="enviar">Mandar opciones</button><p class="nota" id="nota"></p></form>';
+  var ops = document.getElementById('ops'), hoy = new Date(); hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
+  function minimos() { ops.querySelectorAll('.of').forEach(function (i) { i.min = hoy.toISOString().slice(0, 10); }); }
+  previas.forEach(function (o, i) { if (!ops.children[i]) ops.insertAdjacentHTML('beforeend', fila()); ops.children[i].querySelector('.of').value = o.fecha; ops.children[i].querySelector('.oh').value = o.hora; });
+  minimos();
+  document.getElementById('mas').onclick = function () { if (ops.children.length < 6) { ops.insertAdjacentHTML('beforeend', fila()); minimos(); } };
+  document.getElementById('f').onsubmit = function (e) {
+    e.preventDefault();
+    var lista = [].map.call(ops.children, function (r) { return {fecha: r.querySelector('.of').value, hora: r.querySelector('.oh').value}; }).filter(function (o) { return o.fecha && o.hora; });
+    var nota = document.getElementById('nota');
+    if (!lista.length) { nota.textContent = 'Ponga al menos un día con su hora.'; return; }
+    document.getElementById('enviar').disabled = true; nota.textContent = 'Enviando…';
+    fetch(API + 'medico/opciones', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({folio: F, t: T, opciones: lista})})
+      .then(function (r) { return r.json().then(function (x) { if (!r.ok) throw new Error(x.error); return x; }); })
+      .then(function (x) {
+        caja.innerHTML = cab + '<p><b>¡Listo! Guardamos sus opciones:</b></p><ul>' + x.opciones.map(function (o) { return '<li>' + fechaLarga(o.fecha) + ' · ' + o.hora + ' h</li>'; }).join('') + '</ul>' +
+          '<p class="nota">Avise a la unidad para que se las mande al paciente.</p>' + avisar(d, 'Ya puse mis opciones de horario para la consulta virtual ' + d.folio + '.');
+      }).catch(function (err) { nota.textContent = err.message || 'No se pudo enviar.'; document.getElementById('enviar').disabled = false; });
+  };
+}).catch(function () { caja.innerHTML = '<p class="nota">No se pudo cargar. Revisa tu conexión e intenta de nuevo.</p>'; });
+</script>
+</body>
+</html>
