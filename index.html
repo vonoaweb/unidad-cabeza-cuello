@@ -1131,18 +1131,36 @@ function pedirJson(ruta, cuerpo) {
   return fetch(CITAS + ruta, cuerpo ? {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(cuerpo)} : undefined)
     .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || 'Error'); return d; }); });
 }
-function modoSolicitud() { cAgenda.hidden = true; cFechaCaja.hidden = tipoConsulta() !== 'presencial'; cEnviar.textContent = 'Solicitar cita'; }
+function modoSolicitud() { cAgenda.hidden = true; cFechaCaja.hidden = tipoConsulta() !== 'presencial'; cEnviar.textContent = tipoConsulta() === 'presencial' ? 'Pedir cita por WhatsApp' : 'Solicitar cita'; }
+/* "El que tenga el próximo lugar": se busca entre los médicos de la especialidad el primero con un día libre y se muestra su calendario */
+function buscarMedicoLibre(mia) {
+  var candidatos = lugares.filter(function (x) { return x.id && x.agenda && x.agenda.indexOf(cEsp.value) >= 0; });
+  if (!candidatos.length) return modoSolicitud();
+  Promise.all(candidatos.map(function (x) {
+    return pedirJson('presencial/calendario?medico=' + x.id).then(function (d) {
+      var libre = d.dias.filter(function (y) { return y.estado === 'libre'; })[0];
+      return libre ? {medico: x, fecha: libre.fecha} : null;
+    }).catch(function () { return null; });
+  })).then(function (r) {
+    if (mia !== vuelta) return;
+    var mejor = r.filter(Boolean).sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; })[0];
+    if (mejor) { cMed.value = mejor.medico.nombre; agendaPresencial(); return; }
+    modoSolicitud();
+    notaCita.textContent = 'Por ahora no hay fechas abiertas en esta especialidad. Pide tu cita por WhatsApp y te avisamos en cuanto abra una.';
+  });
+}
 var vuelta = 0;  /* ignora respuestas viejas si el paciente cambió de médico o de tipo mientras cargaba */
 function agendaPresencial() {
   cListo.hidden = true; notaCita.textContent = '';
   var m = medicoElegido(), mia = ++vuelta;
-  if (tipoConsulta() !== 'presencial' || !m || !m.id) return modoSolicitud();
+  if (tipoConsulta() !== 'presencial') return modoSolicitud();
+  if (!m || !m.id) return buscarMedicoLibre(mia);
   pedirJson('presencial/calendario?medico=' + m.id).then(function (d) {
     if (mia !== vuelta) return;
     var libres = d.dias.filter(function (x) { return x.estado === 'libre'; });
     if (!libres.length) {
       modoSolicitud(); cFechaCaja.hidden = true;
-      notaCita.textContent = d.dias.length ? 'Por ahora no hay lugares con este médico. Solicita tu cita y te avisamos en cuanto abra una fecha.' : 'Próxima fecha por confirmar. Solicita tu cita y te avisamos.';
+      notaCita.textContent = d.dias.length ? 'Por ahora no hay lugares con este médico. Pide tu cita por WhatsApp y te avisamos en cuanto abra una fecha, o elige otro médico de la especialidad.' : 'Próxima fecha por confirmar. Solicita tu cita y te avisamos.';
       return;
     }
     pintarCalendario(d.dias, libres[0].fecha);
@@ -1200,6 +1218,7 @@ function dibujarQR(caja, texto) {
   var s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'; s.onload = hacer; document.head.appendChild(s);
 }
 cMed.addEventListener('change', agendaPresencial);
+agendaPresencial();  /* al abrir la página ya se muestra la agenda de la especialidad que viene elegida */
 document.querySelectorAll('[data-esp]').forEach(function (a) {
   a.addEventListener('click', function () { cEsp.value = a.dataset.esp; llenarMedicos(); agendaPresencial(); });
 });
