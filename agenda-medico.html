@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mi agenda · Cabeza y Cuello</title>
+<link rel="icon" href="img/logo-sello-96.png">
+<style>
+:root{--navy:#0A1B5C;--azul:#2F5BD8;--tinte:#F5F7FD;--tinte-2:#E2E8FA;--texto:#475485}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--navy);background:var(--tinte);font-size:16px;line-height:1.5}
+header{background:var(--navy);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px}
+header img{width:40px;height:40px}header b{display:block;font-size:16px}header span{font-size:12.5px;opacity:.75}
+main{max-width:640px;margin:0 auto;padding:20px 16px 60px;display:grid;gap:14px}
+h1{font-size:21px;margin:0}
+.dia{background:#fff;border:1px solid var(--tinte-2);border-radius:16px;padding:16px 18px}
+.dia h2{font-size:16px;margin:0 0 2px;text-transform:capitalize}
+.lugar{font-size:13.5px;color:var(--texto);margin-bottom:6px}
+.cita{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--tinte-2);font-size:15px}
+.hora{font-weight:600}.det{color:var(--texto);font-size:13.5px}
+.etq{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:40px;background:var(--tinte-2);margin-right:4px}
+.etq.v{background:#e6eeff;color:#1d3fa3}.etq.no{background:#eee;color:#555}
+a.meet{display:inline-block;margin-top:6px;background:var(--azul);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:7px 14px;border-radius:40px}
+.nota{color:var(--texto);font-size:14px;margin:0}
+.resumen{display:flex;gap:10px;flex-wrap:wrap}.resumen div{background:#fff;border:1px solid var(--tinte-2);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--texto)}.resumen b{display:block;font-size:20px;color:var(--navy)}
+</style>
+</head>
+<body>
+<header><img src="img/logo-sello-96.png" alt=""><div><b>Unidad de Alta Especialidad en Cabeza y Cuello</b><span>Mi agenda</span></div></header>
+<main id="caja"><p class="nota">Cargando…</p></main>
+<script>
+var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams(location.search);
+var caja = document.getElementById('caja');
+var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); };
+function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
+function cargar() {
+  fetch(API + 'agenda-medico?m=' + encodeURIComponent(q.get('m') || '') + '&t=' + encodeURIComponent(q.get('t') || '')).then(function (r) { return r.json(); }).then(function (d) {
+    if (d.error) { caja.innerHTML = '<h1>Liga no válida</h1><p class="nota">Pide a la unidad que te la vuelva a mandar.</p>'; return; }
+    /* juntar por fecha: días abiertos en la unidad, citas presenciales y consultas virtuales */
+    var dias = {};
+    function dia(f) { return dias[f] = dias[f] || {fecha: f, lugar: null, citas: []}; }
+    d.dias.forEach(function (x) { dia(x.fecha).lugar = x; });
+    d.presenciales.forEach(function (c) { dia(c.fecha).citas.push({hora: c.hora, html: '<span class="etq">' + esc(d.tipos[c.tipo]) + '</span>' + (c.estado === 'no_asistio' ? '<span class="etq no">No asistió</span>' : c.estado === 'atendida' ? '<span class="etq no">Atendida</span>' : '') + '<br>' + esc(c.nombre) + (c.motivo ? '<div class="det">' + esc(c.motivo) + '</div>' : '')}); });
+    d.virtuales.forEach(function (c) { dia(c.fecha).citas.push({hora: c.hora, html: '<span class="etq v">Virtual</span><span class="etq">' + esc(d.tipos[c.tipo] || '') + '</span><br>' + esc(c.nombre) + (c.motivo ? '<div class="det">' + esc(c.motivo) + '</div>' : '') + (c.meet && c.estado === 'agendada' ? '<a class="meet" href="' + esc(c.meet) + '" target="_blank" rel="noopener">Entrar a la videollamada</a>' : '')}); });
+    var lista = Object.keys(dias).sort().map(function (k) { return dias[k]; });
+    var total = d.presenciales.length + d.virtuales.length;
+    var html = '<h1>' + esc(d.medico) + '</h1><p class="nota">' + esc(d.especialidad) + ' · próximos 60 días</p>' +
+      '<div class="resumen"><div>Citas<b>' + total + '</b></div><div>Días en la unidad<b>' + d.dias.length + '</b></div><div>Virtuales<b>' + d.virtuales.length + '</b></div></div>';
+    html += lista.map(function (x) {
+      x.citas.sort(function (a, b) { return a.hora < b.hora ? -1 : 1; });
+      var lugar = x.lugar ? (x.lugar.consultorio ? 'Consultorio ' + x.lugar.consultorio : 'En la unidad') + ' · ' + x.lugar.inicio + ' a ' + x.lugar.fin : 'Solo consulta virtual';
+      return '<section class="dia"><h2>' + fechaLarga(x.fecha) + '</h2><div class="lugar">' + lugar + '</div>' +
+        (x.citas.map(function (c) { return '<div class="cita"><div class="hora">' + c.hora + '</div><div>' + c.html + '</div></div>'; }).join('') || '<p class="nota">Todavía sin pacientes.</p>') + '</section>';
+    }).join('') || '<p class="nota">No tienes citas ni días programados en los próximos 60 días.</p>';
+    caja.innerHTML = html + '<p class="nota">Esta liga es personal. Se actualiza sola: vuelve a abrirla para ver los cambios.</p>';
+  }).catch(function () { caja.innerHTML = '<p class="nota">No se pudo cargar. Revisa tu conexión e intenta de nuevo.</p>'; });
+}
+cargar();
+</script>
+</body>
+</html>
