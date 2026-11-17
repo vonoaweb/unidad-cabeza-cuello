@@ -222,6 +222,19 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .aviso-acepto{justify-self:start;display:flex;gap:10px;align-items:center;font-size:14.5px;font-weight:600;color:var(--navy);cursor:pointer;margin-top:6px}
 .aviso-acepto input{width:18px;height:18px;accent-color:var(--azul)}
 .aviso-paso{display:grid;gap:10px;justify-items:center;width:100%}
+.cal-pac{display:grid;gap:8px}.cal-et{font-size:13px;font-weight:600;color:var(--texto)}
+.cal-mes{background:#fff;border:1px solid var(--tinte-2);border-radius:14px;padding:12px}.cal-mes+.cal-mes{margin-top:10px}
+.cal-cab{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cal-cab h4{margin:0;font-size:14.5px}.cal-cab h4::first-letter{text-transform:uppercase}
+.cal-flecha{border:1px solid var(--tinte-2);background:#fff;border-radius:50%;width:32px;height:32px;font-size:18px;line-height:1;color:var(--navy);cursor:pointer}.cal-flecha:disabled{opacity:.3;cursor:default}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal-grid .sem{font-size:11px;font-weight:600;color:var(--texto)}
+.cal-dia{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:42px;border-radius:12px;font-size:14px;color:#b4bad0;border:0;background:none;padding:0;font-family:inherit}
+.cal-dia small{font-size:9.5px;line-height:1;margin-top:2px}
+.cal-dia.lleno{background:#f1f2f6;color:#9aa0b5}.cal-dia.libre{background:#e6eeff;color:var(--azul);font-weight:700;cursor:pointer}
+.cal-dia.libre:hover{background:#d5e1ff}.cal-dia.sel{background:var(--azul);color:#fff}
+.horas{display:flex;flex-wrap:wrap;gap:8px}.horas button{border:1px solid var(--tinte-2);background:#fff;border-radius:40px;padding:9px 14px;font-size:14.5px;font-weight:600;color:var(--navy);cursor:pointer;font-family:inherit}
+.horas button.sel{background:var(--azul);border-color:var(--azul);color:#fff}.horas .nota{margin:0}
+.pase-qr{display:flex;justify-content:center;background:#fff;border-radius:12px;padding:10px}.pase-qr img{width:200px;height:200px;image-rendering:pixelated}
 .cita-lista{margin-top:16px;padding:16px 18px;border:1px solid var(--tinte-2);border-radius:14px;background:#fff;display:grid;gap:10px;font-size:15px}.cita-lista h3{margin:0;font-size:18px}
 .pago-trans{display:grid;gap:4px;width:100%;padding:14px 16px;border:1px solid var(--tinte-2);border-radius:12px;font-size:14.5px;text-align:left}
 .pago-trans code{font-size:15px;font-weight:600;letter-spacing:.02em}
@@ -447,11 +460,16 @@ footer a{color:#fff}
           <input id="cFecha" type="date">
         </label>
         <div id="cAgenda" class="campos" hidden>
-          <label>Día<select id="cDia"></select></label>
-          <label>Hora<select id="cHora"></select></label>
+          <div class="cal-pac"><span class="cal-et">Elige el día</span><div id="cCal"></div><input type="hidden" id="cDia"></div>
+          <div class="cal-pac"><span class="cal-et">Elige la hora</span><div id="cHoras" class="horas"></div><input type="hidden" id="cHora"></div>
           <label>Tu nombre completo<input id="cNombre" autocomplete="name"></label>
           <label>Tu WhatsApp (10 dígitos)<input id="cWa" inputmode="numeric" autocomplete="tel"></label>
           <label>¿Qué te gustaría consultar? (opcional)<input id="cMotivo" maxlength="300"></label>
+          <fieldset class="tipo-cita"><legend>¿Cómo vas a pagar tu consulta en la unidad?</legend>
+            <label><input type="radio" name="pago" value="efectivo" checked> Efectivo</label>
+            <label><input type="radio" name="pago" value="transferencia"> Transferencia</label>
+            <label><input type="radio" name="pago" value="tarjeta"> Tarjeta</label>
+          </fieldset>
         </div>
         <button class="btn btn-azul" type="submit" id="cEnviar">Solicitar cita</button>
       </form>
@@ -1119,32 +1137,72 @@ function agendaPresencial() {
   cListo.hidden = true; notaCita.textContent = '';
   var m = medicoElegido(), mia = ++vuelta;
   if (tipoConsulta() !== 'presencial' || !m || !m.id) return modoSolicitud();
-  pedirJson('presencial/dias?medico=' + m.id).then(function (d) {
+  pedirJson('presencial/calendario?medico=' + m.id).then(function (d) {
     if (mia !== vuelta) return;
-    var libres = d.dias.filter(function (x) { return !x.lleno; });
+    var libres = d.dias.filter(function (x) { return x.estado === 'libre'; });
     if (!libres.length) {
       modoSolicitud(); cFechaCaja.hidden = true;
-      notaCita.textContent = d.dias.length ? 'Los días abiertos ya están llenos. Solicita tu cita y te avisamos de la próxima fecha.' : 'Próxima fecha por confirmar. Solicita tu cita y te avisamos.';
+      notaCita.textContent = d.dias.length ? 'Por ahora no hay lugares con este médico. Solicita tu cita y te avisamos en cuanto abra una fecha.' : 'Próxima fecha por confirmar. Solicita tu cita y te avisamos.';
       return;
     }
-    opciones(cDia, d.dias.map(function (x) { return [x.fecha, fechaLarga(x.fecha) + (x.lleno ? ' (lleno)' : ''), x.lleno]; }), '');
-    cDia.value = libres[0].fecha;
+    pintarCalendario(d.dias, libres[0].fecha);
     cAgenda.hidden = false; cFechaCaja.hidden = true; cEnviar.textContent = 'Agendar cita';
     cargarHoras();
   }).catch(function () { if (mia === vuelta) modoSolicitud(); });
 }
+/* Calendario del paciente: los días con lugar salen en azul; los llenos y los días del médico sin lugar, en gris */
+var calPac = {porFecha: {}, meses: [], i: 0};
+function pintarCalendario(dias, elegido) {
+  calPac.porFecha = {}; dias.forEach(function (x) { calPac.porFecha[x.fecha] = x.estado; });
+  calPac.meses = []; var m = hoy.toISOString().slice(0, 7);
+  while (m <= dias[dias.length - 1].fecha.slice(0, 7)) { calPac.meses.push(m); var d = new Date(m + '-15T12:00'); d.setMonth(d.getMonth() + 1); m = d.toISOString().slice(0, 7); }
+  calPac.i = Math.max(0, calPac.meses.indexOf(elegido.slice(0, 7)));
+  cDia.value = elegido; pintarMes();
+}
+/* un mes a la vez, con flechas para ver los siguientes */
+function pintarMes() {
+  var ym = calPac.meses[calPac.i], y = +ym.slice(0, 4), mes = +ym.slice(5, 7) - 1, dias_mes = new Date(y, mes + 1, 0).getDate(), hueco = (new Date(y, mes, 1).getDay() + 6) % 7;
+  var html = '<div class="cal-mes"><div class="cal-cab"><button type="button" class="cal-flecha" data-mes="-1" aria-label="Mes anterior"' + (calPac.i ? '' : ' disabled') + '>‹</button><h4>' +
+    new Date(y, mes, 15).toLocaleDateString('es-MX', {month: 'long', year: 'numeric'}) + '</h4><button type="button" class="cal-flecha" data-mes="1" aria-label="Mes siguiente"' + (calPac.i < calPac.meses.length - 1 ? '' : ' disabled') + '>›</button></div><div class="cal-grid">' +
+    ['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(function (s) { return '<span class="sem">' + s + '</span>'; }).join('') + new Array(hueco + 1).join('<span></span>');
+  for (var n = 1; n <= dias_mes; n++) {
+    var f = ym + '-' + String(n).padStart(2, '0'), e = calPac.porFecha[f];
+    if (e === 'libre') html += '<button type="button" class="cal-dia libre' + (f === cDia.value ? ' sel' : '') + '" data-dia="' + f + '" aria-label="' + fechaLarga(f) + ', con lugares">' + n + '</button>';
+    else if (e) html += '<span class="cal-dia lleno">' + n + '<small>' + (e === 'lleno' ? 'Lleno' : 'Sin lugar') + '</small></span>';
+    else html += '<span class="cal-dia">' + n + '</span>';
+  }
+  document.getElementById('cCal').innerHTML = html + '</div></div>';
+}
+document.getElementById('cCal').addEventListener('click', function (e) {
+  var flecha = e.target.closest('[data-mes]');
+  if (flecha) { calPac.i = Math.min(calPac.meses.length - 1, Math.max(0, calPac.i + +flecha.dataset.mes)); pintarMes(); return; }
+  var b = e.target.closest('[data-dia]'); if (!b) return;
+  this.querySelectorAll('.sel').forEach(function (x) { x.classList.remove('sel'); }); b.classList.add('sel');
+  cDia.value = b.dataset.dia; cargarHoras();
+});
 function cargarHoras() {
-  var m = medicoElegido();
+  var m = medicoElegido(), caja = document.getElementById('cHoras');
+  cHora.value = '';
   if (!m || !cDia.value) return;
   pedirJson('presencial/horas?medico=' + m.id + '&fecha=' + cDia.value + '&tipo=' + tipoVisita()).then(function (d) {
-    opciones(cHora, d.horas.map(function (h) { return [h, h + ' h']; }), 'Sin horas libres ese día');
+    caja.innerHTML = d.horas.map(function (h) { return '<button type="button" data-hora="' + h + '">' + h + '</button>'; }).join('') || '<p class="nota">Ese día ya no hay horas para este tipo de consulta. Elige otro día.</p>';
   });
+}
+document.getElementById('cHoras').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-hora]'); if (!b) return;
+  this.querySelectorAll('.sel').forEach(function (x) { x.classList.remove('sel'); }); b.classList.add('sel');
+  cHora.value = b.dataset.hora;
+});
+/* QR del pase: se dibuja en el navegador con qrcode-generator (cdnjs) */
+function dibujarQR(caja, texto) {
+  var hacer = function () { var q = qrcode(0, 'M'); q.addData(texto); q.make(); caja.innerHTML = '<img alt="QR de tu pase" src="' + q.createDataURL(8, 2) + '">'; };
+  if (window.qrcode) return hacer();
+  var s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'; s.onload = hacer; document.head.appendChild(s);
 }
 cMed.addEventListener('change', agendaPresencial);
 document.querySelectorAll('[data-esp]').forEach(function (a) {
   a.addEventListener('click', function () { cEsp.value = a.dataset.esp; llenarMedicos(); agendaPresencial(); });
 });
-cDia.addEventListener('change', cargarHoras);
 document.querySelectorAll('[name=visita]').forEach(function (r) { r.addEventListener('change', cargarHoras); });
 document.querySelectorAll('[name=tipo]').forEach(function (r) { r.addEventListener('change', function () { digitalOk = false; agendaPresencial(); }); });
 
@@ -1214,16 +1272,19 @@ document.getElementById('formCita').addEventListener('submit', function (e) {
   /* presencial con agenda: se aparta la hora en el servidor */
   if (tipo === 'presencial' && !cAgenda.hidden) {
     var nombre = document.getElementById('cNombre').value.trim(), wa = document.getElementById('cWa').value.replace(/\D/g, '');
-    if (!cHora.value) { notaCita.textContent = 'Elige un día y una hora.'; return; }
+    if (!cHora.value) { notaCita.textContent = 'Elige el día y la hora.'; return; }
     if (!nombre || wa.length < 10) { notaCita.textContent = 'Escribe tu nombre y tu WhatsApp de 10 dígitos.'; return; }
     cEnviar.disabled = true; notaCita.textContent = 'Agendando…';
-    pedirJson('presencial', {medico: medicoElegido().id, fecha: cDia.value, hora: cHora.value, tipo: tipoVisita(), nombre: nombre, whatsapp: wa, motivo: document.getElementById('cMotivo').value})
+    pedirJson('presencial', {medico: medicoElegido().id, fecha: cDia.value, hora: cHora.value, tipo: tipoVisita(), nombre: nombre, whatsapp: wa, motivo: document.getElementById('cMotivo').value, pago: (document.querySelector('[name=pago]:checked') || {}).value})
       .then(function (d) {
         var cuando = fechaLarga(d.fecha) + ' a las ' + d.hora + ' h';
-        var txt = 'Hola, agendé una cita presencial. Folio ' + d.folio + ' · ' + d.tipo + ' con ' + d.medico + ', el ' + cuando + '. A nombre de ' + nombre + '.';
+        var txt = 'Hola, agendé una cita presencial. Folio ' + d.folio + ' · ' + d.tipo + ' con ' + d.medico + ', el ' + cuando + '. A nombre de ' + nombre + '. Mi pase: ' + d.pase;
         cListo.innerHTML = '<h3>¡Tu cita quedó agendada!</h3><div>Folio <b>' + d.folio + '</b><br>' + d.medico + '<br>' + d.tipo + ' · ' + cuando + '</div>' +
-          '<div class="nota" style="margin:0">Llega 10 minutos antes. Para cancelar o cambiar tu cita, escríbenos por WhatsApp con tu folio.</div>' +
-          '<a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Avisar a la unidad por WhatsApp</a>';
+          '<div class="pase-qr" id="cQR"></div>' +
+          '<div class="nota" style="margin:0">Este es tu pase: enséñalo en la unidad al llegar para registrar tu asistencia. Guárdalo con el botón de abajo o tómale captura. Llega 10 minutos antes; para cancelar o cambiar tu cita, escríbenos por WhatsApp con tu folio.</div>' +
+          '<a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Confirmar y guardar mi pase por WhatsApp</a>' +
+          '<a class="btn btn-linea" href="' + d.pase + '" target="_blank" rel="noopener">Abrir mi pase</a>';
+        dibujarQR(document.getElementById('cQR'), d.pase);
         cListo.hidden = false; notaCita.textContent = '';
         document.getElementById('formCita').reset(); cAgenda.hidden = true; cFechaCaja.hidden = false;
       }).catch(function (err) { notaCita.textContent = err.message; cargarHoras(); })

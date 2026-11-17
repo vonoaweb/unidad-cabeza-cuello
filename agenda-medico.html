@@ -20,7 +20,8 @@ h1{font-size:21px;margin:0}
 .cita{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--tinte-2);font-size:15px}
 .hora{font-weight:600}.det{color:var(--texto);font-size:13.5px}
 .etq{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:40px;background:var(--tinte-2);margin-right:4px}
-.etq.v{background:#e6eeff;color:#1d3fa3}.etq.no{background:#eee;color:#555}
+.etq.v{background:#e6eeff;color:#1d3fa3}.etq.no{background:#eee;color:#555}.etq.ok{background:#dcf5e3;color:#11632f}
+button.conf{margin-top:6px;border:0;border-radius:40px;background:var(--azul);color:#fff;font:inherit;font-size:13.5px;font-weight:600;padding:6px 14px;cursor:pointer}
 a.meet{display:inline-block;margin-top:6px;background:var(--azul);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:7px 14px;border-radius:40px}
 .nota{color:var(--texto);font-size:14px;margin:0}
 .resumen{display:flex;gap:10px;flex-wrap:wrap}.resumen div{background:#fff;border:1px solid var(--tinte-2);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--texto)}.resumen b{display:block;font-size:20px;color:var(--navy)}
@@ -41,7 +42,11 @@ function cargar() {
     var dias = {};
     function dia(f) { return dias[f] = dias[f] || {fecha: f, lugar: null, citas: []}; }
     d.dias.forEach(function (x) { dia(x.fecha).lugar = x; });
-    d.presenciales.forEach(function (c) { dia(c.fecha).citas.push({hora: c.hora, html: '<span class="etq">' + esc(d.tipos[c.tipo]) + '</span>' + (c.estado === 'no_asistio' ? '<span class="etq no">No asistió</span>' : c.estado === 'atendida' ? '<span class="etq no">Atendida</span>' : '') + '<br>' + esc(c.nombre) + (c.motivo ? '<div class="det">' + esc(c.motivo) + '</div>' : '')}); });
+    d.presenciales.forEach(function (c) {
+      var estado = c.checkin ? '<span class="etq ok">Llegó ' + new Date(c.checkin).toLocaleTimeString('es-MX', {hour: '2-digit', minute: '2-digit'}) + '</span>' : c.estado === 'no_asistio' ? '<span class="etq no">No asistió</span>' : c.estado === 'atendida' ? '<span class="etq no">Atendida</span>' : '';
+      var confirmar = c.estado === 'agendada' ? (c.confirmada ? '<div class="det">Confirmada por usted ✓</div>' : '<button class="conf" data-folio="' + esc(c.folio) + '">Confirmar esta cita</button>') : '';
+      dia(c.fecha).citas.push({hora: c.hora, html: '<span class="etq">' + esc(d.tipos[c.tipo]) + '</span>' + estado + '<br>' + esc(c.nombre) + (c.motivo ? '<div class="det">' + esc(c.motivo) + '</div>' : '') + confirmar});
+    });
     d.virtuales.forEach(function (c) { dia(c.fecha).citas.push({hora: c.hora, html: '<span class="etq v">Virtual</span><span class="etq">' + esc(d.tipos[c.tipo] || '') + '</span><br>' + esc(c.nombre) + (c.motivo ? '<div class="det">' + esc(c.motivo) + '</div>' : '') + (c.meet && c.estado === 'agendada' ? '<a class="meet" href="' + esc(c.meet) + '" target="_blank" rel="noopener">Entrar a la videollamada</a>' : '')}); });
     var lista = Object.keys(dias).sort().map(function (k) { return dias[k]; });
     var total = d.presenciales.length + d.virtuales.length;
@@ -56,6 +61,13 @@ function cargar() {
     caja.innerHTML = html + '<p class="nota">Esta liga es personal. Se actualiza sola: vuelve a abrirla para ver los cambios.</p>';
   }).catch(function () { caja.innerHTML = '<p class="nota">No se pudo cargar. Revisa tu conexión e intenta de nuevo.</p>'; });
 }
+caja.addEventListener('click', function (e) {
+  var b = e.target.closest('button.conf'); if (!b) return;
+  b.disabled = true; b.textContent = 'Confirmando…';
+  fetch(API + 'agenda-medico/confirmar', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({m: q.get('m'), t: q.get('t'), folio: b.dataset.folio})})
+    .then(function (r) { if (!r.ok) throw new Error(); cargar(); })
+    .catch(function () { b.disabled = false; b.textContent = 'No se pudo, intenta de nuevo'; });
+});
 cargar();
 </script>
 </body>
