@@ -16,7 +16,8 @@ main{max-width:560px;margin:0 auto;padding:22px 16px 60px}
 .caja{background:#fff;border:1px solid var(--tinte-2);border-radius:16px;padding:20px;display:grid;gap:14px}
 h1{font-size:21px;margin:0}
 .datos{display:grid;gap:4px;font-size:15px}.datos span{color:var(--texto)}
-.op{display:grid;grid-template-columns:1fr 120px;gap:8px}
+.op{display:grid;grid-template-columns:minmax(0,1fr) 136px 44px;gap:8px}
+.quitar{border:1px solid var(--tinte-2);background:#fff;border-radius:12px;font-size:18px;color:var(--texto);cursor:pointer}.quitar:hover{color:#8a1c1c;border-color:#f3b9b9}
 input,button{font:inherit}input{width:100%;padding:12px;border:1px solid var(--tinte-2);border-radius:12px;background:#fff}
 .btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:40px;padding:13px 20px;font-weight:600;cursor:pointer;text-decoration:none;background:var(--azul);color:#fff}
 .btn-linea{background:#fff;color:var(--navy);border:1px solid var(--tinte-2)}
@@ -31,7 +32,7 @@ var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams
 var caja = document.getElementById('caja');
 var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); };
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
-function fila() { return '<div class="op"><input type="date" class="of"><input type="time" class="oh" step="900"></div>'; }
+function fila() { return '<div class="op"><input type="date" class="of"><input type="time" class="oh" step="900"><button type="button" class="quitar" aria-label="Quitar esta opción" title="Quitar">✕</button></div>'; }
 function avisar(d, texto) { return '<a class="btn btn-linea" href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Avisar a la unidad por WhatsApp</a>'; }
 fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(T)).then(function (r) { return r.json(); }).then(function (d) {
   if (d.error || d.quien !== 'medico') { caja.innerHTML = '<h1>Liga no válida</h1><p class="nota">Pide a la unidad que te la vuelva a mandar.</p>'; return; }
@@ -50,6 +51,12 @@ fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(
   function minimos() { ops.querySelectorAll('.of').forEach(function (i) { i.min = hoy.toISOString().slice(0, 10); }); }
   previas.forEach(function (o, i) { if (!ops.children[i]) ops.insertAdjacentHTML('beforeend', fila()); ops.children[i].querySelector('.of').value = o.fecha; ops.children[i].querySelector('.oh').value = o.hora; });
   minimos();
+  /* quitar una opción: si es la única, solo se vacía */
+  ops.addEventListener('click', function (e) {
+    var b = e.target.closest('.quitar'); if (!b) return;
+    var r = b.parentNode;
+    if (ops.children.length > 1) r.remove(); else { r.querySelector('.of').value = ''; r.querySelector('.oh').value = ''; }
+  });
   document.getElementById('mas').onclick = function () { if (ops.children.length < 6) { ops.insertAdjacentHTML('beforeend', fila()); minimos(); } };
   document.getElementById('f').onsubmit = function (e) {
     e.preventDefault();
