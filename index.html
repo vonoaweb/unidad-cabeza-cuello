@@ -222,7 +222,9 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .aviso-acepto{justify-self:start;display:flex;gap:10px;align-items:center;font-size:14.5px;font-weight:600;color:var(--navy);cursor:pointer;margin-top:6px}
 .aviso-acepto input{width:18px;height:18px;accent-color:var(--azul)}
 .aviso-paso{display:grid;gap:10px;justify-items:center;width:100%}
-.cal-pac{display:grid;gap:8px}.cal-et{font-size:13px;font-weight:600;color:var(--texto)}
+.cal-pac{display:grid;gap:8px}
+.otros{display:grid;gap:8px;margin-top:10px;font-weight:600;color:var(--navy)}.otros button{display:grid;text-align:left;gap:2px;border:1px solid var(--tinte-2);background:#e6eeff;border-radius:12px;padding:10px 14px;font-family:inherit;font-size:14px;font-weight:600;color:var(--azul);cursor:pointer}
+.otros small{font-size:12.5px;font-weight:400;color:var(--texto)}.otros small::first-letter{text-transform:uppercase}.cal-et{font-size:13px;font-weight:600;color:var(--texto)}
 .cal-mes{background:#fff;border:1px solid var(--tinte-2);border-radius:14px;padding:12px}.cal-mes+.cal-mes{margin-top:10px}
 .cal-cab{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cal-cab h4{margin:0;font-size:14.5px}.cal-cab h4::first-letter{text-transform:uppercase}
 .cal-flecha{border:1px solid var(--tinte-2);background:#fff;border-radius:50%;width:32px;height:32px;font-size:18px;line-height:1;color:var(--navy);cursor:pointer}.cal-flecha:disabled{opacity:.3;cursor:default}
@@ -1147,8 +1149,32 @@ function buscarMedicoLibre(mia) {
     if (mejor) { cMed.value = mejor.medico.nombre; agendaPresencial(); return; }
     modoSolicitud();
     notaCita.textContent = 'Por ahora no hay fechas abiertas en esta especialidad. Pide tu cita por WhatsApp y te avisamos en cuanto abra una.';
+    sugerirOtros(mia);
   });
 }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
+/* Si no hay lugar con lo elegido, se ofrecen los médicos que sí tienen fecha, con un botón para ir a su calendario */
+function sugerirOtros(mia) {
+  var conAgenda = lugares.filter(function (x) { return x.id && x.agenda; });
+  Promise.all(conAgenda.map(function (x) {
+    return pedirJson('presencial/calendario?medico=' + x.id).then(function (d) {
+      var libre = d.dias.filter(function (y) { return y.estado === 'libre'; })[0];
+      return libre && x.nombre !== cMed.value ? {medico: x, fecha: libre.fecha} : null;
+    }).catch(function () { return null; });
+  })).then(function (r) {
+    if (mia !== vuelta) return;
+    var hay = r.filter(Boolean).sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; });
+    if (!hay.length) return;
+    notaCita.innerHTML = esc(notaCita.textContent) + '<span class="otros">Con lugar ahora:' + hay.map(function (h) {
+      return '<button type="button" data-ir="' + esc(h.medico.nombre) + '">' + esc(h.medico.nombre) + ' · ' + esc(h.medico.agenda[0]) + '<small>' + fechaLarga(h.fecha) + '</small></button>';
+    }).join('') + '</span>';
+  });
+}
+notaCita.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-ir]'); if (!b) return;
+  var m = lugares.filter(function (x) { return x.nombre === b.dataset.ir; })[0]; if (!m) return;
+  cEsp.value = m.agenda[0]; llenarMedicos(); cMed.value = m.nombre; agendaPresencial();
+});
 var vuelta = 0;  /* ignora respuestas viejas si el paciente cambió de médico o de tipo mientras cargaba */
 function agendaPresencial() {
   cListo.hidden = true; notaCita.textContent = '';
@@ -1160,7 +1186,8 @@ function agendaPresencial() {
     var libres = d.dias.filter(function (x) { return x.estado === 'libre'; });
     if (!libres.length) {
       modoSolicitud(); cFechaCaja.hidden = true;
-      notaCita.textContent = d.dias.length ? 'Por ahora no hay lugares con este médico. Pide tu cita por WhatsApp y te avisamos en cuanto abra una fecha, o elige otro médico de la especialidad.' : 'Próxima fecha por confirmar. Solicita tu cita y te avisamos.';
+      notaCita.textContent = 'Por ahora no hay fechas abiertas con este médico. Pide tu cita por WhatsApp y te avisamos en cuanto abra una.';
+      sugerirOtros(mia);
       return;
     }
     pintarCalendario(d.dias, libres[0].fecha);
