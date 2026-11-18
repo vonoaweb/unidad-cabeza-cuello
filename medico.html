@@ -31,6 +31,7 @@ input,button{font:inherit}input{width:100%;padding:12px;border:1px solid var(--t
 var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams(location.search), F = q.get('f'), T = q.get('t');
 var caja = document.getElementById('caja');
 var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); };
+function hora12(h) { if (!h) return ''; var p = h.split(':'), n = +p[0]; return (n % 12 || 12) + ':' + p[1] + (n < 12 ? ' a. m.' : ' p. m.'); }  /* 9:30 a. m. (se guarda en 24 h) */
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
 function fila() { return '<div class="op"><input type="date" class="of"><input type="time" class="oh" step="900"><button type="button" class="quitar" aria-label="Quitar esta opción" title="Quitar">✕</button></div>'; }
 function avisar(d, texto) { return '<a class="btn btn-linea" href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Avisar a la unidad por WhatsApp</a>'; }
@@ -40,7 +41,7 @@ fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(
     (d.motivo ? '<div><span>Motivo:</span> ' + esc(d.motivo) + '</div>' : '') + '</div>';
   if (d.estado === 'por_pagar') { caja.innerHTML = cab + '<p class="nota">El paciente todavía no paga. La unidad te avisará cuando esté pagada.</p>'; return; }
   if (['agendada', 'realizada', 'no_asistio', 'cancelada'].indexOf(d.estado) >= 0) {
-    caja.innerHTML = cab + (d.fecha ? '<p><b>El paciente eligió el ' + fechaLarga(d.fecha) + ' a las ' + d.hora + ' h.</b></p><p class="nota">La unidad te mandará la liga de Google Meet.</p>' : '<p class="nota">Esta consulta ya no está activa.</p>');
+    caja.innerHTML = cab + (d.fecha ? '<p><b>El paciente eligió el ' + fechaLarga(d.fecha) + ' a las ' + hora12(d.hora) + '.</b></p><p class="nota">La unidad te mandará la liga de Google Meet.</p>' : '<p class="nota">Esta consulta ya no está activa.</p>');
     return;
   }
   var previas = d.opciones || [];
@@ -67,7 +68,7 @@ fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(
     fetch(API + 'medico/opciones', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({folio: F, t: T, opciones: lista})})
       .then(function (r) { return r.json().then(function (x) { if (!r.ok) throw new Error(x.error); return x; }); })
       .then(function (x) {
-        caja.innerHTML = cab + '<p><b>¡Listo! Guardamos sus opciones:</b></p><ul>' + x.opciones.map(function (o) { return '<li>' + fechaLarga(o.fecha) + ' · ' + o.hora + ' h</li>'; }).join('') + '</ul>' +
+        caja.innerHTML = cab + '<p><b>¡Listo! Guardamos sus opciones:</b></p><ul>' + x.opciones.map(function (o) { return '<li>' + fechaLarga(o.fecha) + ' · ' + hora12(o.hora) + '</li>'; }).join('') + '</ul>' +
           '<p class="nota">Avise a la unidad para que se las mande al paciente.</p>' + avisar(d, 'Ya puse mis opciones de horario para la consulta virtual ' + d.folio + '.');
       }).catch(function (err) { nota.textContent = err.message || 'No se pudo enviar.'; document.getElementById('enviar').disabled = false; });
   };

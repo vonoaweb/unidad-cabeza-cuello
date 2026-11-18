@@ -29,10 +29,11 @@ button{font:inherit}
 <script>
 var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams(location.search), F = q.get('f'), T = q.get('t');
 var caja = document.getElementById('caja');
+function hora12(h) { if (!h) return ''; var p = h.split(':'), n = +p[0]; return (n % 12 || 12) + ':' + p[1] + (n < 12 ? ' a. m.' : ' p. m.'); }  /* 9:30 a. m. (se guarda en 24 h) */
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
 function listo(d, fecha, hora) {
-  var txt = 'Hola, elegí el horario de mi consulta virtual ' + d.folio + ' con ' + d.medico + ': ' + fechaLarga(fecha) + ' a las ' + hora + ' h.';
-  return '<h1>¡Tu consulta quedó agendada!</h1><p><b>' + fechaLarga(fecha) + ' a las ' + hora + ' h</b><br>' + d.medico + ' · folio ' + d.folio + '</p>' +
+  var txt = 'Hola, elegí el horario de mi consulta virtual ' + d.folio + ' con ' + d.medico + ': ' + fechaLarga(fecha) + ' a las ' + hora12(hora) + '.';
+  return '<h1>¡Tu consulta quedó agendada!</h1><p><b>' + fechaLarga(fecha) + ' a las ' + hora12(hora) + '</b><br>' + d.medico + ' · folio ' + d.folio + '</p>' +
     '<p class="nota">Te mandaremos la liga de Google Meet por WhatsApp. Recuerda: si cancelas se cobra el 50 % y si no te conectas a la hora, la consulta se cobra completa.</p>' +
     '<a class="btn" href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Avisar a la unidad por WhatsApp</a>';
 }
@@ -41,7 +42,7 @@ fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(
   if (d.fecha) { caja.innerHTML = listo(d, d.fecha, d.hora); return; }
   if (d.estado !== 'opciones') { caja.innerHTML = '<h1>Consulta ' + d.folio + '</h1><p class="nota">' + (d.estado === 'por_pagar' ? 'Todavía no recibimos tu pago.' : 'Tu médico todavía no propone horarios. Te avisamos por WhatsApp.') + '</p>'; return; }
   caja.innerHTML = '<h1>Elige el horario de tu consulta</h1><p class="nota">' + d.medico + ' · ' + d.tipo + ' · folio ' + d.folio + '</p><form id="f" style="display:grid;gap:10px">' +
-    d.opciones.map(function (o, i) { return '<label class="op"><input type="radio" name="op" value="' + i + '"' + (i ? '' : ' checked') + '> ' + fechaLarga(o.fecha) + ' · ' + o.hora + ' h</label>'; }).join('') +
+    d.opciones.map(function (o, i) { return '<label class="op"><input type="radio" name="op" value="' + i + '"' + (i ? '' : ' checked') + '> ' + fechaLarga(o.fecha) + ' · ' + hora12(o.hora) + '</label>'; }).join('') +
     '<button class="btn" id="enviar">Confirmar este horario</button><p class="nota" id="nota"></p></form>';
   document.getElementById('f').onsubmit = function (e) {
     e.preventDefault();

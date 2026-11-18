@@ -31,6 +31,7 @@ h1{font-size:20px;margin:0}
 var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams(location.search);
 var caja = document.getElementById('caja');
 var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); };
+function hora12(h) { if (!h) return ''; var p = h.split(':'), n = +p[0]; return (n % 12 || 12) + ':' + p[1] + (n < 12 ? ' a. m.' : ' p. m.'); }  /* 9:30 a. m. (se guarda en 24 h) */
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
 fetch(API + 'pase?f=' + encodeURIComponent(q.get('f') || '') + '&t=' + encodeURIComponent(q.get('t') || '')).then(function (r) { return r.json(); }).then(function (d) {
   if (d.error) { caja.innerHTML = '<h1>Pase no válido</h1><p class="nota">Escríbenos por WhatsApp y te lo volvemos a mandar.</p>'; return; }
@@ -41,7 +42,7 @@ fetch(API + 'pase?f=' + encodeURIComponent(q.get('f') || '') + '&t=' + encodeURI
         (d.transferencia ? '<br>CLABE ' + d.transferencia.clabe + (d.transferencia.banco ? ' (' + esc(d.transferencia.banco) + ')' : '') + ' · concepto ' + esc(d.folio) : '') + '</div>' : '';
   caja.innerHTML = '<h1>' + esc(d.nombre) + '</h1>' + estado +
     '<div class="qr"><img alt="QR del pase" src="' + qr.createDataURL(8, 2) + '"></div><div class="folio">' + esc(d.folio) + '</div>' +
-    '<div class="datos"><div><b>' + fechaLarga(d.fecha) + ' · ' + esc(d.hora) + ' h</b></div><div>' + esc(d.medico) + '</div><span>' + esc(d.tipo) + (d.consultorio ? ' · Consultorio ' + d.consultorio : '') + '</span></div>' +
+    '<div class="datos"><div><b>' + fechaLarga(d.fecha) + ' · ' + hora12(d.hora) + '</b></div><div>' + esc(d.medico) + '</div><span>' + esc(d.tipo) + (d.consultorio ? ' · Consultorio ' + d.consultorio : '') + '</span></div>' +
     '<p class="nota">Enseña este QR en la unidad al llegar. Llega 10 minutos antes. Para cancelar o cambiar tu cita, escríbenos por <a href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent('Hola, sobre mi cita con folio ' + d.folio + ':') + '">WhatsApp</a>.</p>';
 }).catch(function () { caja.innerHTML = '<p class="nota">No se pudo cargar. Revisa tu conexión e intenta de nuevo.</p>'; });
 </script>

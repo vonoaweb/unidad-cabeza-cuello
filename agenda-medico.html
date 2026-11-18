@@ -17,7 +17,7 @@ h1{font-size:21px;margin:0}
 .dia{background:#fff;border:1px solid var(--tinte-2);border-radius:16px;padding:16px 18px}
 .dia h2{font-size:16px;margin:0 0 2px}.dia h2::first-letter{text-transform:uppercase}
 .lugar{font-size:13.5px;color:var(--texto);margin-bottom:6px}
-.cita{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--tinte-2);font-size:15px}
+.cita{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--tinte-2);font-size:15px}
 .hora{font-weight:600}.det{color:var(--texto);font-size:13.5px}
 .etq{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:40px;background:var(--tinte-2);margin-right:4px}
 .etq.v{background:#e6eeff;color:#1d3fa3}.etq.no{background:#eee;color:#555}.etq.ok{background:#dcf5e3;color:#11632f}
@@ -34,6 +34,7 @@ a.meet{display:inline-block;margin-top:6px;background:var(--azul);color:#fff;tex
 var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams(location.search);
 var caja = document.getElementById('caja');
 var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); };
+function hora12(h) { if (!h) return ''; var p = h.split(':'), n = +p[0]; return (n % 12 || 12) + ':' + p[1] + (n < 12 ? ' a. m.' : ' p. m.'); }  /* 9:30 a. m. (se guarda en 24 h) */
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
 function cargar() {
   fetch(API + 'agenda-medico?m=' + encodeURIComponent(q.get('m') || '') + '&t=' + encodeURIComponent(q.get('t') || '')).then(function (r) { return r.json(); }).then(function (d) {
@@ -56,7 +57,7 @@ function cargar() {
       x.citas.sort(function (a, b) { return a.hora < b.hora ? -1 : 1; });
       var lugar = x.lugar ? (x.lugar.consultorio ? 'Consultorio ' + x.lugar.consultorio : 'En la unidad') + ' · ' + x.lugar.inicio + ' a ' + x.lugar.fin : 'Solo consulta virtual';
       return '<section class="dia"><h2>' + fechaLarga(x.fecha) + '</h2><div class="lugar">' + lugar + '</div>' +
-        (x.citas.map(function (c) { return '<div class="cita"><div class="hora">' + c.hora + '</div><div>' + c.html + '</div></div>'; }).join('') || '<p class="nota">Todavía sin pacientes.</p>') + '</section>';
+        (x.citas.map(function (c) { return '<div class="cita"><div class="hora">' + hora12(c.hora) + '</div><div>' + c.html + '</div></div>'; }).join('') || '<p class="nota">Todavía sin pacientes.</p>') + '</section>';
     }).join('') || '<p class="nota">No tienes citas ni días programados en los próximos 60 días.</p>';
     caja.innerHTML = html + '<p class="nota">Esta liga es personal. Se actualiza sola: vuelve a abrirla para ver los cambios.</p>';
   }).catch(function () { caja.innerHTML = '<p class="nota">No se pudo cargar. Revisa tu conexión e intenta de nuevo.</p>'; });

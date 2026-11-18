@@ -228,7 +228,7 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .asis-barra{height:4px;background:var(--tinte-2);border-radius:4px;overflow:hidden}.asis-barra span{display:block;height:100%;width:0;background:var(--azul);transition:width .3s}
 .asis-t{font-size:clamp(19px,2.2vw,22px);margin:2px 0 0;font-weight:600;color:var(--navy)}
 .asis-resumen{display:flex;flex-wrap:wrap;gap:6px;font-size:13px;color:var(--texto);background:var(--tinte);border-radius:10px;padding:8px 12px}
-.asis-ops,.asis-meds,.asis-pie{display:grid;gap:10px}
+.asis-ops,.asis-meds,.asis-pie{display:grid;gap:10px}.asis-pie{margin-top:22px;padding-top:16px;border-top:1px solid var(--tinte-2)}
 .asis-op,.asis-med{display:flex;gap:14px;align-items:center;text-align:left;border:1px solid var(--tinte-2);background:#fff;border-radius:16px;padding:16px;font:inherit;color:var(--navy);cursor:pointer;width:100%}
 .asis-med{padding:12px 14px}.asis-op:hover,.asis-med:hover{border-color:var(--azul)}.asis-op.sel,.asis-med.sel{border-color:var(--azul);box-shadow:0 0 0 3px rgba(47,91,216,.15)}
 .asis-op b,.asis-med b{display:block;font-size:16px}.asis-op small,.asis-med small{display:block;font-size:13.5px;color:var(--texto);margin-top:2px}
@@ -1060,6 +1060,7 @@ document.getElementById('compartir').addEventListener('click', function () {
 var CITAS = 'https://cyc-citas.vonoaweb.workers.dev/api/';
 var hoy = new Date(); hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
+function hora12(h) { if (!h) return ''; var p = h.split(':'), n = +p[0]; return (n % 12 || 12) + ':' + p[1] + (n < 12 ? ' a. m.' : ' p. m.'); }  /* 9:30 a. m. (se guarda en 24 h) */
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
 function mayus(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
 function pedirJson(ruta, cuerpo) {
@@ -1126,7 +1127,7 @@ function resumen() {
   if (est.tipo) r.push(est.tipo === 'presencial' ? 'En la unidad' : 'Por videollamada');
   if (est.medico) r.push(esc(est.medico.nombre));
   if (est.visita) r.push(est.visita === 'valoracion' ? 'Primera vez' : 'Seguimiento');
-  if (est.fecha && est.hora && est.tipo === 'presencial') r.push(mayus(fechaLarga(est.fecha)) + ' · ' + est.hora + ' h');
+  if (est.fecha && est.hora && est.tipo === 'presencial') r.push(mayus(fechaLarga(est.fecha)) + ', ' + hora12(est.hora));
   return r.length ? '<div class="asis-resumen">' + r.join('<span>·</span>') + '</div>' : '';
 }
 function opcion(dato, valor, icono, tituloOp, texto, elegida) {
@@ -1208,7 +1209,7 @@ function cargarHoras() {
   pedirJson('presencial/horas?medico=' + est.medico.id + '&fecha=' + est.fecha + '&tipo=' + est.visita).then(function (d) {
     if (d.horas.indexOf(est.hora) < 0) est.hora = '';
     caja.innerHTML = '<span class="cal-et">Horas para el ' + fechaLarga(est.fecha) + '</span><div class="horas-l">' +
-      (d.horas.map(function (h) { return '<button type="button" data-hora="' + h + '"' + (h === est.hora ? ' class="sel"' : '') + '>' + h + '</button>'; }).join('') || '<p class="nota" style="margin:0">Ese día ya no hay horas. Elige otro día.</p>') + '</div>';
+      (d.horas.map(function (h) { return '<button type="button" data-hora="' + h + '"' + (h === est.hora ? ' class="sel"' : '') + '>' + hora12(h) + '</button>'; }).join('') || '<p class="nota" style="margin:0">Ese día ya no hay horas. Elige otro día.</p>') + '</div>';
   });
 }
 
@@ -1249,7 +1250,7 @@ function enviar(e) {
   });
 }
 function listoPresencial(d, nombre) {
-  var cuando = fechaLarga(d.fecha) + ' a las ' + d.hora + ' h';
+  var cuando = fechaLarga(d.fecha) + ' a las ' + hora12(d.hora);
   var txt = 'Hola, agendé una cita presencial. Folio ' + d.folio + ' · ' + d.tipo + ' con ' + d.medico + ', el ' + cuando + '. A nombre de ' + nombre + '. Mi pase: ' + d.pase;
   est.paso = 'listo'; pintar();
   if (d.anticipo) {
