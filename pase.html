@@ -19,7 +19,7 @@ h1{font-size:20px;margin:0}
 .datos{display:grid;gap:2px;font-size:15.5px}.datos span{color:var(--texto);font-size:14px}
 .folio{font-size:22px;font-weight:700;letter-spacing:.06em}
 .estado{border-radius:12px;padding:10px 12px;font-weight:600;font-size:14.5px}
-.estado.ok{background:#dcf5e3;color:#11632f}.estado.mal{background:#fde2e2;color:#8a1c1c}
+.estado.ok{background:#dcf5e3;color:#11632f}.estado.pend{background:#fff4d6;color:#7a5a00;font-weight:500}.estado.mal{background:#fde2e2;color:#8a1c1c}
 .nota{color:var(--texto);font-size:14px;margin:0}
 </style>
 </head>
@@ -36,7 +36,9 @@ fetch(API + 'pase?f=' + encodeURIComponent(q.get('f') || '') + '&t=' + encodeURI
   if (d.error) { caja.innerHTML = '<h1>Pase no válido</h1><p class="nota">Escríbenos por WhatsApp y te lo volvemos a mandar.</p>'; return; }
   var qr = qrcode(0, 'M'); qr.addData(location.href); qr.make();
   var estado = d.checkin ? '<div class="estado ok">Llegada registrada · ' + new Date(d.checkin).toLocaleTimeString('es-MX', {hour: '2-digit', minute: '2-digit'}) + '</div>'
-    : d.estado === 'cancelada' ? '<div class="estado mal">Esta cita está cancelada</div>' : '';
+    : d.estado === 'cancelada' ? '<div class="estado mal">Esta cita está cancelada</div>'
+    : d.estado === 'por_pagar' ? '<div class="estado pend">Falta tu anticipo de $' + d.anticipo + '. Págalo antes del ' + new Date(d.vence).toLocaleString('es-MX', {weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'}) + ' o la hora se libera.' +
+        (d.transferencia ? '<br>CLABE ' + d.transferencia.clabe + (d.transferencia.banco ? ' (' + esc(d.transferencia.banco) + ')' : '') + ' · concepto ' + esc(d.folio) : '') + '</div>' : '';
   caja.innerHTML = '<h1>' + esc(d.nombre) + '</h1>' + estado +
     '<div class="qr"><img alt="QR del pase" src="' + qr.createDataURL(8, 2) + '"></div><div class="folio">' + esc(d.folio) + '</div>' +
     '<div class="datos"><div><b>' + fechaLarga(d.fecha) + ' · ' + esc(d.hora) + ' h</b></div><div>' + esc(d.medico) + '</div><span>' + esc(d.tipo) + (d.consultorio ? ' · Consultorio ' + d.consultorio : '') + '</span></div>' +

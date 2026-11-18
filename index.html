@@ -239,6 +239,7 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .asis-pronto{margin:2px 0 0;font-size:13px}#aHoras{display:block}.horas-l{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .cal-ley{display:flex;align-items:center;gap:6px;font-size:12.5px;margin:8px 0 0}.pt{display:inline-block;width:11px;height:11px;border-radius:50%}.pt.az{background:#e6eeff;border:1px solid var(--azul)}.pt.gr{background:#f1f2f6;border:1px solid #c9cdda;margin-left:10px}
 .asis-como{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px;color:var(--texto)}
+.pago-aviso{background:#fff4d6;color:#7a5a00;border-radius:12px;padding:12px 14px;font-size:14.5px}
 .asis-wa{font-size:13.5px;color:var(--texto);margin:16px 0 0}.asis-wa a{color:var(--azul);font-weight:600}
 .otros{display:grid;gap:8px;margin-top:10px;font-weight:600;color:var(--navy)}.otros button{display:grid;text-align:left;gap:2px;border:1px solid var(--tinte-2);background:#e6eeff;border-radius:12px;padding:10px 14px;font-family:inherit;font-size:14px;font-weight:600;color:var(--azul);cursor:pointer}
 .otros small{font-size:12.5px;font-weight:400;color:var(--texto)}.otros small::first-letter{text-transform:uppercase}.cal-et{font-size:13px;font-weight:600;color:var(--texto)}
@@ -1088,6 +1089,24 @@ function cargarProximas() {
   }));
 }
 var proximasListas = cargarProximas();
+/* precios de cada médico: si tiene precio, la cita presencial se aparta con anticipo del 50 % */
+var precios = {};
+pedirJson('medicos').then(function (d) { d.medicos.forEach(function (m) { precios[m.id] = m; }); }).catch(function () {});
+function cuentas() {
+  var m = precios[est.medico.id] || {}, precio = +(est.visita === 'valoracion' ? m.precio_valoracion : m.precio_seguimiento) || 0;
+  return {precio: precio, anticipo: Math.ceil(precio / 2)};
+}
+function bloquePago(tr, monto, folio, concepto, pagoMP) {
+  var html = '';
+  if (pagoMP) html += '<a class="btn btn-azul" href="' + pagoMP + '">Pagar con tarjeta o Mercado Pago</a>';
+  if (tr) {
+    var comp = 'Hola, ya hice la transferencia de $' + monto + ' (' + concepto + '). Folio ' + folio + '. Aquí va mi comprobante:';
+    html += '<div class="pago-trans"><b>' + (pagoMP ? 'O por transferencia' : 'Pago por transferencia') + '</b>' + (tr.banco ? '<span>Banco: ' + esc(tr.banco) + '</span>' : '') + (tr.titular ? '<span>A nombre de: ' + esc(tr.titular) + '</span>' : '') +
+      '<span>CLABE: <code>' + tr.clabe.replace(/(\d{3})(\d{3})(\d{11})(\d)/, '$1 $2 $3 $4') + '</code> <button type="button" class="btn-copiar" data-clabe="' + tr.clabe + '">Copiar</button></span><span>Monto: <b>$' + monto + '</b> · Concepto: <b>' + folio + '</b></span></div>' +
+      '<a class="btn ' + (pagoMP ? 'btn-linea' : 'btn-azul') + '" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(comp) + '" target="_blank" rel="noopener">Mandar mi comprobante por WhatsApp</a>';
+  }
+  return html;
+}
 
 function ir(paso) { est.paso = paso; aNota.textContent = ''; pintar(); document.getElementById('agenda').scrollIntoView({block: 'start'}); }
 function pasosTotales() { return 5; }
@@ -1204,14 +1223,15 @@ function paso4Virtual() {
 
 /* Paso 5: tus datos */
 function paso5() {
-  var pres = est.tipo === 'presencial';
-  aCuerpo.innerHTML = '<h3 class="asis-t">Tus datos</h3>' + resumen() + '<form id="aForm" class="campos" novalidate>' +
+  var pres = est.tipo === 'presencial', cu = pres ? cuentas() : {anticipo: 0};
+  var avisoAnt = cu.anticipo ? '<div class="pago-trans"><b>Para apartar tu cita</b><span>Consulta: $' + cu.precio + '</span><span>Anticipo del 50 %: <b>$' + cu.anticipo + '</b>, lo pagas al terminar este paso.</span><span>El resto, $' + (cu.precio - cu.anticipo) + ', en la unidad el día de tu consulta.</span></div>' : '';
+  aCuerpo.innerHTML = '<h3 class="asis-t">Tus datos</h3>' + resumen() + avisoAnt + '<form id="aForm" class="campos" novalidate>' +
     '<label>Nombre completo del paciente<input id="aNombre" autocomplete="name" required></label>' +
     '<label>WhatsApp (10 dígitos)<input id="aWa" inputmode="numeric" autocomplete="tel" required></label>' +
     (pres ? '' : '<label>Correo (opcional)<input id="aCorreo" type="email" autocomplete="email"></label>') +
     '<label>¿Qué te gustaría consultar? (opcional)<input id="aMotivo" maxlength="300"></label>' +
-    (pres ? '<fieldset class="tipo-cita"><legend>¿Cómo vas a pagar en la unidad?</legend><label><input type="radio" name="aPago" value="efectivo" checked> Efectivo</label><label><input type="radio" name="aPago" value="transferencia"> Transferencia</label><label><input type="radio" name="aPago" value="tarjeta"> Tarjeta</label></fieldset>' : '') +
-    '<button class="btn btn-azul" id="aEnviar">' + (pres ? 'Confirmar mi cita' : 'Enviar solicitud') + '</button></form>';
+    (pres ? '<fieldset class="tipo-cita"><legend>' + (cu.anticipo ? '¿Cómo vas a pagar el resto en la unidad?' : '¿Cómo vas a pagar en la unidad?') + '</legend><label><input type="radio" name="aPago" value="efectivo" checked> Efectivo</label><label><input type="radio" name="aPago" value="transferencia"> Transferencia</label><label><input type="radio" name="aPago" value="tarjeta"> Tarjeta</label></fieldset>' : '') +
+    '<button class="btn btn-azul" id="aEnviar">' + (pres ? (cu.anticipo ? 'Apartar mi cita' : 'Confirmar mi cita') : 'Enviar solicitud') + '</button></form>';
   document.getElementById('aForm').addEventListener('submit', enviar);
 }
 function enviar(e) {
@@ -1232,6 +1252,15 @@ function listoPresencial(d, nombre) {
   var cuando = fechaLarga(d.fecha) + ' a las ' + d.hora + ' h';
   var txt = 'Hola, agendé una cita presencial. Folio ' + d.folio + ' · ' + d.tipo + ' con ' + d.medico + ', el ' + cuando + '. A nombre de ' + nombre + '. Mi pase: ' + d.pase;
   est.paso = 'listo'; pintar();
+  if (d.anticipo) {
+    var limite = new Date(d.vence).toLocaleString('es-MX', {weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'});
+    aCuerpo.innerHTML = '<div class="cita-lista"><h3>¡Tu hora quedó apartada!</h3><div>Folio <b>' + d.folio + '</b><br>' + esc(d.medico) + '<br>' + d.tipo + ' · ' + cuando + '</div>' +
+      '<div class="pago-aviso">Para confirmarla, paga el anticipo de <b>$' + d.anticipo + '</b> antes del <b>' + limite + '</b>; si no se recibe a tiempo, la hora se libera para otro paciente.</div>' +
+      bloquePago(d.transferencia, d.anticipo, d.folio, 'anticipo de mi cita', d.pago) +
+      '<div class="pase-qr" id="aQR"></div><div class="nota" style="margin:0">Este es tu pase: enséñalo en la unidad al llegar. Queda confirmado cuando recibamos tu anticipo.</div>' +
+      '<a class="btn btn-linea" href="' + d.pase + '" target="_blank" rel="noopener">Abrir mi pase</a><button type="button" class="btn btn-linea" data-reiniciar="1">Agendar otra cita</button></div>';
+    return dibujarQR(document.getElementById('aQR'), d.pase);
+  }
   aCuerpo.innerHTML = '<div class="cita-lista"><h3>¡Tu cita quedó agendada!</h3><div>Folio <b>' + d.folio + '</b><br>' + esc(d.medico) + '<br>' + d.tipo + ' · ' + cuando + '</div>' +
     '<div class="pase-qr" id="aQR"></div>' +
     '<div class="nota" style="margin:0">Este es tu pase: enséñalo en la unidad al llegar. Guárdalo con el botón de abajo o tómale captura. Llega 10 minutos antes; para cancelar o cambiar tu cita, escríbenos por WhatsApp con tu folio.</div>' +
