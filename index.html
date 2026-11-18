@@ -1319,7 +1319,7 @@ function agendarCon(m) {
 document.querySelectorAll('a[data-esp]').forEach(function (a) {
   a.addEventListener('click', function () { est.filtro = medicosReales.some(function (m) { return m.agenda.indexOf(a.dataset.esp) >= 0; }) ? a.dataset.esp : ''; est.medico = null; est.medicoFijo = false; ir(est.tipo ? 2 : 1); });
 });
-(function () { var q = new URLSearchParams(location.search); if (q.get('cita') && q.get('pago')) aviso(q.get('pago') === 'ok' ? 'Pago recibido. Folio ' + q.get('cita') + ': tu especialista te mandará opciones de horario por WhatsApp.' : 'El pago no se completó. Folio ' + q.get('cita') + ': escríbenos por WhatsApp.'); })();
+(function () { var q = new URLSearchParams(location.search); if (q.get('cita') && q.get('pago')) aviso(q.get('pago') === 'ok' ? (/^CP-/.test(q.get('cita')) ? 'Anticipo recibido. Folio ' + q.get('cita') + ': tu cita quedó confirmada. Enseña tu pase al llegar.' : 'Pago recibido. Folio ' + q.get('cita') + ': tu especialista te mandará opciones de horario por WhatsApp.') : 'El pago no se completó. Folio ' + q.get('cita') + ': escríbenos por WhatsApp.'); })();
 pintar();
 
 /* Menú en celular */
