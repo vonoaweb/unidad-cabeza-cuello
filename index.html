@@ -1216,7 +1216,7 @@ function cargarHoras() {
 /* Paso 4 virtual: cómo funciona y condiciones */
 function paso4Virtual() {
   aCuerpo.innerHTML = '<h3 class="asis-t">Así funciona la consulta por videollamada</h3>' + resumen() +
-    '<ol class="asis-como"><li>Envías tu solicitud y pagas la consulta.</li><li>' + mayus(titulo(est.medico)) + ' te propone por WhatsApp algunos días y horas; eliges el que te acomode.</li><li>Te llega la liga de Google Meet para conectarte, hasta 30 minutos.</li></ol>' +
+    '<ol class="asis-como"><li>Envías tu solicitud. Todavía no pagas nada.</li><li>' + mayus(titulo(est.medico)) + ' te propone por WhatsApp algunos días y horas; eliges el que te acomode.</li><li>Al elegir, pagas la consulta para confirmarla.</li><li>Te llega la liga de Google Meet para conectarte, hasta 30 minutos.</li></ol>' +
     '<ul class="aviso-reglas"><li>El especialista reserva ese horario solo para ti.</li><li>Si cancelas, se cobra el 50&nbsp;% de la consulta.</li><li>Si no te conectas a la hora acordada, se toma como consulta dada y se cobra completa.</li></ul>' +
     '<label class="aviso-acepto"><input type="checkbox" id="aAcepto"' + (est.acepto ? ' checked' : '') + '> Leí y acepto estas condiciones</label>' +
     '<div class="asis-pie"><button type="button" class="btn btn-azul" id="aSigue">Continuar</button></div>';
@@ -1271,22 +1271,11 @@ function listoPresencial(d, nombre) {
   dibujarQR(document.getElementById('aQR'), d.pase);
 }
 function listoVirtual(d) {
-  var tr = d.transferencia, html = '<div class="cita-lista"><h3>¡Recibimos tu solicitud!</h3><div>Folio <b>' + d.folio + '</b><br>' + esc(d.medico) + '<br>' + d.tipo + ' · videollamada</div>';
-  if (d.pago || tr) {
-    html += '<div>Para continuar, paga los <b>$' + d.precio + '</b>.</div>';
-    if (d.pago) html += '<a class="btn btn-azul" href="' + d.pago + '">Pagar con tarjeta o Mercado Pago</a>';
-    if (tr) {
-      var comp = 'Hola, ya hice la transferencia de $' + d.precio + ' de mi consulta por videollamada. Folio ' + d.folio + ' con ' + d.medico + '. Aquí va mi comprobante:';
-      html += '<div class="pago-trans"><b>' + (d.pago ? 'O por transferencia' : 'Pago por transferencia') + '</b>' + (tr.banco ? '<span>Banco: ' + esc(tr.banco) + '</span>' : '') + (tr.titular ? '<span>A nombre de: ' + esc(tr.titular) + '</span>' : '') +
-        '<span>CLABE: <code>' + tr.clabe.replace(/(\d{3})(\d{3})(\d{11})(\d)/, '$1 $2 $3 $4') + '</code> <button type="button" class="btn-copiar" data-clabe="' + tr.clabe + '">Copiar</button></span><span>Concepto: <b>' + d.folio + '</b></span></div>' +
-        '<a class="btn ' + (d.pago ? 'btn-linea' : 'btn-azul') + '" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(comp) + '" target="_blank" rel="noopener">Mandar mi comprobante por WhatsApp</a>';
-    }
-  } else {
-    var texto = 'Hola, solicité una consulta por videollamada. Folio ' + d.folio + ' con ' + d.medico + '. ¿Cómo hago el pago de $' + d.precio + '?';
-    html += '<div>Manda tu folio por WhatsApp y te decimos cómo pagar los $' + d.precio + '.</div><a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Mandar mi folio por WhatsApp</a>';
-  }
-  html += '<div class="nota" style="margin:0">Al confirmar tu pago, tu especialista te mandará por WhatsApp algunas opciones de día y hora para que elijas.</div></div>';
-  est.paso = 'listo'; pintar(); aCuerpo.innerHTML = html;
+  est.paso = 'listo'; pintar();
+  aCuerpo.innerHTML = '<div class="cita-lista"><h3>¡Recibimos tu solicitud!</h3><div>Folio <b>' + d.folio + '</b><br>' + esc(d.medico) + '<br>' + d.tipo + ' · videollamada</div>' +
+    '<ol class="asis-como"><li>' + mayus(titulo(est.medico)) + ' te mandará por WhatsApp algunos días y horas.</li><li>Eliges el que te acomode y ahí mismo ves cómo pagar los <b>$' + d.precio + '</b>.</li><li>Con tu pago confirmado te llega la liga de la videollamada.</li></ol>' +
+    '<div class="nota" style="margin:0">Todavía no tienes que pagar nada. Si tienes dudas, escríbenos por WhatsApp con tu folio.</div>' +
+    '<button type="button" class="btn btn-linea" data-reiniciar="1">Agendar otra cita</button></div>';
 }
 
 /* clics del asistente */

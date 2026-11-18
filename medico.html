@@ -39,8 +39,7 @@ fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(
   if (d.error || d.quien !== 'medico') { caja.innerHTML = '<h1>Liga no válida</h1><p class="nota">Pide a la unidad que te la vuelva a mandar.</p>'; return; }
   var cab = '<h1>Consulta virtual ' + esc(d.folio) + '</h1><div class="datos"><div><span>Paciente:</span> ' + esc(d.paciente) + '</div><div><span>Tipo:</span> ' + esc(d.tipo) + '</div>' +
     (d.motivo ? '<div><span>Motivo:</span> ' + esc(d.motivo) + '</div>' : '') + '</div>';
-  if (d.estado === 'por_pagar') { caja.innerHTML = cab + '<p class="nota">El paciente todavía no paga. La unidad te avisará cuando esté pagada.</p>'; return; }
-  if (['agendada', 'realizada', 'no_asistio', 'cancelada'].indexOf(d.estado) >= 0) {
+  if (['por_pagar', 'agendada', 'realizada', 'no_asistio', 'cancelada'].indexOf(d.estado) >= 0) {
     caja.innerHTML = cab + (d.fecha ? '<p><b>El paciente eligió el ' + fechaLarga(d.fecha) + ' a las ' + hora12(d.hora) + '.</b></p><p class="nota">La unidad te mandará la liga de Google Meet.</p>' : '<p class="nota">Esta consulta ya no está activa.</p>');
     return;
   }

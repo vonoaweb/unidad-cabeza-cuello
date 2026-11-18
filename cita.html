@@ -21,6 +21,7 @@ button{font:inherit}
 .btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:40px;padding:13px 20px;font-weight:600;cursor:pointer;text-decoration:none;background:var(--azul);color:#fff}
 .btn-linea{background:#fff;color:var(--navy);border:1px solid var(--tinte-2)}
 .nota{color:var(--texto);font-size:14px;margin:0}
+.trans{display:grid;gap:4px;border:1px solid var(--tinte-2);border-radius:12px;padding:14px 16px;font-size:15px}
 </style>
 </head>
 <body>
@@ -31,27 +32,38 @@ var API = 'https://cyc-citas.vonoaweb.workers.dev/api/', q = new URLSearchParams
 var caja = document.getElementById('caja');
 function hora12(h) { if (!h) return ''; var p = h.split(':'), n = +p[0]; return (n % 12 || 12) + ':' + p[1] + (n < 12 ? ' a. m.' : ' p. m.'); }  /* 9:30 a. m. (se guarda en 24 h) */
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
-function listo(d, fecha, hora) {
-  var txt = 'Hola, elegí el horario de mi consulta virtual ' + d.folio + ' con ' + d.medico + ': ' + fechaLarga(fecha) + ' a las ' + hora12(hora) + '.';
-  return '<h1>¡Tu consulta quedó agendada!</h1><p><b>' + fechaLarga(fecha) + ' a las ' + hora12(hora) + '</b><br>' + d.medico + ' · folio ' + d.folio + '</p>' +
-    '<p class="nota">Te mandaremos la liga de Google Meet por WhatsApp. Recuerda: si cancelas se cobra el 50 % y si no te conectas a la hora, la consulta se cobra completa.</p>' +
-    '<a class="btn" href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Avisar a la unidad por WhatsApp</a>';
+/* datos para pagar la consulta (transferencia y, si la unidad lo activó, Mercado Pago) */
+function pagar(d, fecha, hora, pagoMP) {
+  var tr = d.transferencia, comp = 'Hola, ya pagué mi consulta por videollamada ' + d.folio + ' con ' + d.medico + ' (' + fechaLarga(fecha) + ', ' + hora12(hora) + '). Aquí va mi comprobante:';
+  return '<h1>Confirma tu consulta con tu pago</h1><p><b>' + fechaLarga(fecha) + ', ' + hora12(hora) + '</b><br>' + d.medico + ' · folio ' + d.folio + '</p>' +
+    '<p>Para confirmarla paga <b>$' + d.precio + '</b>. Cuando recibamos tu pago te mandamos la liga de la videollamada.</p>' +
+    (pagoMP ? '<a class="btn" href="' + pagoMP + '">Pagar con tarjeta o Mercado Pago</a>' : '') +
+    (tr ? '<div class="trans"><b>' + (pagoMP ? 'O por transferencia' : 'Pago por transferencia') + '</b><span>Banco: ' + tr.banco + '</span><span>A nombre de: ' + tr.titular + '</span><span>CLABE: <b>' + tr.clabe.replace(/(\d{3})(\d{3})(\d{11})(\d)/, '$1 $2 $3 $4') + '</b></span><span>Monto: <b>$' + d.precio + '</b> · Concepto: <b>' + d.folio + '</b></span></div>' : '') +
+    '<a class="btn' + (pagoMP ? ' btn-linea' : '') + '" href="https://wa.me/' + d.whatsappUnidad + '?text=' + encodeURIComponent(comp) + '" target="_blank" rel="noopener">Mandar mi comprobante por WhatsApp</a>' +
+    '<p class="nota">Recuerda: si cancelas se cobra el 50 % y si no te conectas a la hora acordada, la consulta se cobra completa.</p>';
 }
+function confirmada(d) {
+  return '<h1>¡Tu consulta está confirmada!</h1><p><b>' + fechaLarga(d.fecha) + ', ' + hora12(d.hora) + '</b><br>' + d.medico + ' · folio ' + d.folio + '</p><p class="nota">Te mandaremos la liga de Google Meet por WhatsApp. Conéctate puntual.</p>';
+}
+var q2 = new URLSearchParams(location.search);
 fetch(API + 'solicitud?f=' + encodeURIComponent(F) + '&t=' + encodeURIComponent(T)).then(function (r) { return r.json(); }).then(function (d) {
   if (d.error || d.quien !== 'paciente') { caja.innerHTML = '<h1>Liga no válida</h1><p class="nota">Escríbenos por WhatsApp y te la volvemos a mandar.</p>'; return; }
-  if (d.fecha) { caja.innerHTML = listo(d, d.fecha, d.hora); return; }
-  if (d.estado !== 'opciones') { caja.innerHTML = '<h1>Consulta ' + d.folio + '</h1><p class="nota">' + (d.estado === 'por_pagar' ? 'Todavía no recibimos tu pago.' : 'Tu médico todavía no propone horarios. Te avisamos por WhatsApp.') + '</p>'; return; }
+  if (q2.get('pago') === 'ok' && d.estado === 'por_pagar') { caja.innerHTML = '<h1>Estamos confirmando tu pago</h1><p class="nota">En unos minutos se confirma solo. Si no, escríbenos por WhatsApp con tu folio ' + d.folio + '.</p>'; return; }
+  if (d.estado === 'por_pagar' && d.fecha) { caja.innerHTML = pagar(d, d.fecha, d.hora, null); return; }
+  if (['agendada', 'realizada'].indexOf(d.estado) >= 0 && d.fecha) { caja.innerHTML = confirmada(d); return; }
+  if (d.estado === 'cancelada') { caja.innerHTML = '<h1>Consulta cancelada</h1><p class="nota">Si crees que es un error, escríbenos por WhatsApp.</p>'; return; }
+  if (d.estado !== 'opciones') { caja.innerHTML = '<h1>Consulta ' + d.folio + '</h1><p class="nota">Tu especialista todavía no propone horarios. Te avisamos por WhatsApp.</p>'; return; }
   caja.innerHTML = '<h1>Elige el horario de tu consulta</h1><p class="nota">' + d.medico + ' · ' + d.tipo + ' · folio ' + d.folio + '</p><form id="f" style="display:grid;gap:10px">' +
     d.opciones.map(function (o, i) { return '<label class="op"><input type="radio" name="op" value="' + i + '"' + (i ? '' : ' checked') + '> ' + fechaLarga(o.fecha) + ' · ' + hora12(o.hora) + '</label>'; }).join('') +
-    '<button class="btn" id="enviar">Confirmar este horario</button><p class="nota" id="nota"></p></form>';
+    '<button class="btn" id="enviar">Elegir este horario</button><p class="nota" id="nota"></p></form>';
   document.getElementById('f').onsubmit = function (e) {
     e.preventDefault();
     var i = +document.querySelector('[name=op]:checked').value, nota = document.getElementById('nota');
-    document.getElementById('enviar').disabled = true; nota.textContent = 'Confirmando…';
+    document.getElementById('enviar').disabled = true; nota.textContent = 'Guardando…';
     fetch(API + 'paciente/elegir', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({folio: F, t: T, opcion: i})})
       .then(function (r) { return r.json().then(function (x) { if (!r.ok) throw new Error(x.error); return x; }); })
-      .then(function (x) { caja.innerHTML = listo(d, x.fecha, x.hora); })
-      .catch(function (err) { nota.textContent = err.message || 'No se pudo confirmar.'; document.getElementById('enviar').disabled = false; });
+      .then(function (x) { caja.innerHTML = pagar(Object.assign({}, d, x), x.fecha, x.hora, x.pago); })
+      .catch(function (err) { nota.textContent = err.message || 'No se pudo guardar.'; document.getElementById('enviar').disabled = false; });
   };
 }).catch(function () { caja.innerHTML = '<p class="nota">No se pudo cargar. Revisa tu conexión e intenta de nuevo.</p>'; });
 </script>
