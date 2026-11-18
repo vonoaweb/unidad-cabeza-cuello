@@ -223,6 +223,23 @@ button.miembro{background:none;border:0;padding:0;font:inherit;color:inherit;cur
 .aviso-acepto input{width:18px;height:18px;accent-color:var(--azul)}
 .aviso-paso{display:grid;gap:10px;justify-items:center;width:100%}
 .cal-pac{display:grid;gap:8px}
+.asis{display:grid;gap:14px;margin-top:18px}
+.asis-cab{display:flex;align-items:center;min-height:30px}.asis-atras{border:0;background:none;color:var(--azul);font:inherit;font-weight:600;cursor:pointer;padding:4px 0}.asis-paso{font-size:13px;color:var(--texto);margin-left:auto}
+.asis-barra{height:4px;background:var(--tinte-2);border-radius:4px;overflow:hidden}.asis-barra span{display:block;height:100%;width:0;background:var(--azul);transition:width .3s}
+.asis-t{font-size:clamp(19px,2.2vw,22px);margin:2px 0 0;font-weight:600;color:var(--navy)}
+.asis-resumen{display:flex;flex-wrap:wrap;gap:6px;font-size:13px;color:var(--texto);background:var(--tinte);border-radius:10px;padding:8px 12px}
+.asis-ops,.asis-meds,.asis-pie{display:grid;gap:10px}
+.asis-op,.asis-med{display:flex;gap:14px;align-items:center;text-align:left;border:1px solid var(--tinte-2);background:#fff;border-radius:16px;padding:16px;font:inherit;color:var(--navy);cursor:pointer;width:100%}
+.asis-med{padding:12px 14px}.asis-op:hover,.asis-med:hover{border-color:var(--azul)}.asis-op.sel,.asis-med.sel{border-color:var(--azul);box-shadow:0 0 0 3px rgba(47,91,216,.15)}
+.asis-op b,.asis-med b{display:block;font-size:16px}.asis-op small,.asis-med small{display:block;font-size:13.5px;color:var(--texto);margin-top:2px}
+.asis-ic{flex:none;width:46px;height:46px;border-radius:12px;background:#e6eeff;display:grid;place-items:center}.asis-ic svg{width:24px;height:24px;fill:none;stroke:var(--azul);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.asis-chips{display:flex;flex-wrap:wrap;gap:6px}.chip-f{border:1px solid var(--tinte-2);background:#fff;border-radius:40px;padding:6px 12px;font:inherit;font-size:13px;color:var(--navy);cursor:pointer}.chip-f.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
+.asis-med img,.asis-med .ini{flex:none;width:58px;height:58px;border-radius:50%;object-fit:cover}.asis-med .ini{display:grid;place-items:center;background:var(--navy);color:#fff;font-size:20px}
+.disp{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:600;padding:2px 10px;border-radius:40px}.disp.si{background:#dcf5e3;color:#11632f}.disp.no{background:#f1f2f6;color:#6b7290}
+.asis-pronto{margin:2px 0 0;font-size:13px}#aHoras{display:block}.horas-l{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cal-ley{display:flex;align-items:center;gap:6px;font-size:12.5px;margin:8px 0 0}.pt{display:inline-block;width:11px;height:11px;border-radius:50%}.pt.az{background:#e6eeff;border:1px solid var(--azul)}.pt.gr{background:#f1f2f6;border:1px solid #c9cdda;margin-left:10px}
+.asis-como{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px;color:var(--texto)}
+.asis-wa{font-size:13.5px;color:var(--texto);margin:16px 0 0}.asis-wa a{color:var(--azul);font-weight:600}
 .otros{display:grid;gap:8px;margin-top:10px;font-weight:600;color:var(--navy)}.otros button{display:grid;text-align:left;gap:2px;border:1px solid var(--tinte-2);background:#e6eeff;border-radius:12px;padding:10px 14px;font-family:inherit;font-size:14px;font-weight:600;color:var(--azul);cursor:pointer}
 .otros small{font-size:12.5px;font-weight:400;color:var(--texto)}.otros small::first-letter{text-transform:uppercase}.cal-et{font-size:13px;font-weight:600;color:var(--texto)}
 .cal-mes{background:#fff;border:1px solid var(--tinte-2);border-radius:14px;padding:12px}.cal-mes+.cal-mes{margin-top:10px}
@@ -433,50 +450,14 @@ footer a{color:#fff}
   <div class="wrap agenda-wrap">
     <div class="agenda aparece">
       <h2><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Agenda tu cita</h2>
-      <p class="sub">Estamos para cuidar de ti. Elige la especialidad, el médico y el horario que te acomode.</p>
-      <form id="formCita" class="campos" novalidate>
-        <label>Especialidad
-          <select id="cEsp" required>
-            <option value="Otorrinolaringología">Otorrinolaringología</option>
-            <option value="Neurocirugía de base de cráneo">Neurocirugía de base de cráneo</option>
-            <option value="Cirugía maxilofacial">Cirugía maxilofacial</option>
-            <option value="Oculoplastia">Oculoplastia</option>
-            <option value="Oncología de cabeza y cuello">Oncología de cabeza y cuello</option>
-            <option value="Dermatología">Dermatología</option>
-          </select>
-        </label>
-        <fieldset class="tipo-cita"><legend>Tipo de consulta</legend>
-          <label><input type="radio" name="tipo" value="presencial" checked> Presencial</label>
-          <label><input type="radio" name="tipo" value="virtual"> Virtual</label>
-        </fieldset>
-        <label>Médico
-          <select id="cMed">
-            <option value="">El que tenga el próximo lugar</option>
-          </select>
-        </label>
-        <fieldset class="tipo-cita"><legend>¿Es tu primera vez con este médico?</legend>
-          <label><input type="radio" name="visita" value="valoracion" checked> Primera valoración</label>
-          <label><input type="radio" name="visita" value="seguimiento"> Seguimiento</label>
-        </fieldset>
-        <label id="cFechaCaja">Fecha que prefieres
-          <input id="cFecha" type="date">
-        </label>
-        <div id="cAgenda" class="campos" hidden>
-          <div class="cal-pac"><span class="cal-et">Elige el día</span><div id="cCal"></div><input type="hidden" id="cDia"></div>
-          <div class="cal-pac"><span class="cal-et">Elige la hora</span><div id="cHoras" class="horas"></div><input type="hidden" id="cHora"></div>
-          <label>Tu nombre completo<input id="cNombre" autocomplete="name"></label>
-          <label>Tu WhatsApp (10 dígitos)<input id="cWa" inputmode="numeric" autocomplete="tel"></label>
-          <label>¿Qué te gustaría consultar? (opcional)<input id="cMotivo" maxlength="300"></label>
-          <fieldset class="tipo-cita"><legend>¿Cómo vas a pagar tu consulta en la unidad?</legend>
-            <label><input type="radio" name="pago" value="efectivo" checked> Efectivo</label>
-            <label><input type="radio" name="pago" value="transferencia"> Transferencia</label>
-            <label><input type="radio" name="pago" value="tarjeta"> Tarjeta</label>
-          </fieldset>
-        </div>
-        <button class="btn btn-azul" type="submit" id="cEnviar">Solicitar cita</button>
-      </form>
-      <p class="nota" id="notaCita" aria-live="polite"></p>
-      <div id="cListo" class="cita-lista" hidden></div>
+      <p class="sub">Tres preguntas rápidas y eliges tu horario.</p>
+      <div id="asis" class="asis">
+        <div class="asis-cab"><button type="button" class="asis-atras" id="aAtras" hidden>‹ Atrás</button><span id="aPaso" class="asis-paso"></span></div>
+        <div class="asis-barra"><span id="aBarra"></span></div>
+        <div id="aCuerpo" aria-live="polite"></div>
+        <p class="nota" id="aNota" aria-live="assertive"></p>
+      </div>
+      <p class="asis-wa" data-con-wa hidden>¿Prefieres que te ayudemos? <a href="#" data-wa="Hola, quiero agendar una cita en la Unidad de Cabeza y Cuello.">Escríbenos por WhatsApp</a></p>
     </div>
     <figure class="unidad-foto aparece" style="margin:0">
       <img src="img/consultorio-exploracion-1600.jpg" srcset="img/consultorio-exploracion-800.jpg 800w, img/consultorio-exploracion-1600.jpg 1600w" sizes="(max-width:1000px) 100vw, 50vw" alt="Consultorio de exploración de la unidad" loading="lazy">
@@ -671,40 +652,6 @@ footer a{color:#fff}
   </div>
 </section>
 
-<dialog class="perfil" id="avisoDigital" aria-labelledby="avisoTitulo">
-  <div class="perfil-caja">
-    <button class="cerrar" type="button" data-cerrar-aviso aria-label="Cerrar">×</button>
-    <div id="avisoPaso1" class="aviso-paso">
-    <h3 id="avisoTitulo">¿Qué es la consulta virtual?</h3>
-    <p class="aviso-texto">Es una videollamada por Google Meet con el especialista, de hasta 30 minutos, sin que tengas que trasladarte. Sirve para aclarar dudas sobre tus molestias o tus estudios y preparar tu consulta en persona en la unidad.</p>
-    <h4 class="aviso-reglas-t">Antes de pedirla, considera:</h4>
-    <ul class="aviso-reglas">
-      <li>El especialista reserva ese horario solo para ti y deja de atender a otros pacientes.</li>
-      <li>Si cancelas, se cobra el 50&nbsp;% de la consulta.</li>
-      <li>Si no te conectas a la hora acordada, se toma como consulta dada y se cobra completa.</li>
-    </ul>
-    <label class="aviso-acepto"><input type="checkbox" id="avisoAcepto"> Leí y acepto estas condiciones</label>
-    <div class="perfil-acciones">
-      <button class="btn btn-azul" type="button" id="avisoSi" disabled>Sí, quiero consulta virtual</button>
-      <button class="btn btn-linea" type="button" data-cerrar-aviso>Mejor presencial</button>
-    </div>
-    </div>
-    <form id="avisoPaso2" class="aviso-paso campos" hidden novalidate>
-      <h3>Solicita tu consulta virtual</h3>
-      <p class="aviso-texto">Como los especialistas también operan y consultan en Guadalajara, tu médico te propondrá por WhatsApp algunos días y horas, y tú eliges el que te acomode.</p>
-      <label>Médico<select id="dMed"></select></label>
-      <label>Tipo de consulta<select id="dTipo"><option value="valoracion">Primera valoración</option><option value="seguimiento">Seguimiento</option></select></label>
-      <label>Tu nombre completo<input id="dNombre" autocomplete="name" required></label>
-      <label>Tu WhatsApp (10 dígitos)<input id="dWa" inputmode="numeric" autocomplete="tel" required></label>
-      <label>Correo (opcional)<input id="dCorreo" type="email" autocomplete="email"></label>
-      <label>¿Qué te gustaría consultar? (opcional)<input id="dMotivo" maxlength="300"></label>
-      <p class="aviso-texto" id="dPrecio"></p>
-      <button class="btn btn-azul" type="submit" id="dApartar">Enviar solicitud</button>
-      <p class="nota" id="dNota" aria-live="polite"></p>
-    </form>
-    <div id="avisoPaso3" class="aviso-paso" hidden></div>
-  </div>
-</dialog>
 
 <dialog class="perfil" id="perfil" aria-labelledby="perfilNombre">
   <div class="perfil-caja">
@@ -957,9 +904,8 @@ document.getElementById('perfilCompartir').addEventListener('click', function ()
   });
 })();
 document.getElementById('perfilAgendar').addEventListener('click', function () {
-  cEsp.value = medicoActual.agenda[0]; llenarMedicos(); cMed.value = medicoActual.nombre; agendaPresencial();
   perfil.close();
-  document.getElementById('agenda').scrollIntoView();
+  agendarCon(medicoActual);
 });
 
 /* Videoteca por especialidad: cada especialidad es un riel que se desliza hacia los lados, con sus filtros por tema.
@@ -1105,248 +1051,247 @@ document.getElementById('compartir').addEventListener('click', function () {
 })();
 
 
-/* Agenda: con número manda la solicitud por WhatsApp; sin número, avisa */
-var hoy = new Date(); hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
-document.getElementById('cFecha').min = hoy.toISOString().slice(0, 10);
-var cEsp = document.getElementById('cEsp'), cMed = document.getElementById('cMed');
-function llenarMedicos() {
-  cMed.innerHTML = '<option value="">El que tenga el próximo lugar</option>' + lugares.filter(function (m) {
-    return m.nombre && m.agenda && m.agenda.indexOf(cEsp.value) >= 0;
-  }).map(function (m) { return '<option>' + m.nombre + '</option>'; }).join('');
-}
-cEsp.addEventListener('change', function () { llenarMedicos(); agendaPresencial(); });
-llenarMedicos();
-/* Agenda con el servidor de citas.
-   Presencial: la unidad abre un día a la vez por médico; el paciente elige primera valoración (45 min) o seguimiento (30 min)
-   y el servidor solo ofrece las horas que caben. Sin médico elegido o sin días abiertos, se pide por WhatsApp como antes.
-   Virtual: el paciente solicita y paga; el médico le propone opciones de día y hora y el paciente elige (ligas cita.html y medico.html). */
+/* Agenda paso a paso, pensada desde el paciente: una pregunta por pantalla.
+   1 ¿Cómo quieres tu consulta? → 2 ¿Con quién? (médicos con su próxima fecha) → 3 ¿Primera vez o seguimiento?
+   Presencial: 4 día y hora → 5 tus datos y cómo pagas → pase con QR.
+   Virtual:    4 cómo funciona (aceptar condiciones) → 5 tus datos → pago; el médico propone horarios después.
+   WhatsApp queda solo como ayuda opcional, nunca como el botón principal. */
 var CITAS = 'https://cyc-citas.vonoaweb.workers.dev/api/';
-var cDia = document.getElementById('cDia'), cHora = document.getElementById('cHora'), cAgenda = document.getElementById('cAgenda'),
-    cFechaCaja = document.getElementById('cFechaCaja'), cEnviar = document.getElementById('cEnviar'), cListo = document.getElementById('cListo'),
-    notaCita = document.getElementById('notaCita');
-function medicoElegido() { return lugares.filter(function (m) { return m.nombre && m.nombre === cMed.value; })[0]; }
-function tipoConsulta() { return document.querySelector('[name=tipo]:checked').value; }
-function tipoVisita() { return document.querySelector('[name=visita]:checked').value; }
-function opciones(sel, lista, vacio) { sel.innerHTML = lista.length ? lista.map(function (o) { return '<option value="' + o[0] + '"' + (o[2] ? ' disabled' : '') + '>' + o[1] + '</option>'; }).join('') : '<option value="">' + vacio + '</option>'; }
+var hoy = new Date(); hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 function fechaLarga(f) { return new Date(f + 'T12:00').toLocaleDateString('es-MX', {weekday: 'long', day: 'numeric', month: 'long'}); }
+function mayus(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
 function pedirJson(ruta, cuerpo) {
   return fetch(CITAS + ruta, cuerpo ? {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(cuerpo)} : undefined)
-    .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || 'Error'); return d; }); });
+    .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || 'Algo salió mal. Intenta de nuevo.'); return d; }); });
 }
-function modoSolicitud() { cAgenda.hidden = true; cFechaCaja.hidden = tipoConsulta() !== 'presencial'; cEnviar.textContent = tipoConsulta() === 'presencial' ? 'Pedir cita por WhatsApp' : 'Solicitar cita'; }
-/* "El que tenga el próximo lugar": se busca entre los médicos de la especialidad el primero con un día libre y se muestra su calendario */
-function buscarMedicoLibre(mia) {
-  var candidatos = lugares.filter(function (x) { return x.id && x.agenda && x.agenda.indexOf(cEsp.value) >= 0; });
-  if (!candidatos.length) return modoSolicitud();
-  Promise.all(candidatos.map(function (x) {
-    return pedirJson('presencial/calendario?medico=' + x.id).then(function (d) {
-      var libre = d.dias.filter(function (y) { return y.estado === 'libre'; })[0];
-      return libre ? {medico: x, fecha: libre.fecha} : null;
-    }).catch(function () { return null; });
-  })).then(function (r) {
-    if (mia !== vuelta) return;
-    var mejor = r.filter(Boolean).sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; })[0];
-    if (mejor) { cMed.value = mejor.medico.nombre; agendaPresencial(); return; }
-    modoSolicitud();
-    notaCita.textContent = 'Por ahora no hay fechas abiertas en esta especialidad. Pide tu cita por WhatsApp y te avisamos en cuanto abra una.';
-    sugerirOtros(mia);
-  });
-}
-function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
-/* Si no hay lugar con lo elegido, se ofrecen los médicos que sí tienen fecha, con un botón para ir a su calendario */
-function sugerirOtros(mia) {
-  var conAgenda = lugares.filter(function (x) { return x.id && x.agenda; });
-  Promise.all(conAgenda.map(function (x) {
-    return pedirJson('presencial/calendario?medico=' + x.id).then(function (d) {
-      var libre = d.dias.filter(function (y) { return y.estado === 'libre'; })[0];
-      return libre && x.nombre !== cMed.value ? {medico: x, fecha: libre.fecha} : null;
-    }).catch(function () { return null; });
-  })).then(function (r) {
-    if (mia !== vuelta) return;
-    var hay = r.filter(Boolean).sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; });
-    if (!hay.length) return;
-    notaCita.innerHTML = esc(notaCita.textContent) + '<span class="otros">Con lugar ahora:' + hay.map(function (h) {
-      return '<button type="button" data-ir="' + esc(h.medico.nombre) + '">' + esc(h.medico.nombre) + ' · ' + esc(h.medico.agenda[0]) + '<small>' + fechaLarga(h.fecha) + '</small></button>';
-    }).join('') + '</span>';
-  });
-}
-notaCita.addEventListener('click', function (e) {
-  var b = e.target.closest('[data-ir]'); if (!b) return;
-  var m = lugares.filter(function (x) { return x.nombre === b.dataset.ir; })[0]; if (!m) return;
-  cEsp.value = m.agenda[0]; llenarMedicos(); cMed.value = m.nombre; agendaPresencial();
-});
-var vuelta = 0;  /* ignora respuestas viejas si el paciente cambió de médico o de tipo mientras cargaba */
-function agendaPresencial() {
-  cListo.hidden = true; notaCita.textContent = '';
-  var m = medicoElegido(), mia = ++vuelta;
-  if (tipoConsulta() !== 'presencial') return modoSolicitud();
-  if (!m || !m.id) return buscarMedicoLibre(mia);
-  pedirJson('presencial/calendario?medico=' + m.id).then(function (d) {
-    if (mia !== vuelta) return;
-    var libres = d.dias.filter(function (x) { return x.estado === 'libre'; });
-    if (!libres.length) {
-      modoSolicitud(); cFechaCaja.hidden = true;
-      notaCita.textContent = 'Por ahora no hay fechas abiertas con este médico. Pide tu cita por WhatsApp y te avisamos en cuanto abra una.';
-      sugerirOtros(mia);
-      return;
-    }
-    pintarCalendario(d.dias, libres[0].fecha);
-    cAgenda.hidden = false; cFechaCaja.hidden = true; cEnviar.textContent = 'Agendar cita';
-    cargarHoras();
-  }).catch(function () { if (mia === vuelta) modoSolicitud(); });
-}
-/* Calendario del paciente: los días con lugar salen en azul; los llenos y los días del médico sin lugar, en gris */
-var calPac = {porFecha: {}, meses: [], i: 0};
-function pintarCalendario(dias, elegido) {
-  calPac.porFecha = {}; dias.forEach(function (x) { calPac.porFecha[x.fecha] = x.estado; });
-  calPac.meses = []; var m = hoy.toISOString().slice(0, 7);
-  while (m <= dias[dias.length - 1].fecha.slice(0, 7)) { calPac.meses.push(m); var d = new Date(m + '-15T12:00'); d.setMonth(d.getMonth() + 1); m = d.toISOString().slice(0, 7); }
-  calPac.i = Math.max(0, calPac.meses.indexOf(elegido.slice(0, 7)));
-  cDia.value = elegido; pintarMes();
-}
-/* un mes a la vez, con flechas para ver los siguientes */
-function pintarMes() {
-  var ym = calPac.meses[calPac.i], y = +ym.slice(0, 4), mes = +ym.slice(5, 7) - 1, dias_mes = new Date(y, mes + 1, 0).getDate(), hueco = (new Date(y, mes, 1).getDay() + 6) % 7;
-  var html = '<div class="cal-mes"><div class="cal-cab"><button type="button" class="cal-flecha" data-mes="-1" aria-label="Mes anterior"' + (calPac.i ? '' : ' disabled') + '>‹</button><h4>' +
-    new Date(y, mes, 15).toLocaleDateString('es-MX', {month: 'long', year: 'numeric'}) + '</h4><button type="button" class="cal-flecha" data-mes="1" aria-label="Mes siguiente"' + (calPac.i < calPac.meses.length - 1 ? '' : ' disabled') + '>›</button></div><div class="cal-grid">' +
-    ['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(function (s) { return '<span class="sem">' + s + '</span>'; }).join('') + new Array(hueco + 1).join('<span></span>');
-  for (var n = 1; n <= dias_mes; n++) {
-    var f = ym + '-' + String(n).padStart(2, '0'), e = calPac.porFecha[f];
-    if (e === 'libre') html += '<button type="button" class="cal-dia libre' + (f === cDia.value ? ' sel' : '') + '" data-dia="' + f + '" aria-label="' + fechaLarga(f) + ', con lugares">' + n + '</button>';
-    else if (e) html += '<span class="cal-dia lleno">' + n + '<small>' + (e === 'lleno' ? 'Lleno' : 'Sin lugar') + '</small></span>';
-    else html += '<span class="cal-dia">' + n + '</span>';
-  }
-  document.getElementById('cCal').innerHTML = html + '</div></div>';
-}
-document.getElementById('cCal').addEventListener('click', function (e) {
-  var flecha = e.target.closest('[data-mes]');
-  if (flecha) { calPac.i = Math.min(calPac.meses.length - 1, Math.max(0, calPac.i + +flecha.dataset.mes)); pintarMes(); return; }
-  var b = e.target.closest('[data-dia]'); if (!b) return;
-  this.querySelectorAll('.sel').forEach(function (x) { x.classList.remove('sel'); }); b.classList.add('sel');
-  cDia.value = b.dataset.dia; cargarHoras();
-});
-function cargarHoras() {
-  var m = medicoElegido(), caja = document.getElementById('cHoras');
-  cHora.value = '';
-  if (!m || !cDia.value) return;
-  pedirJson('presencial/horas?medico=' + m.id + '&fecha=' + cDia.value + '&tipo=' + tipoVisita()).then(function (d) {
-    caja.innerHTML = d.horas.map(function (h) { return '<button type="button" data-hora="' + h + '">' + h + '</button>'; }).join('') || '<p class="nota">Ese día ya no hay horas para este tipo de consulta. Elige otro día.</p>';
-  });
-}
-document.getElementById('cHoras').addEventListener('click', function (e) {
-  var b = e.target.closest('[data-hora]'); if (!b) return;
-  this.querySelectorAll('.sel').forEach(function (x) { x.classList.remove('sel'); }); b.classList.add('sel');
-  cHora.value = b.dataset.hora;
-});
-/* QR del pase: se dibuja en el navegador con qrcode-generator (cdnjs) */
 function dibujarQR(caja, texto) {
   var hacer = function () { var q = qrcode(0, 'M'); q.addData(texto); q.make(); caja.innerHTML = '<img alt="QR de tu pase" src="' + q.createDataURL(8, 2) + '">'; };
   if (window.qrcode) return hacer();
   var s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'; s.onload = hacer; document.head.appendChild(s);
 }
-cMed.addEventListener('change', agendaPresencial);
-agendaPresencial();  /* al abrir la página ya se muestra la agenda de la especialidad que viene elegida */
-document.querySelectorAll('[data-esp]').forEach(function (a) {
-  a.addEventListener('click', function () { cEsp.value = a.dataset.esp; llenarMedicos(); agendaPresencial(); });
-});
-document.querySelectorAll('[name=visita]').forEach(function (r) { r.addEventListener('change', cargarHoras); });
-document.querySelectorAll('[name=tipo]').forEach(function (r) { r.addEventListener('change', function () { digitalOk = false; agendaPresencial(); }); });
 
-/* Consulta virtual: antes de mandar la solicitud se explica en qué consiste y el paciente acepta las condiciones */
-var avisoDigital = document.getElementById('avisoDigital'), digitalOk = false;
-avisoDigital.addEventListener('click', function (e) {
-  if (e.target === avisoDigital || e.target.closest('[data-cerrar-aviso]')) {
-    avisoDigital.close();
-    if (e.target.closest('.btn-linea')) { document.querySelector('[name=tipo][value=presencial]').checked = true; agendaPresencial(); }
-  }
-});
-document.getElementById('avisoAcepto').addEventListener('change', function () { document.getElementById('avisoSi').disabled = !this.checked; });
-function verPaso(n) { [1, 2, 3].forEach(function (i) { document.getElementById('avisoPaso' + i).hidden = i !== n; }); avisoDigital.scrollTop = 0; }
-var dMed = document.getElementById('dMed');
-document.getElementById('avisoSi').addEventListener('click', function () {
-  pedirJson('medicos').then(function (d) {
-    if (!d.medicos.length) throw new Error('sin médicos');
-    opciones(dMed, d.medicos.map(function (m) { return [m.id, m.nombre + ' · ' + m.especialidad]; }), '');
-    var elegido = medicoElegido(); if (elegido && elegido.id) dMed.value = elegido.id;
-    document.getElementById('dTipo').value = tipoVisita();
-    document.getElementById('dPrecio').textContent = 'Costo: $' + d.precio + '. Al enviar tu solicitud eliges cómo pagar; con el pago tu médico te propone horarios.';
-    verPaso(2);
-  }).catch(function () { digitalOk = true; avisoDigital.close(); document.getElementById('formCita').requestSubmit(); });
-});
-document.getElementById('avisoPaso2').addEventListener('submit', function (e) {
-  e.preventDefault();
-  var nota = document.getElementById('dNota'), boton = document.getElementById('dApartar');
-  boton.disabled = true; nota.textContent = 'Enviando…';
-  pedirJson('virtual', {
-    medico: dMed.value, tipo: document.getElementById('dTipo').value, nombre: document.getElementById('dNombre').value,
-    whatsapp: document.getElementById('dWa').value, correo: document.getElementById('dCorreo').value, motivo: document.getElementById('dMotivo').value, acepto: true
-  }).then(function (d) {
-    var tr = d.transferencia, html = '<h3>¡Recibimos tu solicitud!</h3><p class="aviso-texto">Folio <b>' + d.folio + '</b><br>' + d.medico + '<br>' + d.tipo + ' · consulta virtual</p>';
-    var pasos = '<p class="aviso-texto">Al confirmar tu pago, tu médico te mandará por WhatsApp algunas opciones de día y hora para que elijas.</p>';
-    /* Formas de pago: Mercado Pago (si la unidad ya tiene cuenta) y transferencia con comprobante por WhatsApp (si ya hay CLABE) */
-    if (d.pago || tr) {
-      html += '<p class="aviso-texto">Para continuar, paga los <b>$' + d.precio + '</b>.</p>';
-      if (d.pago) html += '<div class="perfil-acciones"><a class="btn btn-azul" href="' + d.pago + '">Pagar con tarjeta o Mercado Pago</a></div>';
-      if (tr) {
-        var comp = 'Hola, ya hice la transferencia de $' + d.precio + ' de mi consulta virtual. Folio ' + d.folio + ' con ' + d.medico + '. Aquí va mi comprobante:';
-        html += '<div class="pago-trans"><b>' + (d.pago ? 'O por transferencia' : 'Pago por transferencia') + '</b>' +
-          (tr.banco ? '<span>Banco: ' + tr.banco + '</span>' : '') + (tr.titular ? '<span>A nombre de: ' + tr.titular + '</span>' : '') +
-          '<span>CLABE: <code id="pClabe">' + tr.clabe.replace(/(\d{3})(\d{3})(\d{11})(\d)/, '$1 $2 $3 $4') + '</code> <button type="button" class="btn-copiar" id="pCopiar">Copiar</button></span>' +
-          '<span>Concepto: <b>' + d.folio + '</b></span></div>' +
-          '<div class="perfil-acciones"><a class="btn ' + (d.pago ? 'btn-linea' : 'btn-azul') + '" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(comp) + '" target="_blank" rel="noopener">Mandar mi comprobante por WhatsApp</a></div>';
-      }
-      html += pasos;
-    } else {
-      var texto = 'Hola, solicité una consulta virtual. Folio ' + d.folio + ' con ' + d.medico + '. ¿Cómo hago el pago de $' + d.precio + '?';
-      html += '<p class="aviso-texto">Manda tu folio por WhatsApp y te decimos cómo pagar los $' + d.precio + '.</p>' + pasos +
-        '<div class="perfil-acciones"><a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Mandar mi folio por WhatsApp</a></div>';
+var medicosReales = lugares.filter(function (m) { return m.id; });
+var proximamente = lugares.filter(function (m) { return !m.nombre; }).map(function (m) { return m.esp; })
+  .filter(function (e, i, a) { return a.indexOf(e) === i && !medicosReales.some(function (m) { return m.agenda.indexOf(e) >= 0; }); });
+var est = {paso: 1, tipo: '', medico: null, visita: '', fecha: '', hora: '', filtro: '', acepto: false, cal: null, mesI: 0, proximas: {}};
+var aCuerpo = document.getElementById('aCuerpo'), aNota = document.getElementById('aNota');
+function titulo(m) { return (/^Dra\./.test(m.nombre) ? 'la ' : 'el ') + m.nombre; }
+
+/* próxima fecha con lugar de cada médico (para las tarjetas del paso 2) */
+function cargarProximas() {
+  return Promise.all(medicosReales.map(function (m) {
+    return pedirJson('presencial/calendario?medico=' + m.id).then(function (d) {
+      var libre = d.dias.filter(function (x) { return x.estado === 'libre'; })[0];
+      est.proximas[m.id] = libre ? libre.fecha : '';
+    }).catch(function () { est.proximas[m.id] = ''; });
+  }));
+}
+var proximasListas = cargarProximas();
+
+function ir(paso) { est.paso = paso; aNota.textContent = ''; pintar(); document.getElementById('agenda').scrollIntoView({block: 'start'}); }
+function pasosTotales() { return 5; }
+function pintar() {
+  var p = est.paso;
+  document.getElementById('aAtras').hidden = p === 1 || p === 'listo';
+  document.getElementById('aPaso').textContent = p === 'listo' ? '' : 'Paso ' + p + ' de ' + pasosTotales();
+  document.getElementById('aBarra').style.width = (p === 'listo' ? 100 : (p - 1) / pasosTotales() * 100) + '%';
+  if (p === 1) return paso1();
+  if (p === 2) return paso2();
+  if (p === 3) return paso3();
+  if (p === 4) return est.tipo === 'presencial' ? paso4Presencial() : paso4Virtual();
+  if (p === 5) return paso5();
+}
+function resumen() {
+  var r = [];
+  if (est.tipo) r.push(est.tipo === 'presencial' ? 'En la unidad' : 'Por videollamada');
+  if (est.medico) r.push(esc(est.medico.nombre));
+  if (est.visita) r.push(est.visita === 'valoracion' ? 'Primera vez' : 'Seguimiento');
+  if (est.fecha && est.hora && est.tipo === 'presencial') r.push(mayus(fechaLarga(est.fecha)) + ' · ' + est.hora + ' h');
+  return r.length ? '<div class="asis-resumen">' + r.join('<span>·</span>') + '</div>' : '';
+}
+function opcion(dato, valor, icono, tituloOp, texto, elegida) {
+  return '<button type="button" class="asis-op' + (elegida ? ' sel' : '') + '" data-' + dato + '="' + valor + '">' + (icono ? '<span class="asis-ic">' + icono + '</span>' : '') +
+    '<span><b>' + tituloOp + '</b>' + (texto ? '<small>' + texto + '</small>' : '') + '</span></button>';
+}
+var IC_UNIDAD = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5M12 8v4M10 10h4"/></svg>';
+var IC_VIDEO = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg>';
+
+function paso1() {
+  aCuerpo.innerHTML = '<h3 class="asis-t">¿Cómo quieres tu consulta?</h3><div class="asis-ops">' +
+    opcion('tipo', 'presencial', IC_UNIDAD, 'En la unidad', 'Te atiende el especialista en Tepatitlán. Eliges día y hora.', est.tipo === 'presencial') +
+    opcion('tipo', 'virtual', IC_VIDEO, 'Por videollamada', 'Consulta por Google Meet, de hasta 30 minutos, sin trasladarte.', est.tipo === 'virtual') + '</div>';
+}
+function paso2() {
+  aCuerpo.innerHTML = '<h3 class="asis-t">¿Con qué especialista?</h3><p class="nota" style="margin:0">Cargando fechas…</p>';
+  proximasListas.then(function () {
+    if (est.paso !== 2) return;
+    var esps = []; medicosReales.forEach(function (m) { m.agenda.forEach(function (e) { if (esps.indexOf(e) < 0) esps.push(e); }); });
+    var lista = medicosReales.filter(function (m) { return !est.filtro || m.agenda.indexOf(est.filtro) >= 0; })
+      .sort(function (a, b) { var fa = est.proximas[a.id] || '9999', fb = est.proximas[b.id] || '9999'; return est.tipo === 'presencial' && fa !== fb ? (fa < fb ? -1 : 1) : 0; });
+    var chips = '<div class="asis-chips">' + ['', ].concat(esps).map(function (e) { return '<button type="button" class="chip-f' + (est.filtro === e ? ' sel' : '') + '" data-filtro="' + esc(e) + '">' + (e ? esc(e) : 'Todos') + '</button>'; }).join('') + '</div>';
+    var tarjetas = lista.map(function (m) {
+      var f = est.proximas[m.id], linea;
+      if (est.tipo === 'virtual') linea = '<span class="disp si">Te propone horarios por WhatsApp</span>';
+      else linea = f ? '<span class="disp si">Próxima fecha: ' + fechaLarga(f) + '</span>' : '<span class="disp no">Sin fechas por ahora</span>';
+      return '<button type="button" class="asis-med' + (est.medico === m ? ' sel' : '') + '" data-medico="' + m.id + '">' +
+        (m.foto ? '<img src="' + m.foto + '" alt="" loading="lazy">' : '<span class="ini">' + esc(m.nombre.replace(/^Dra?\.\s*/, '').charAt(0)) + '</span>') +
+        '<span><b>' + esc(m.nombre) + '</b><small>' + esc(m.esp) + '</small>' + linea + '</span></button>';
+    }).join('') || '<p class="nota">No hay especialistas en esta especialidad todavía.</p>';
+    aCuerpo.innerHTML = '<h3 class="asis-t">¿Con qué especialista?</h3>' + resumen() + chips + '<div class="asis-meds">' + tarjetas + '</div>' +
+      (proximamente.length ? '<p class="nota asis-pronto">Muy pronto: ' + proximamente.map(esc).join(', ') + '.</p>' : '');
+  });
+}
+function paso3() {
+  aCuerpo.innerHTML = '<h3 class="asis-t">¿Es tu primera consulta con ' + esc(titulo(est.medico)) + '?</h3>' + resumen() + '<div class="asis-ops">' +
+    opcion('visita', 'valoracion', '', 'Sí, es mi primera vez', 'Primera valoración: el especialista revisa tu caso completo.', est.visita === 'valoracion') +
+    opcion('visita', 'seguimiento', '', 'No, ya me había atendido', 'Consulta de seguimiento.', est.visita === 'seguimiento') + '</div>';
+}
+
+/* Paso 4 presencial: calendario (un mes a la vez) y horas en botones */
+function paso4Presencial() {
+  aCuerpo.innerHTML = '<h3 class="asis-t">Elige el día y la hora</h3>' + resumen() + '<div id="aCal"><p class="nota">Cargando fechas…</p></div><div id="aHoras" class="horas"></div><div class="asis-pie"><button type="button" class="btn btn-azul" id="aSigue">Continuar</button></div>';
+  pedirJson('presencial/calendario?medico=' + est.medico.id).then(function (d) {
+    var libres = d.dias.filter(function (x) { return x.estado === 'libre'; });
+    if (!libres.length) {
+      aCuerpo.innerHTML = '<h3 class="asis-t">' + mayus(titulo(est.medico)) + ' todavía no abre fechas</h3>' + resumen() +
+        '<p class="aviso-texto" style="text-align:left">La unidad abre un día a la vez y, en cuanto se llena, abre el siguiente. Puedes elegir otro especialista o pedirnos que te avisemos.</p>' +
+        '<div class="asis-pie"><button type="button" class="btn btn-azul" data-irpaso="2">Ver otros especialistas</button>' +
+        '<button type="button" class="btn btn-linea" id="aAvisame">Avísenme por WhatsApp</button></div>';
+      return;
     }
-    document.getElementById('avisoPaso3').innerHTML = html;
-    var cp = document.getElementById('pCopiar');
-    if (cp) cp.addEventListener('click', function () { navigator.clipboard.writeText(tr.clabe).then(function () { cp.textContent = 'Copiada'; }); });
-    verPaso(3);
-  }).catch(function (err) { nota.textContent = err.message || 'No se pudo enviar. Intenta de nuevo.'; })
-    .then(function () { boton.disabled = false; });
-});
-avisoDigital.addEventListener('close', function () { verPaso(1); });
-(function () { var q = new URLSearchParams(location.search); if (q.get('cita') && q.get('pago')) aviso(q.get('pago') === 'ok' ? 'Pago recibido. Folio ' + q.get('cita') + ': tu médico te mandará opciones de horario por WhatsApp.' : 'El pago no se completó. Folio ' + q.get('cita') + ': escríbenos por WhatsApp.'); })();
+    est.cal = {};
+    d.dias.forEach(function (x) { est.cal[x.fecha] = x.estado; });
+    if (!est.cal[est.fecha] || est.cal[est.fecha] !== 'libre') { est.fecha = libres[0].fecha; est.hora = ''; }
+    est.meses = [];
+    var m = hoy.toISOString().slice(0, 7), ultimo = d.dias[d.dias.length - 1].fecha.slice(0, 7);
+    while (m <= ultimo) { est.meses.push(m); var t = new Date(m + '-15T12:00'); t.setMonth(t.getMonth() + 1); m = t.toISOString().slice(0, 7); }
+    est.mesI = Math.max(0, est.meses.indexOf(est.fecha.slice(0, 7)));
+    pintarMes(); cargarHoras();
+  }).catch(function (e) { aNota.textContent = e.message; });
+}
+function pintarMes() {
+  var ym = est.meses[est.mesI], y = +ym.slice(0, 4), mes = +ym.slice(5, 7) - 1, n_dias = new Date(y, mes + 1, 0).getDate(), hueco = (new Date(y, mes, 1).getDay() + 6) % 7;
+  var html = '<div class="cal-mes"><div class="cal-cab"><button type="button" class="cal-flecha" data-mes="-1" aria-label="Mes anterior"' + (est.mesI ? '' : ' disabled') + '>‹</button><h4>' +
+    new Date(y, mes, 15).toLocaleDateString('es-MX', {month: 'long', year: 'numeric'}) + '</h4><button type="button" class="cal-flecha" data-mes="1" aria-label="Mes siguiente"' + (est.mesI < est.meses.length - 1 ? '' : ' disabled') + '>›</button></div><div class="cal-grid">' +
+    ['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(function (s) { return '<span class="sem">' + s + '</span>'; }).join('') + new Array(hueco + 1).join('<span></span>');
+  for (var n = 1; n <= n_dias; n++) {
+    var f = ym + '-' + String(n).padStart(2, '0'), e = est.cal[f];
+    if (e === 'libre') html += '<button type="button" class="cal-dia libre' + (f === est.fecha ? ' sel' : '') + '" data-dia="' + f + '" aria-label="' + fechaLarga(f) + ', con lugares">' + n + '</button>';
+    else if (e) html += '<span class="cal-dia lleno">' + n + '<small>' + (e === 'lleno' ? 'Lleno' : 'Sin lugar') + '</small></span>';
+    else html += '<span class="cal-dia">' + n + '</span>';
+  }
+  document.getElementById('aCal').innerHTML = html + '</div></div><p class="nota cal-ley"><span class="pt az"></span> Con lugar <span class="pt gr"></span> Sin lugar</p>';
+}
+function cargarHoras() {
+  var caja = document.getElementById('aHoras');
+  caja.innerHTML = '<span class="cal-et">Horas para el ' + fechaLarga(est.fecha) + '</span>';
+  pedirJson('presencial/horas?medico=' + est.medico.id + '&fecha=' + est.fecha + '&tipo=' + est.visita).then(function (d) {
+    if (d.horas.indexOf(est.hora) < 0) est.hora = '';
+    caja.innerHTML = '<span class="cal-et">Horas para el ' + fechaLarga(est.fecha) + '</span><div class="horas-l">' +
+      (d.horas.map(function (h) { return '<button type="button" data-hora="' + h + '"' + (h === est.hora ? ' class="sel"' : '') + '>' + h + '</button>'; }).join('') || '<p class="nota" style="margin:0">Ese día ya no hay horas. Elige otro día.</p>') + '</div>';
+  });
+}
 
-document.getElementById('formCita').addEventListener('submit', function (e) {
+/* Paso 4 virtual: cómo funciona y condiciones */
+function paso4Virtual() {
+  aCuerpo.innerHTML = '<h3 class="asis-t">Así funciona la consulta por videollamada</h3>' + resumen() +
+    '<ol class="asis-como"><li>Envías tu solicitud y pagas la consulta.</li><li>' + mayus(titulo(est.medico)) + ' te propone por WhatsApp algunos días y horas; eliges el que te acomode.</li><li>Te llega la liga de Google Meet para conectarte, hasta 30 minutos.</li></ol>' +
+    '<ul class="aviso-reglas"><li>El especialista reserva ese horario solo para ti.</li><li>Si cancelas, se cobra el 50&nbsp;% de la consulta.</li><li>Si no te conectas a la hora acordada, se toma como consulta dada y se cobra completa.</li></ul>' +
+    '<label class="aviso-acepto"><input type="checkbox" id="aAcepto"' + (est.acepto ? ' checked' : '') + '> Leí y acepto estas condiciones</label>' +
+    '<div class="asis-pie"><button type="button" class="btn btn-azul" id="aSigue">Continuar</button></div>';
+}
+
+/* Paso 5: tus datos */
+function paso5() {
+  var pres = est.tipo === 'presencial';
+  aCuerpo.innerHTML = '<h3 class="asis-t">Tus datos</h3>' + resumen() + '<form id="aForm" class="campos" novalidate>' +
+    '<label>Nombre completo del paciente<input id="aNombre" autocomplete="name" required></label>' +
+    '<label>WhatsApp (10 dígitos)<input id="aWa" inputmode="numeric" autocomplete="tel" required></label>' +
+    (pres ? '' : '<label>Correo (opcional)<input id="aCorreo" type="email" autocomplete="email"></label>') +
+    '<label>¿Qué te gustaría consultar? (opcional)<input id="aMotivo" maxlength="300"></label>' +
+    (pres ? '<fieldset class="tipo-cita"><legend>¿Cómo vas a pagar en la unidad?</legend><label><input type="radio" name="aPago" value="efectivo" checked> Efectivo</label><label><input type="radio" name="aPago" value="transferencia"> Transferencia</label><label><input type="radio" name="aPago" value="tarjeta"> Tarjeta</label></fieldset>' : '') +
+    '<button class="btn btn-azul" id="aEnviar">' + (pres ? 'Confirmar mi cita' : 'Enviar solicitud') + '</button></form>';
+  document.getElementById('aForm').addEventListener('submit', enviar);
+}
+function enviar(e) {
   e.preventDefault();
-  var tipo = tipoConsulta(), visita = tipoVisita() === 'valoracion' ? 'primera valoración' : 'seguimiento';
-  if (tipo === 'virtual' && !digitalOk) return avisoDigital.showModal();
-  /* presencial con agenda: se aparta la hora en el servidor */
-  if (tipo === 'presencial' && !cAgenda.hidden) {
-    var nombre = document.getElementById('cNombre').value.trim(), wa = document.getElementById('cWa').value.replace(/\D/g, '');
-    if (!cHora.value) { notaCita.textContent = 'Elige el día y la hora.'; return; }
-    if (!nombre || wa.length < 10) { notaCita.textContent = 'Escribe tu nombre y tu WhatsApp de 10 dígitos.'; return; }
-    cEnviar.disabled = true; notaCita.textContent = 'Agendando…';
-    pedirJson('presencial', {medico: medicoElegido().id, fecha: cDia.value, hora: cHora.value, tipo: tipoVisita(), nombre: nombre, whatsapp: wa, motivo: document.getElementById('cMotivo').value, pago: (document.querySelector('[name=pago]:checked') || {}).value})
-      .then(function (d) {
-        var cuando = fechaLarga(d.fecha) + ' a las ' + d.hora + ' h';
-        var txt = 'Hola, agendé una cita presencial. Folio ' + d.folio + ' · ' + d.tipo + ' con ' + d.medico + ', el ' + cuando + '. A nombre de ' + nombre + '. Mi pase: ' + d.pase;
-        cListo.innerHTML = '<h3>¡Tu cita quedó agendada!</h3><div>Folio <b>' + d.folio + '</b><br>' + d.medico + '<br>' + d.tipo + ' · ' + cuando + '</div>' +
-          '<div class="pase-qr" id="cQR"></div>' +
-          '<div class="nota" style="margin:0">Este es tu pase: enséñalo en la unidad al llegar para registrar tu asistencia. Guárdalo con el botón de abajo o tómale captura. Llega 10 minutos antes; para cancelar o cambiar tu cita, escríbenos por WhatsApp con tu folio.</div>' +
-          '<a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Confirmar y guardar mi pase por WhatsApp</a>' +
-          '<a class="btn btn-linea" href="' + d.pase + '" target="_blank" rel="noopener">Abrir mi pase</a>';
-        dibujarQR(document.getElementById('cQR'), d.pase);
-        cListo.hidden = false; notaCita.textContent = '';
-        document.getElementById('formCita').reset(); cAgenda.hidden = true; cFechaCaja.hidden = false;
-      }).catch(function (err) { notaCita.textContent = err.message; cargarHoras(); })
-      .then(function () { cEnviar.disabled = false; });
-    return;
-  }
-  /* sin agenda en línea: solicitud por WhatsApp */
-  var esp = (tipo === 'virtual' ? 'consulta virtual de ' : '') + cEsp.value, med = cMed.value;
-  var f = document.getElementById('cFecha').value;
-  var fecha = f && !cFechaCaja.hidden ? fechaLarga(f) : 'la próxima fecha disponible';
-  if (WHATSAPP) {
-    abrirWhatsApp('Hola, quiero una ' + (tipo === 'virtual' ? '' : 'cita de ') + esp + ' (' + visita + ')' + (med ? (med.indexOf('Dra.') === 0 ? ' con la ' : ' con el ') + med : '') + ' para ' + fecha + '.');
+  var nombre = document.getElementById('aNombre').value.trim(), wa = document.getElementById('aWa').value.replace(/\D/g, ''), boton = document.getElementById('aEnviar');
+  if (!nombre || wa.length < 10) { aNota.textContent = 'Escribe el nombre y un WhatsApp de 10 dígitos.'; return; }
+  boton.disabled = true; aNota.textContent = est.tipo === 'presencial' ? 'Agendando…' : 'Enviando…';
+  var motivo = document.getElementById('aMotivo').value;
+  var pide = est.tipo === 'presencial'
+    ? pedirJson('presencial', {medico: est.medico.id, fecha: est.fecha, hora: est.hora, tipo: est.visita, nombre: nombre, whatsapp: wa, motivo: motivo, pago: (document.querySelector('[name=aPago]:checked') || {}).value}).then(function (d) { listoPresencial(d, nombre); })
+    : pedirJson('virtual', {medico: est.medico.id, tipo: est.visita, nombre: nombre, whatsapp: wa, correo: document.getElementById('aCorreo').value, motivo: motivo, acepto: true}).then(listoVirtual);
+  pide.catch(function (err) {
+    aNota.textContent = err.message; boton.disabled = false;
+    if (/hora/.test(err.message) && est.tipo === 'presencial') { est.hora = ''; setTimeout(function () { ir(4); aNota.textContent = err.message; }, 1200); }
+  });
+}
+function listoPresencial(d, nombre) {
+  var cuando = fechaLarga(d.fecha) + ' a las ' + d.hora + ' h';
+  var txt = 'Hola, agendé una cita presencial. Folio ' + d.folio + ' · ' + d.tipo + ' con ' + d.medico + ', el ' + cuando + '. A nombre de ' + nombre + '. Mi pase: ' + d.pase;
+  est.paso = 'listo'; pintar();
+  aCuerpo.innerHTML = '<div class="cita-lista"><h3>¡Tu cita quedó agendada!</h3><div>Folio <b>' + d.folio + '</b><br>' + esc(d.medico) + '<br>' + d.tipo + ' · ' + cuando + '</div>' +
+    '<div class="pase-qr" id="aQR"></div>' +
+    '<div class="nota" style="margin:0">Este es tu pase: enséñalo en la unidad al llegar. Guárdalo con el botón de abajo o tómale captura. Llega 10 minutos antes; para cancelar o cambiar tu cita, escríbenos por WhatsApp con tu folio.</div>' +
+    '<a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Guardar mi pase en WhatsApp</a>' +
+    '<a class="btn btn-linea" href="' + d.pase + '" target="_blank" rel="noopener">Abrir mi pase</a>' +
+    '<button type="button" class="btn btn-linea" data-reiniciar="1">Agendar otra cita</button></div>';
+  dibujarQR(document.getElementById('aQR'), d.pase);
+}
+function listoVirtual(d) {
+  var tr = d.transferencia, html = '<div class="cita-lista"><h3>¡Recibimos tu solicitud!</h3><div>Folio <b>' + d.folio + '</b><br>' + esc(d.medico) + '<br>' + d.tipo + ' · videollamada</div>';
+  if (d.pago || tr) {
+    html += '<div>Para continuar, paga los <b>$' + d.precio + '</b>.</div>';
+    if (d.pago) html += '<a class="btn btn-azul" href="' + d.pago + '">Pagar con tarjeta o Mercado Pago</a>';
+    if (tr) {
+      var comp = 'Hola, ya hice la transferencia de $' + d.precio + ' de mi consulta por videollamada. Folio ' + d.folio + ' con ' + d.medico + '. Aquí va mi comprobante:';
+      html += '<div class="pago-trans"><b>' + (d.pago ? 'O por transferencia' : 'Pago por transferencia') + '</b>' + (tr.banco ? '<span>Banco: ' + esc(tr.banco) + '</span>' : '') + (tr.titular ? '<span>A nombre de: ' + esc(tr.titular) + '</span>' : '') +
+        '<span>CLABE: <code>' + tr.clabe.replace(/(\d{3})(\d{3})(\d{11})(\d)/, '$1 $2 $3 $4') + '</code> <button type="button" class="btn-copiar" data-clabe="' + tr.clabe + '">Copiar</button></span><span>Concepto: <b>' + d.folio + '</b></span></div>' +
+        '<a class="btn ' + (d.pago ? 'btn-linea' : 'btn-azul') + '" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(comp) + '" target="_blank" rel="noopener">Mandar mi comprobante por WhatsApp</a>';
+    }
   } else {
-    notaCita.textContent = 'La agenda en línea abre muy pronto. Mientras tanto, pide tu cita de ' + esp + ' en la recepción de la unidad.';
+    var texto = 'Hola, solicité una consulta por videollamada. Folio ' + d.folio + ' con ' + d.medico + '. ¿Cómo hago el pago de $' + d.precio + '?';
+    html += '<div>Manda tu folio por WhatsApp y te decimos cómo pagar los $' + d.precio + '.</div><a class="btn btn-azul" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto) + '" target="_blank" rel="noopener">Mandar mi folio por WhatsApp</a>';
+  }
+  html += '<div class="nota" style="margin:0">Al confirmar tu pago, tu especialista te mandará por WhatsApp algunas opciones de día y hora para que elijas.</div></div>';
+  est.paso = 'listo'; pintar(); aCuerpo.innerHTML = html;
+}
+
+/* clics del asistente */
+document.getElementById('asis').addEventListener('click', function (e) {
+  var b = e.target.closest('button'); if (!b) return;
+  var d = b.dataset;
+  if (d.tipo) { est.tipo = d.tipo; return ir(est.medico ? 3 : 2); }
+  if (d.filtro !== undefined) { est.filtro = d.filtro; return paso2(); }
+  if (d.medico) { est.medico = medicosReales.filter(function (m) { return m.id === d.medico; })[0]; est.fecha = ''; est.hora = ''; return ir(3); }
+  if (d.visita) { est.visita = d.visita; est.hora = ''; return ir(4); }
+  if (d.mes) { est.mesI = Math.min(est.meses.length - 1, Math.max(0, est.mesI + +d.mes)); return pintarMes(); }
+  if (d.dia) { est.fecha = d.dia; est.hora = ''; pintarMes(); return cargarHoras(); }
+  if (d.hora) { est.hora = d.hora; document.querySelectorAll('#aHoras .sel').forEach(function (x) { x.classList.remove('sel'); }); b.classList.add('sel'); aNota.textContent = ''; return; }
+  if (d.irpaso) return ir(+d.irpaso);
+  if (d.clabe) { navigator.clipboard.writeText(d.clabe).then(function () { b.textContent = 'Copiada'; }); return; }
+  if (d.reiniciar) { est = Object.assign(est, {paso: 1, tipo: '', medico: null, visita: '', fecha: '', hora: '', acepto: false}); proximasListas = cargarProximas(); return ir(1); }
+  if (b.id === 'aAtras') { var p = est.paso; return ir(p === 3 && est.medicoFijo ? 1 : p - 1); }
+  if (b.id === 'aAvisame') return abrirWhatsApp('Hola, quiero una cita presencial con ' + est.medico.nombre + ' (' + (est.visita === 'valoracion' ? 'primera vez' : 'seguimiento') + '). ¿Me avisan cuando haya fecha?');
+  if (b.id === 'aSigue') {
+    if (est.tipo === 'presencial' && !est.hora) { aNota.textContent = 'Elige una hora.'; return; }
+    if (est.tipo === 'virtual') { est.acepto = document.getElementById('aAcepto').checked; if (!est.acepto) { aNota.textContent = 'Para continuar, acepta las condiciones.'; return; } }
+    return ir(5);
   }
 });
+
+/* entradas al asistente desde otras partes de la página */
+function agendarCon(m) {
+  est.medico = medicosReales.filter(function (x) { return x.id === m.id; })[0] || null; est.medicoFijo = !!est.medico;
+  est.visita = ''; est.fecha = ''; est.hora = ''; ir(est.tipo ? (est.medico ? 3 : 2) : 1);
+}
+document.querySelectorAll('a[data-esp]').forEach(function (a) {
+  a.addEventListener('click', function () { est.filtro = medicosReales.some(function (m) { return m.agenda.indexOf(a.dataset.esp) >= 0; }) ? a.dataset.esp : ''; est.medico = null; est.medicoFijo = false; ir(est.tipo ? 2 : 1); });
+});
+(function () { var q = new URLSearchParams(location.search); if (q.get('cita') && q.get('pago')) aviso(q.get('pago') === 'ok' ? 'Pago recibido. Folio ' + q.get('cita') + ': tu especialista te mandará opciones de horario por WhatsApp.' : 'El pago no se completó. Folio ' + q.get('cita') + ': escríbenos por WhatsApp.'); })();
+pintar();
 
 /* Menú en celular */
 var menu = document.querySelector('.menu'), nav = document.getElementById('menu');
